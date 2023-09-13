@@ -1,0 +1,7 @@
+@EndUserText.label: 'Agency'
+@AbapCatalog.extensibility.extensible: true
+@ObjectModel.leadingEntity.name: 'ZDMOC_AgencyTP'
+define service ZDMOUI_AGENCY
+  {
+  expose ZDMOC_AgencyTP as Agency;
+}

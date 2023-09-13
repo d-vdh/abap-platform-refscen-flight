@@ -1,6 +1,0 @@
-extension for projection;
-
-extend behavior for ZAI_DMOAgency
-{
-  use action ZAI_DMOcreateFromTemplate;
-}

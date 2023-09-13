@@ -1,6 +1,0 @@
-extension using interface ZAI_DMOi_agencytp;
-
-extend behavior for ZAI_DMOAgency
-{
-  managed event ZAI_DMOAgencyReviewCreatedCntct on ZAI_DMOAgencyReviewCreated parameter ZAI_DMOZZ_P_AgencyReview_Contact;
-}

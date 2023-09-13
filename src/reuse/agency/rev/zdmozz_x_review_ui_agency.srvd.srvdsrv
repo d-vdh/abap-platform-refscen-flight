@@ -1,0 +1,3 @@
+extend service ZDMOUI_AGENCY with {
+  expose ZDMOZZ_C_Agency_ReviewTP as ZDMOZZ_Review;
+}

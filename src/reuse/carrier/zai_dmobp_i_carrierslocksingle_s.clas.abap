@@ -1,5 +1,0 @@
-CLASS ZAI_DMObp_i_carrierslocksingle_s DEFINITION PUBLIC ABSTRACT FINAL FOR BEHAVIOR OF ZAI_DMOi_carrierslocksingleton_s.
-ENDCLASS.
-
-CLASS ZAI_DMObp_i_carrierslocksingle_s IMPLEMENTATION.
-ENDCLASS.

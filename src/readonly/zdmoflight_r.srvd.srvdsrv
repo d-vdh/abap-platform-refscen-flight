@@ -1,0 +1,9 @@
+@EndUserText.label: 'Service Definition for Managing Flights'
+@ObjectModel.leadingEntity.name: 'ZDMOI_Connection_R'
+define service ZDMOFLIGHT_R {
+  expose ZDMOI_Connection_R as Connection;
+  expose ZDMOI_Flight_R as Flight;
+  expose ZDMOI_Carrier_StdVH as Airline;
+  expose ZDMOI_Airport_StdVH as Airport;
+  expose I_CountryVH as Country;
+}

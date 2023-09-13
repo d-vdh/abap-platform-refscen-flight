@@ -1,0 +1,5 @@
+@EndUserText.label: 'Supplement Maintenance'
+@ObjectModel.leadingEntity.name: 'ZDMOC_Supplement'
+define service ZDMOUI_Supplement {
+  expose ZDMOC_Supplement as Supplement;
+}

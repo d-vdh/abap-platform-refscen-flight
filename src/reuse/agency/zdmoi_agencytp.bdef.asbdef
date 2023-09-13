@@ -1,0 +1,16 @@
+interface;
+use draft;
+extensible;
+
+define behavior for ZDMOI_AgencyTP alias ZDMOAgency
+{
+  use create;
+  use update;
+  use delete;
+
+  use action Resume;
+  use action Edit;
+  use action Activate;
+  use action Discard;
+  use action Prepare;
+}

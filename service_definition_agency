@@ -1,7 +1,7 @@
 @EndUserText.label: 'Agency'
 @AbapCatalog.extensibility.extensible: true
-@ObjectModel.leadingEntity.name: 'ZAI_DMOC_AgencyTP'
-define service ZAI_DMOUI_AGENCY
+@ObjectModel.leadingEntity.name: 'ZDMOC_AgencyTP'
+define service ZDMOUI_AGENCY
   provider contracts odata_v2_ui, odata_v4_ui {
-  expose ZAI_DMOC_AgencyTP as Agency;
+  expose ZDMOC_AgencyTP as Agency;
 }

@@ -1,0 +1,20 @@
+extension using interface ZDMOi_agencytp
+implementation in class ZDMOzz_bp_x_cntry_r_agencytp unique;
+
+extend behavior for ZDMOAgency
+{
+
+  validation ZDMOvalidateDiallingCode on save { field PhoneNumber; }
+
+  determination ZDMOdetermineCountryCode on modify { field PhoneNumber; }
+
+  determination ZDMOdetermineDiallingCode on modify { field CountryCode; }
+
+  extend draft determine action Prepare
+  {
+    validation ZDMOvalidateDiallingCode;
+  }
+
+  factory action ( authorization : global ) ZDMOcreateFromTemplate [1];
+
+}

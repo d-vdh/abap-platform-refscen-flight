@@ -1,0 +1,12 @@
+@EndUserText.label: 'Service definition for managing travels'
+@ObjectModel.leadingEntity.name: 'ZDMOC_Travel_Approver_M'
+define service ZDMOUI_TRAVEL_Approver_M {
+  expose ZDMOC_Travel_Approver_M as Travel;
+  expose ZDMOC_Booking_Approver_M as Booking;
+  expose ZDMOI_Customer_StdVH as Passenger;
+  expose ZDMOI_Agency_StdVH as TravelAgency;
+  expose I_CurrencyStdVH as Currency;
+  expose I_CountryVH as Country;
+  expose ZDMOI_Overall_Status_VH as OverallStatus;
+  expose ZDMOI_Booking_Status_VH as BookingStatus;
+}

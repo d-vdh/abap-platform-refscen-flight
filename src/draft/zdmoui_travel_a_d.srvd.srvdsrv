@@ -1,0 +1,19 @@
+@EndUserText.label: 'Travel Draft Scenario(active projection)'
+@ObjectModel.leadingEntity.name: 'ZDMOC_Travel_A_D'
+define service ZDMOUI_TRAVEL_A_D {
+  expose ZDMOC_Travel_A_D as Travel;
+  expose ZDMOC_Booking_A_D as Booking;
+  expose ZDMOC_BookingSupplement_A_D as BookingSupplement;
+  expose ZDMOI_Supplement_StdVH as Supplement;
+  expose ZDMOI_SupplementCategory_VH as SupplementCategory;
+  expose ZDMOI_Customer_StdVH as Passenger;
+  expose ZDMOI_Agency_StdVH as TravelAgency;
+  expose ZDMOI_Carrier_StdVH as Airline;
+  expose ZDMOI_Connection_StdVH as FlightConnection;
+  expose ZDMOI_Flight_StdVH as Flight;
+  expose ZDMOI_Airport_StdVH as Airport;
+  expose ZDMOI_Overall_Status_VH as OverallStatus;
+  expose ZDMOI_Booking_Status_VH as BookingStatus;
+  expose I_CurrencyStdVH as Currency;
+  expose I_CountryVH as Country;
+}

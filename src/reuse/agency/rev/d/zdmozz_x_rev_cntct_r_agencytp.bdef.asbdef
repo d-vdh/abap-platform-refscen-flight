@@ -1,0 +1,6 @@
+extension using interface ZDMOi_agencytp;
+
+extend behavior for ZDMOAgency
+{
+  managed event ZDMOAgencyReviewCreatedCntct on ZDMOAgencyReviewCreated parameter ZDMOZZ_P_AgencyReview_Contact;
+}

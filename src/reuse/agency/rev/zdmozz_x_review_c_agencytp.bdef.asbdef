@@ -1,0 +1,17 @@
+extension for projection;
+
+extend behavior for ZDMOAgency
+{
+  use association ZDMOZZ_ReviewZAG { create; with draft; }
+}
+
+define behavior for ZDMOZZ_C_Agency_ReviewTP alias ZDMOZZ_Review
+{
+  use update;
+  use delete;
+
+  use action ZDMOreviewWasHelpful;
+  use action ZDMOreviewWasNotHelpful;
+
+  use association _Agency { with draft; }
+}
