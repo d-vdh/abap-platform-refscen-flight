@@ -1,0 +1,3 @@
+extend service ZAI_DMOUI_AGENCY with {
+  expose ZAI_DMOZZ_C_Agency_ReviewTP as ZAI_DMOZZ_Review;
+}

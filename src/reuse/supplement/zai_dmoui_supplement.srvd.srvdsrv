@@ -1,0 +1,5 @@
+@EndUserText.label: 'Supplement Maintenance'
+@ObjectModel.leadingEntity.name: 'ZAI_DMOC_Supplement'
+define service ZAI_DMOUI_Supplement {
+  expose ZAI_DMOC_Supplement as Supplement;
+}

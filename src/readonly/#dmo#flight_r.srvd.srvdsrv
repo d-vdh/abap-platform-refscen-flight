@@ -1,9 +1,0 @@
-@EndUserText.label: 'Service Definition for Managing Flights'
-@ObjectModel.leadingEntity.name: 'ZAI_DMOI_Connection_R'
-define service ZAI_DMOFLIGHT_R {
-  expose ZAI_DMOI_Connection_R as Connection;
-  expose ZAI_DMOI_Flight_R as Flight;
-  expose ZAI_DMOI_Carrier_StdVH as Airline;
-  expose ZAI_DMOI_Airport_StdVH as Airport;
-  expose I_CountryVH as Country;
-}
