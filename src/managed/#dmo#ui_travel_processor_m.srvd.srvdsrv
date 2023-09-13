@@ -1,19 +1,19 @@
 @EndUserText.label: 'Service definition for managing travels'
-@ObjectModel.leadingEntity.name: '/DMO/C_Travel_Processor_M'
-define service /DMO/UI_TRAVEL_Processor_M {
-  expose /DMO/C_Travel_Processor_M as Travel;
-  expose /DMO/C_Booking_Processor_M as Booking;
-  expose /DMO/C_BookSuppl_Processor_M as BookingSupplement;
-  expose /DMO/I_Supplement_StdVH as Supplement;
-  expose /DMO/I_SupplementCategory_VH as SupplementCategory;
-  expose /DMO/I_Customer_StdVH as Passenger;
-  expose /DMO/I_Agency_StdVH as TravelAgency;
-  expose /DMO/I_Carrier_StdVH as Airline;
-  expose /DMO/I_Connection_StdVH as FlightConnection;
-  expose /DMO/I_Flight_StdVH as Flight;
-  expose /DMO/I_Airport_StdVH as Airport;
-  expose /DMO/I_Overall_Status_VH as OverallStatus;
-  expose /DMO/I_Booking_Status_VH as BookingStatus;
+@ObjectModel.leadingEntity.name: 'ZAI_DMOC_Travel_Processor_M'
+define service ZAI_DMOUI_TRAVEL_Processor_M {
+  expose ZAI_DMOC_Travel_Processor_M as Travel;
+  expose ZAI_DMOC_Booking_Processor_M as Booking;
+  expose ZAI_DMOC_BookSuppl_Processor_M as BookingSupplement;
+  expose ZAI_DMOI_Supplement_StdVH as Supplement;
+  expose ZAI_DMOI_SupplementCategory_VH as SupplementCategory;
+  expose ZAI_DMOI_Customer_StdVH as Passenger;
+  expose ZAI_DMOI_Agency_StdVH as TravelAgency;
+  expose ZAI_DMOI_Carrier_StdVH as Airline;
+  expose ZAI_DMOI_Connection_StdVH as FlightConnection;
+  expose ZAI_DMOI_Flight_StdVH as Flight;
+  expose ZAI_DMOI_Airport_StdVH as Airport;
+  expose ZAI_DMOI_Overall_Status_VH as OverallStatus;
+  expose ZAI_DMOI_Booking_Status_VH as BookingStatus;
   expose I_CurrencyStdVH as Currency;
   expose I_CountryVH as Country;
 }

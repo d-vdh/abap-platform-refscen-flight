@@ -1,7 +1,7 @@
 @EndUserText.label: 'Agency'
 @AbapCatalog.extensibility.extensible: true
-@ObjectModel.leadingEntity.name: '/DMO/C_AgencyTP'
-define service /DMO/UI_AGENCY
+@ObjectModel.leadingEntity.name: 'ZAI_DMOC_AgencyTP'
+define service ZAI_DMOUI_AGENCY
   {
-  expose /DMO/C_AgencyTP as Agency;
+  expose ZAI_DMOC_AgencyTP as Agency;
 }

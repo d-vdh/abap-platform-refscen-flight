@@ -1,4 +1,4 @@
-extend view entity /DMO/C_AgencyTP with
+extend view entity ZAI_DMOC_AgencyTP with
 {
   @UI.facet: [
       {
@@ -7,8 +7,8 @@ extend view entity /DMO/C_AgencyTP with
         type:          #LINEITEM_REFERENCE,
         label:         'Review',
         position:      20,
-        targetElement: '/DMO/ZZ_ReviewZAG'
+        targetElement: 'ZAI_DMOZZ_ReviewZAG'
       }
     ]
-  Agency./DMO/ZZ_ReviewZAG : redirected to composition child /DMO/ZZ_C_Agency_ReviewTP
+  Agency.ZAI_DMOZZ_ReviewZAG : redirected to composition child ZAI_DMOZZ_C_Agency_ReviewTP
 }

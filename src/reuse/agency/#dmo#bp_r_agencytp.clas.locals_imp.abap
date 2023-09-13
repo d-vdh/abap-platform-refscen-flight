@@ -20,15 +20,15 @@ CLASS lhc_agency DEFINITION
     CLASS-METHODS class_constructor.
 
   PRIVATE SECTION.
-    METHODS get_global_authorizations FOR GLOBAL AUTHORIZATION IMPORTING REQUEST requested_authorizations FOR /dmo/agency RESULT result.
+    METHODS get_global_authorizations FOR GLOBAL AUTHORIZATION IMPORTING REQUEST requested_authorizations FOR ZAI_DMOagency RESULT result.
 
-    METHODS validatecountrycode FOR VALIDATE ON SAVE IMPORTING keys FOR /dmo/agency~/dmo/validatecountrycode.
+    METHODS validatecountrycode FOR VALIDATE ON SAVE IMPORTING keys FOR ZAI_DMOagency~ZAI_DMOvalidatecountrycode.
 
-    METHODS validateemailaddress FOR VALIDATE ON SAVE IMPORTING keys FOR /dmo/agency~/dmo/validateemailaddress.
+    METHODS validateemailaddress FOR VALIDATE ON SAVE IMPORTING keys FOR ZAI_DMOagency~ZAI_DMOvalidateemailaddress.
 
-    METHODS validatename FOR VALIDATE ON SAVE IMPORTING keys FOR /dmo/agency~/dmo/validatename.
+    METHODS validatename FOR VALIDATE ON SAVE IMPORTING keys FOR ZAI_DMOagency~ZAI_DMOvalidatename.
 
-    METHODS validatelargeobject FOR VALIDATE ON SAVE IMPORTING keys FOR /dmo/agency~/dmo/validatelargeobject.
+    METHODS validatelargeobject FOR VALIDATE ON SAVE IMPORTING keys FOR ZAI_DMOagency~ZAI_DMOvalidatelargeobject.
 
 ENDCLASS.
 
@@ -52,8 +52,8 @@ CLASS lhc_agency IMPLEMENTATION.
   METHOD validatecountrycode.
     DATA countries TYPE SORTED TABLE OF i_country WITH UNIQUE KEY country.
 
-    READ ENTITIES OF /dmo/r_agencytp IN LOCAL MODE
-         ENTITY /dmo/agency
+    READ ENTITIES OF ZAI_DMOr_agencytp IN LOCAL MODE
+         ENTITY ZAI_DMOagency
          FIELDS ( countrycode )
          WITH CORRESPONDING #(  keys )
          RESULT DATA(agencies).
@@ -72,26 +72,26 @@ CLASS lhc_agency IMPLEMENTATION.
     LOOP AT agencies INTO DATA(agency).
       APPEND VALUE #( %tky        = agency-%tky
                       %state_area = state_area_validate_country )
-             TO reported-/dmo/agency.
+             TO reported-ZAI_DMOagency.
 
       IF        agency-countrycode IS INITIAL
          OR NOT line_exists( countries_db[ country = agency-countrycode ] ).
 
-        APPEND VALUE #(  %tky = agency-%tky ) TO failed-/dmo/agency.
+        APPEND VALUE #(  %tky = agency-%tky ) TO failed-ZAI_DMOagency.
         APPEND VALUE #( %tky                 = agency-%tky
                         %state_area          = state_area_validate_country
-                        %msg                 = NEW /dmo/cx_agency( textid      = /dmo/cx_agency=>country_code_invalid
+                        %msg                 = NEW ZAI_DMOcx_agency( textid      = ZAI_DMOcx_agency=>country_code_invalid
                                                                    countrycode = agency-countrycode )
                         %element-countrycode = if_abap_behv=>mk-on )
-               TO reported-/dmo/agency.
+               TO reported-ZAI_DMOagency.
       ENDIF.
     ENDLOOP.
   ENDMETHOD.
 
 
   METHOD validateemailaddress.
-    READ ENTITIES OF /dmo/r_agencytp IN LOCAL MODE
-         ENTITY /dmo/agency
+    READ ENTITIES OF ZAI_DMOr_agencytp IN LOCAL MODE
+         ENTITY ZAI_DMOagency
          FIELDS ( emailaddress )
          WITH CORRESPONDING #( keys )
          RESULT DATA(agencies).
@@ -100,26 +100,26 @@ CLASS lhc_agency IMPLEMENTATION.
 
       APPEND VALUE #( %tky        = agency-%tky
                       %state_area = state_area_validate_email )
-             TO reported-/dmo/agency.
+             TO reported-ZAI_DMOagency.
 
       " Conversion to string to truncate trailing spaces, so + doesn't match space.
       IF CONV string( agency-emailaddress ) NP '+*@+*.+*'.
 
-        APPEND VALUE #( %tky = agency-%tky ) TO failed-/dmo/agency.
+        APPEND VALUE #( %tky = agency-%tky ) TO failed-ZAI_DMOagency.
 
         APPEND VALUE #( %tky                  = agency-%tky
                         %state_area           = state_area_validate_email
-                        %msg                  = NEW /dmo/cx_agency( /dmo/cx_agency=>email_invalid_format )
+                        %msg                  = NEW ZAI_DMOcx_agency( ZAI_DMOcx_agency=>email_invalid_format )
                         %element-emailaddress = if_abap_behv=>mk-on )
-               TO reported-/dmo/agency.
+               TO reported-ZAI_DMOagency.
       ENDIF.
     ENDLOOP.
   ENDMETHOD.
 
 
   METHOD validatename.
-    READ ENTITIES OF /dmo/r_agencytp IN LOCAL MODE
-         ENTITY /dmo/agency
+    READ ENTITIES OF ZAI_DMOr_agencytp IN LOCAL MODE
+         ENTITY ZAI_DMOagency
          FIELDS ( name )
          WITH CORRESPONDING #( keys )
          RESULT DATA(agencies).
@@ -127,16 +127,16 @@ CLASS lhc_agency IMPLEMENTATION.
     LOOP AT agencies INTO DATA(agency).
       APPEND VALUE #( %tky        = agency-%tky
                       %state_area = state_area_validate_name )
-             TO reported-/dmo/agency.
+             TO reported-ZAI_DMOagency.
 
       IF agency-name IS INITIAL.
-        APPEND VALUE #( %tky = agency-%tky ) TO failed-/dmo/agency.
+        APPEND VALUE #( %tky = agency-%tky ) TO failed-ZAI_DMOagency.
 
         APPEND VALUE #( %tky          = agency-%tky
                         %state_area   = state_area_validate_name
-                        %msg          = NEW /dmo/cx_agency( /dmo/cx_agency=>name_required )
+                        %msg          = NEW ZAI_DMOcx_agency( ZAI_DMOcx_agency=>name_required )
                         %element-name = if_abap_behv=>mk-on )
-               TO reported-/dmo/agency.
+               TO reported-ZAI_DMOagency.
       ENDIF.
     ENDLOOP.
   ENDMETHOD.
@@ -144,8 +144,8 @@ CLASS lhc_agency IMPLEMENTATION.
 
   METHOD validatelargeobject.
 
-    READ ENTITIES OF /dmo/r_agencytp IN LOCAL MODE
-         ENTITY /dmo/agency
+    READ ENTITIES OF ZAI_DMOr_agencytp IN LOCAL MODE
+         ENTITY ZAI_DMOagency
          FIELDS ( attachment mimetype filename )
          WITH CORRESPONDING #( keys )
          RESULT DATA(agencies).
@@ -153,17 +153,17 @@ CLASS lhc_agency IMPLEMENTATION.
     LOOP AT agencies INTO DATA(agency).
 
       APPEND VALUE #( %tky        = agency-%tky
-                      %state_area = state_area_validate_lob ) TO reported-/dmo/agency.
+                      %state_area = state_area_validate_lob ) TO reported-ZAI_DMOagency.
 
       " No mimetype for attachment
       IF agency-attachment IS NOT INITIAL AND agency-mimetype IS INITIAL.
-        APPEND VALUE #( %tky = agency-%tky ) TO failed-/dmo/agency.
+        APPEND VALUE #( %tky = agency-%tky ) TO failed-ZAI_DMOagency.
         APPEND VALUE #( %tky              = agency-%tky
                         %state_area       = state_area_validate_lob
-                        %msg              = NEW /dmo/cx_agency( textid     = /dmo/cx_agency=>mimetype_missing
+                        %msg              = NEW ZAI_DMOcx_agency( textid     = ZAI_DMOcx_agency=>mimetype_missing
                                                                 attachment = agency-attachment )
                         %element-mimetype = if_abap_behv=>mk-on )
-               TO reported-/dmo/agency.
+               TO reported-ZAI_DMOagency.
 
       ENDIF.
 
@@ -171,25 +171,25 @@ CLASS lhc_agency IMPLEMENTATION.
 
         " No (empty) attachment for mimetype
         IF agency-attachment IS INITIAL.
-          APPEND VALUE #( %tky = agency-%tky ) TO failed-/dmo/agency.
+          APPEND VALUE #( %tky = agency-%tky ) TO failed-ZAI_DMOagency.
           APPEND VALUE #(
               %tky                = agency-%tky
               %state_area         = state_area_validate_lob
-              %msg                = NEW /dmo/cx_agency( textid     = /dmo/cx_agency=>attachment_empty_missing
+              %msg                = NEW ZAI_DMOcx_agency( textid     = ZAI_DMOcx_agency=>attachment_empty_missing
                                                         attachment = agency-attachment )
               %element-attachment = if_abap_behv=>mk-on )
-                 TO reported-/dmo/agency.
+                 TO reported-ZAI_DMOagency.
         ENDIF.
 
         " Mimetype is not supported
         IF NOT line_exists( allowed_mimetypes[ mimetype = agency-mimetype ] ).
-          APPEND VALUE #( %tky = agency-%tky ) TO failed-/dmo/agency.
+          APPEND VALUE #( %tky = agency-%tky ) TO failed-ZAI_DMOagency.
           APPEND VALUE #( %tky              = agency-%tky
                           %state_area       = state_area_validate_lob
-                          %msg              = NEW /dmo/cx_agency( textid   = /dmo/cx_agency=>mimetype_not_supported
+                          %msg              = NEW ZAI_DMOcx_agency( textid   = ZAI_DMOcx_agency=>mimetype_not_supported
                                                                   mimetype = agency-mimetype )
                           %element-mimetype = if_abap_behv=>mk-on )
-                 TO reported-/dmo/agency.
+                 TO reported-ZAI_DMOagency.
         ELSE.
 
           IF agency-filename IS NOT INITIAL.
@@ -197,15 +197,15 @@ CLASS lhc_agency IMPLEMENTATION.
 
             " File extension does not match mimetype
             IF file_extension <> allowed_mimetypes[ mimetype = agency-mimetype ]-file_extension.
-              APPEND VALUE #( %tky = agency-%tky ) TO failed-/dmo/agency.
+              APPEND VALUE #( %tky = agency-%tky ) TO failed-ZAI_DMOagency.
               APPEND VALUE #(
                   %tky              = agency-%tky
                   %state_area       = state_area_validate_lob
-                  %msg              = NEW /dmo/cx_agency( textid   = /dmo/cx_agency=>extension_mimetype_mismatch
+                  %msg              = NEW ZAI_DMOcx_agency( textid   = ZAI_DMOcx_agency=>extension_mimetype_mismatch
                                                           mimetype = agency-mimetype )
                   %element-mimetype = if_abap_behv=>mk-on
                   %element-filename = if_abap_behv=>mk-on )
-                     TO reported-/dmo/agency.
+                     TO reported-ZAI_DMOagency.
             ENDIF.
 
           ENDIF.
@@ -213,14 +213,14 @@ CLASS lhc_agency IMPLEMENTATION.
         ENDIF.
 
       ELSEIF agency-attachment IS INITIAL AND agency-filename IS NOT INITIAL.
-        APPEND VALUE #( %tky = agency-%tky ) TO failed-/dmo/agency.
+        APPEND VALUE #( %tky = agency-%tky ) TO failed-ZAI_DMOagency.
         APPEND VALUE #( %tky                = agency-%tky
                         %state_area         = state_area_validate_lob
-                        %msg                = NEW /dmo/cx_agency( textid   = /dmo/cx_agency=>only_filename
+                        %msg                = NEW ZAI_DMOcx_agency( textid   = ZAI_DMOcx_agency=>only_filename
                                                                   filename = agency-filename )
                         %element-attachment = if_abap_behv=>mk-on
                         %element-mimetype   = if_abap_behv=>mk-on )
-               TO reported-/dmo/agency.
+               TO reported-ZAI_DMOagency.
 
       ENDIF.
 
@@ -244,10 +244,10 @@ ENDCLASS.
 CLASS lsc_agency IMPLEMENTATION.
 
   METHOD adjust_numbers.
-    DATA agency_id_max TYPE /dmo/agency_id.
-    DATA entity        TYPE STRUCTURE FOR MAPPED LATE /dmo/r_agencytp.
+    DATA agency_id_max TYPE ZAI_DMOagency_id.
+    DATA entity        TYPE STRUCTURE FOR MAPPED LATE ZAI_DMOr_agencytp.
 
-    DATA(entities_wo_agencyid) = mapped-/dmo/agency.
+    DATA(entities_wo_agencyid) = mapped-ZAI_DMOagency.
     DELETE entities_wo_agencyid WHERE agencyid IS NOT INITIAL.
 
     IF entities_wo_agencyid IS INITIAL.
@@ -257,7 +257,7 @@ CLASS lsc_agency IMPLEMENTATION.
     " Get Numbers
     TRY.
         cl_numberrange_runtime=>number_get( EXPORTING nr_range_nr       = '01'
-                                                      object            = '/DMO/AGNCY'
+                                                      object            = 'ZAI_DMOAGNCY'
                                                       quantity          = CONV #( lines( entities_wo_agencyid  ) )
                                             IMPORTING number            = DATA(number_range_key)
                                                       returncode        = DATA(number_range_return_code)
@@ -273,15 +273,15 @@ CLASS lsc_agency IMPLEMENTATION.
         LOOP AT entities_wo_agencyid INTO entity.
           APPEND VALUE #( %pid = entity-%pid
                           %key = entity-%key
-                          %msg = NEW /dmo/cx_agency( textid   = /dmo/cx_agency=>number_range_depleted
+                          %msg = NEW ZAI_DMOcx_agency( textid   = ZAI_DMOcx_agency=>number_range_depleted
                                                      severity = if_abap_behv_message=>severity-warning ) )
-                 TO reported-/dmo/agency.
+                 TO reported-ZAI_DMOagency.
         ENDLOOP.
 
       WHEN '2' OR '3'.
         " 2 - the last number of the interval was returned
         " 3 - if fewer numbers are available than requested,  the return code is 3
-        RAISE SHORTDUMP NEW /dmo/cx_agency( textid   = /dmo/cx_agency=>not_sufficient_numbers
+        RAISE SHORTDUMP NEW ZAI_DMOcx_agency( textid   = ZAI_DMOcx_agency=>not_sufficient_numbers
                                             severity = if_abap_behv_message=>severity-warning ).
     ENDCASE.
 
@@ -291,7 +291,7 @@ CLASS lsc_agency IMPLEMENTATION.
     agency_id_max = number_range_key - number_range_returned_quantity.
 
     " Set Agency ID
-    LOOP AT mapped-/dmo/agency ASSIGNING FIELD-SYMBOL(<agency>). " USING KEY entity" WHERE agencyid IS INITIAL.
+    LOOP AT mapped-ZAI_DMOagency ASSIGNING FIELD-SYMBOL(<agency>). " USING KEY entity" WHERE agencyid IS INITIAL.
       IF <agency>-agencyid IS INITIAL. " If condition necessary?
         agency_id_max += 1.
         <agency>-agencyid = agency_id_max.

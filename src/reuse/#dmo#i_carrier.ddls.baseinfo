@@ -3,7 +3,7 @@
 {
 "FROM":
 [
-"/DMO/CARRIER"
+"ZAI_DMOCARRIER"
 ],
 "ASSOCIATED":
 [

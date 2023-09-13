@@ -1,7 +1,7 @@
 projection;
 strict(2);
 
-define behavior for /DMO/C_Travel_U alias travel
+define behavior for ZAI_DMOC_Travel_U alias travel
 
 use etag
 
@@ -13,7 +13,7 @@ use etag
   use association _BOOKING { create; }
 }
 
-define behavior for /DMO/C_Booking_U alias booking
+define behavior for ZAI_DMOC_Booking_U alias booking
 use etag
 {
   use update;
@@ -22,7 +22,7 @@ use etag
   use association _Travel;
 }
 
-define behavior for /DMO/C_BookingSupplement_U alias bookingsupplement
+define behavior for ZAI_DMOC_BookingSupplement_U alias bookingsupplement
 use etag
 {
   use update;

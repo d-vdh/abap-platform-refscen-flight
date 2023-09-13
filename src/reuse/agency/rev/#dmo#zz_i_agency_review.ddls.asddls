@@ -7,8 +7,8 @@
   sizeCategory: #S,
   dataClass: #MIXED
 }
-define view entity /DMO/ZZ_I_Agency_Review
-  as select from /dmo/zz_agn_reva as Review
+define view entity ZAI_DMOZZ_I_Agency_Review
+  as select from ZAI_DMOzz_agn_reva as Review
 {
   key Review.agency_id             as AgencyId,
   key Review.review_id             as ReviewId,

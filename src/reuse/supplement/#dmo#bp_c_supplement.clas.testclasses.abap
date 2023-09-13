@@ -8,7 +8,7 @@ CLASS ltd_fields_handler DEFINITION CREATE PUBLIC.
   PROTECTED SECTION.
   PRIVATE SECTION.
     DATA:
-      max_supplement_id TYPE /dmo/supplement_id VALUE 0.
+      max_supplement_id TYPE ZAI_DMOsupplement_id VALUE 0.
 
 ENDCLASS.
 
@@ -16,10 +16,10 @@ CLASS ltd_fields_handler IMPLEMENTATION.
 
   METHOD if_botd_bufdbl_fields_handler~set_readonly_fields.
     CASE entity_name.
-      WHEN '/DMO/I_SUPPLEMENT'.
+      WHEN 'ZAI_DMOI_SUPPLEMENT'.
         CASE operation.
           WHEN if_abap_behv=>op-m-create.
-            TYPES: ty_create_instances TYPE TABLE FOR CREATE /dmo/i_supplement.
+            TYPES: ty_create_instances TYPE TABLE FOR CREATE ZAI_DMOi_supplement.
             FIELD-SYMBOLS: <create_instances> TYPE ty_create_instances.
             ASSIGN instances TO <create_instances>.
             LOOP AT <create_instances> ASSIGNING FIELD-SYMBOL(<instance>).
@@ -36,7 +36,7 @@ ENDCLASS.
 
 
 "! Using RAP BO TDF: Transactional buffer double variant
-"! @testing BDEF:/DMO/C_SUPPLEMENT
+"! @testing BDEF:ZAI_DMOC_SUPPLEMENT
 CLASS ltcl_tdf_buffer DEFINITION FINAL FOR TESTING
   DURATION SHORT
   RISK LEVEL HARMLESS.
@@ -44,7 +44,7 @@ CLASS ltcl_tdf_buffer DEFINITION FINAL FOR TESTING
   PRIVATE SECTION.
 
     CONSTANTS:
-      cv_i_bdef_name TYPE abp_root_entity_name VALUE '/DMO/I_Supplement' ##NO_TEXT.
+      cv_i_bdef_name TYPE abp_root_entity_name VALUE 'ZAI_DMOI_Supplement' ##NO_TEXT.
 
     CLASS-DATA:
       environment TYPE REF TO if_botd_txbufdbl_bo_test_env.
@@ -53,12 +53,12 @@ CLASS ltcl_tdf_buffer DEFINITION FINAL FOR TESTING
       double_supplement TYPE REF TO if_botd_txbufdbl_test_double.
 
     DATA:
-      mapped     TYPE RESPONSE FOR MAPPED   EARLY /dmo/c_supplement,
-      failed     TYPE RESPONSE FOR FAILED   EARLY /dmo/c_supplement,
-      reported   TYPE RESPONSE FOR REPORTED EARLY /dmo/c_supplement,
-      i_mapped   TYPE RESPONSE FOR MAPPED   EARLY /dmo/i_supplement,
-      i_failed   TYPE RESPONSE FOR FAILED   EARLY /dmo/i_supplement,
-      i_reported TYPE RESPONSE FOR REPORTED EARLY /dmo/i_supplement.
+      mapped     TYPE RESPONSE FOR MAPPED   EARLY ZAI_DMOc_supplement,
+      failed     TYPE RESPONSE FOR FAILED   EARLY ZAI_DMOc_supplement,
+      reported   TYPE RESPONSE FOR REPORTED EARLY ZAI_DMOc_supplement,
+      i_mapped   TYPE RESPONSE FOR MAPPED   EARLY ZAI_DMOi_supplement,
+      i_failed   TYPE RESPONSE FOR FAILED   EARLY ZAI_DMOi_supplement,
+      i_reported TYPE RESPONSE FOR REPORTED EARLY ZAI_DMOi_supplement.
 
     CLASS-METHODS:
       class_setup,
@@ -151,8 +151,8 @@ CLASS ltcl_tdf_buffer IMPLEMENTATION.
   METHOD supplement_create.
     " Test
     DATA:
-      c_create TYPE STRUCTURE FOR CREATE /dmo/c_supplement\\supplement,
-      i_create TYPE STRUCTURE FOR CREATE /dmo/i_supplement\\supplement.
+      c_create TYPE STRUCTURE FOR CREATE ZAI_DMOc_supplement\\supplement,
+      i_create TYPE STRUCTURE FOR CREATE ZAI_DMOi_supplement\\supplement.
 
     c_create = VALUE #(
                    %cid                  = 'TEST_CID'
@@ -163,7 +163,7 @@ CLASS ltcl_tdf_buffer IMPLEMENTATION.
                    currencycode          = 'EUR'
                  ).
 
-    MODIFY ENTITIES OF /dmo/c_supplement
+    MODIFY ENTITIES OF ZAI_DMOc_supplement
       ENTITY supplement
         CREATE AUTO FILL CID
           FIELDS ( supplementcategory supplementdescription price currencycode )
@@ -179,7 +179,7 @@ CLASS ltcl_tdf_buffer IMPLEMENTATION.
     cl_abap_unit_assert=>assert_not_initial( mapped-supplement ).
 
 
-    READ ENTITIES OF /dmo/i_supplement
+    READ ENTITIES OF ZAI_DMOi_supplement
       ENTITY supplement
         FIELDS ( supplementcategory price currencycode )
         WITH CORRESPONDING #( mapped-supplement )
@@ -222,13 +222,13 @@ CLASS ltcl_tdf_buffer IMPLEMENTATION.
   METHOD supplement_create_text_update.
     " Preparation
     DATA:
-      c_create              TYPE STRUCTURE FOR CREATE /dmo/c_supplement\\supplement,
-      c_update              TYPE STRUCTURE FOR UPDATE /dmo/c_supplement\\supplement,
-      c_supplement_act      TYPE STRUCTURE FOR UPDATE /dmo/c_supplement\\supplement,
-      c_supplement_exp      TYPE STRUCTURE FOR UPDATE /dmo/c_supplement\\supplement,
-      i_supplement_act      TYPE STRUCTURE FOR UPDATE /dmo/i_supplement\\supplement,
-      i_supplement_exp      TYPE STRUCTURE FOR UPDATE /dmo/i_supplement\\supplement,
-      i_supplement_text_act TYPE STRUCTURE FOR UPDATE /dmo/i_supplement\\supplementtext.
+      c_create              TYPE STRUCTURE FOR CREATE ZAI_DMOc_supplement\\supplement,
+      c_update              TYPE STRUCTURE FOR UPDATE ZAI_DMOc_supplement\\supplement,
+      c_supplement_act      TYPE STRUCTURE FOR UPDATE ZAI_DMOc_supplement\\supplement,
+      c_supplement_exp      TYPE STRUCTURE FOR UPDATE ZAI_DMOc_supplement\\supplement,
+      i_supplement_act      TYPE STRUCTURE FOR UPDATE ZAI_DMOi_supplement\\supplement,
+      i_supplement_exp      TYPE STRUCTURE FOR UPDATE ZAI_DMOi_supplement\\supplement,
+      i_supplement_text_act TYPE STRUCTURE FOR UPDATE ZAI_DMOi_supplement\\supplementtext.
 
     c_create = VALUE #(
                    %cid                  = 'TESTCID'
@@ -248,7 +248,7 @@ CLASS ltcl_tdf_buffer IMPLEMENTATION.
                  ).
 
     " Test
-    MODIFY ENTITIES OF /dmo/c_supplement
+    MODIFY ENTITIES OF ZAI_DMOc_supplement
       ENTITY supplement
         CREATE
           FIELDS ( supplementcategory supplementdescription price currencycode )
@@ -268,7 +268,7 @@ CLASS ltcl_tdf_buffer IMPLEMENTATION.
     cl_abap_unit_assert=>assert_not_initial( mapped-supplement ).
 
 
-    READ ENTITIES OF /dmo/i_supplement
+    READ ENTITIES OF ZAI_DMOi_supplement
       ENTITY supplement
         FIELDS ( supplementcategory price currencycode )
         WITH CORRESPONDING #( mapped-supplement )
@@ -315,7 +315,7 @@ CLASS ltcl_tdf_buffer IMPLEMENTATION.
   METHOD supplement_update_text_create.
     " Preparation
     DATA:
-      i_create TYPE STRUCTURE FOR CREATE /dmo/i_supplement\\supplement.
+      i_create TYPE STRUCTURE FOR CREATE ZAI_DMOi_supplement\\supplement.
 
     i_create = VALUE #(
         %is_draft          = if_abap_behv=>mk-on
@@ -323,7 +323,7 @@ CLASS ltcl_tdf_buffer IMPLEMENTATION.
         price              = '10'
         currencycode       = 'USD'
       ).
-    MODIFY ENTITIES OF /dmo/i_supplement
+    MODIFY ENTITIES OF ZAI_DMOi_supplement
       ENTITY supplement
         CREATE
           AUTO FILL CID
@@ -345,8 +345,8 @@ CLASS ltcl_tdf_buffer IMPLEMENTATION.
 
     " Test
     DATA:
-      c_update TYPE STRUCTURE FOR UPDATE /dmo/c_supplement\\supplement,
-      i_update TYPE STRUCTURE FOR UPDATE /dmo/i_supplement\\supplement.
+      c_update TYPE STRUCTURE FOR UPDATE ZAI_DMOc_supplement\\supplement,
+      i_update TYPE STRUCTURE FOR UPDATE ZAI_DMOi_supplement\\supplement.
 
     c_update = VALUE #(
                    %is_draft             = if_abap_behv=>mk-on
@@ -356,7 +356,7 @@ CLASS ltcl_tdf_buffer IMPLEMENTATION.
                    currencycode          = 'EUR'
                  ).
 
-    MODIFY ENTITIES OF /dmo/c_supplement
+    MODIFY ENTITIES OF ZAI_DMOc_supplement
       ENTITY supplement
         UPDATE
           FIELDS ( supplementdescription price currencycode )
@@ -371,7 +371,7 @@ CLASS ltcl_tdf_buffer IMPLEMENTATION.
     cl_abap_unit_assert=>assert_initial( mapped ).
 
 
-    READ ENTITIES OF /dmo/i_supplement
+    READ ENTITIES OF ZAI_DMOi_supplement
       ENTITY supplement
         FIELDS ( supplementcategory price currencycode )
         WITH CORRESPONDING #( i_mapped-supplement )
@@ -414,8 +414,8 @@ CLASS ltcl_tdf_buffer IMPLEMENTATION.
   METHOD supplement_update_text_update.
     " Preparation
     DATA:
-      i_supplement_create      TYPE STRUCTURE FOR CREATE /dmo/i_supplement\\supplement,
-      i_supplement_text_create TYPE STRUCTURE FOR CREATE /dmo/i_supplement\\supplement\_supplementtext.
+      i_supplement_create      TYPE STRUCTURE FOR CREATE ZAI_DMOi_supplement\\supplement,
+      i_supplement_text_create TYPE STRUCTURE FOR CREATE ZAI_DMOi_supplement\\supplement\_supplementtext.
 
     i_supplement_create = VALUE #(
         %cid               = 'TEST_CID'
@@ -435,7 +435,7 @@ CLASS ltcl_tdf_buffer IMPLEMENTATION.
             )
           )
       ).
-    MODIFY ENTITIES OF /dmo/i_supplement
+    MODIFY ENTITIES OF ZAI_DMOi_supplement
       ENTITY supplement
         CREATE
           FIELDS ( supplementcategory price currencycode )
@@ -462,8 +462,8 @@ CLASS ltcl_tdf_buffer IMPLEMENTATION.
 
     " Test
     DATA:
-      c_update TYPE STRUCTURE FOR UPDATE /dmo/c_supplement\\supplement,
-      i_update TYPE STRUCTURE FOR UPDATE /dmo/i_supplement\\supplement.
+      c_update TYPE STRUCTURE FOR UPDATE ZAI_DMOc_supplement\\supplement,
+      i_update TYPE STRUCTURE FOR UPDATE ZAI_DMOi_supplement\\supplement.
 
     c_update = VALUE #(
                    %is_draft             = if_abap_behv=>mk-on
@@ -473,7 +473,7 @@ CLASS ltcl_tdf_buffer IMPLEMENTATION.
                    currencycode          = 'EUR'
                  ).
 
-    MODIFY ENTITIES OF /dmo/c_supplement
+    MODIFY ENTITIES OF ZAI_DMOc_supplement
       ENTITY supplement
         UPDATE
           FIELDS ( supplementdescription price currencycode )
@@ -487,7 +487,7 @@ CLASS ltcl_tdf_buffer IMPLEMENTATION.
     cl_abap_unit_assert=>assert_initial( mapped ).
 
 
-    READ ENTITIES OF /dmo/i_supplement
+    READ ENTITIES OF ZAI_DMOi_supplement
       ENTITY supplement
         FIELDS ( supplementcategory price currencycode )
         WITH CORRESPONDING #( i_mapped-supplement )
@@ -511,8 +511,8 @@ CLASS ltcl_tdf_buffer IMPLEMENTATION.
 
 
     DATA:
-      i_supplement_exp TYPE STRUCTURE FOR UPDATE /dmo/i_supplement\\supplement,
-      i_supplement_act TYPE STRUCTURE FOR UPDATE /dmo/i_supplement\\supplement.
+      i_supplement_exp TYPE STRUCTURE FOR UPDATE ZAI_DMOi_supplement\\supplement,
+      i_supplement_act TYPE STRUCTURE FOR UPDATE ZAI_DMOi_supplement\\supplement.
 
     i_supplement_exp = CORRESPONDING #( c_update EXCEPT supplementid ).
     i_supplement_exp-supplementcategory = i_supplement_create-supplementcategory.
@@ -535,7 +535,7 @@ CLASS ltcl_tdf_buffer IMPLEMENTATION.
   METHOD text_create.
     " Preparation
     DATA:
-      i_supplement_create      TYPE STRUCTURE FOR CREATE /dmo/i_supplement\\supplement.
+      i_supplement_create      TYPE STRUCTURE FOR CREATE ZAI_DMOi_supplement\\supplement.
 
     i_supplement_create = VALUE #(
         %cid               = 'TEST_CID'
@@ -544,7 +544,7 @@ CLASS ltcl_tdf_buffer IMPLEMENTATION.
         price              = '10'
         currencycode       = 'USD'
       ).
-    MODIFY ENTITIES OF /dmo/i_supplement
+    MODIFY ENTITIES OF ZAI_DMOi_supplement
       ENTITY supplement
         CREATE
           FIELDS ( supplementcategory price currencycode )
@@ -565,8 +565,8 @@ CLASS ltcl_tdf_buffer IMPLEMENTATION.
 
     " Test
     DATA:
-      c_update TYPE STRUCTURE FOR UPDATE /dmo/c_supplement\\supplement,
-      i_update TYPE STRUCTURE FOR UPDATE /dmo/i_supplement\\supplement.
+      c_update TYPE STRUCTURE FOR UPDATE ZAI_DMOc_supplement\\supplement,
+      i_update TYPE STRUCTURE FOR UPDATE ZAI_DMOi_supplement\\supplement.
 
     c_update = VALUE #(
                    %is_draft             = if_abap_behv=>mk-on
@@ -574,7 +574,7 @@ CLASS ltcl_tdf_buffer IMPLEMENTATION.
                    supplementdescription = 'Test'
                  ).
 
-    MODIFY ENTITIES OF /dmo/c_supplement
+    MODIFY ENTITIES OF ZAI_DMOc_supplement
       ENTITY supplement
         UPDATE
           FIELDS ( supplementdescription )
@@ -584,7 +584,7 @@ CLASS ltcl_tdf_buffer IMPLEMENTATION.
       REPORTED  reported.
 
 
-    READ ENTITIES OF /dmo/i_supplement
+    READ ENTITIES OF ZAI_DMOi_supplement
       ENTITY supplement
         FIELDS ( supplementcategory price currencycode )
         WITH CORRESPONDING #( i_mapped-supplement )
@@ -607,8 +607,8 @@ CLASS ltcl_tdf_buffer IMPLEMENTATION.
                                         act = lines( supplements ) ).
 
     DATA:
-      i_supplement_exp TYPE STRUCTURE FOR UPDATE /dmo/i_supplement\\supplement,
-      i_supplement_act TYPE STRUCTURE FOR UPDATE /dmo/i_supplement\\supplement.
+      i_supplement_exp TYPE STRUCTURE FOR UPDATE ZAI_DMOi_supplement\\supplement,
+      i_supplement_act TYPE STRUCTURE FOR UPDATE ZAI_DMOi_supplement\\supplement.
 
     i_supplement_exp = CORRESPONDING #( i_supplement_create EXCEPT supplementid ).
     i_supplement_act = CORRESPONDING #( supplements[ 1 ] EXCEPT supplementid ).
@@ -630,8 +630,8 @@ CLASS ltcl_tdf_buffer IMPLEMENTATION.
   METHOD text_update.
     " Preparation
     DATA:
-      i_supplement_create      TYPE STRUCTURE FOR CREATE /dmo/i_supplement\\supplement,
-      i_supplement_text_create TYPE STRUCTURE FOR CREATE /dmo/i_supplement\\supplement\_supplementtext.
+      i_supplement_create      TYPE STRUCTURE FOR CREATE ZAI_DMOi_supplement\\supplement,
+      i_supplement_text_create TYPE STRUCTURE FOR CREATE ZAI_DMOi_supplement\\supplement\_supplementtext.
 
     i_supplement_create = VALUE #(
         %cid               = 'TEST_CID'
@@ -651,7 +651,7 @@ CLASS ltcl_tdf_buffer IMPLEMENTATION.
             )
           )
       ).
-    MODIFY ENTITIES OF /dmo/i_supplement
+    MODIFY ENTITIES OF ZAI_DMOi_supplement
       ENTITY supplement
         CREATE
           FIELDS ( supplementcategory price currencycode )
@@ -678,8 +678,8 @@ CLASS ltcl_tdf_buffer IMPLEMENTATION.
 
     " Test
     DATA:
-      c_update TYPE STRUCTURE FOR UPDATE /dmo/c_supplement\\supplement,
-      i_update TYPE STRUCTURE FOR UPDATE /dmo/i_supplement\\supplement.
+      c_update TYPE STRUCTURE FOR UPDATE ZAI_DMOc_supplement\\supplement,
+      i_update TYPE STRUCTURE FOR UPDATE ZAI_DMOi_supplement\\supplement.
 
     c_update = VALUE #(
                    %is_draft             = if_abap_behv=>mk-on
@@ -687,7 +687,7 @@ CLASS ltcl_tdf_buffer IMPLEMENTATION.
                    supplementdescription = 'Test'
                  ).
 
-    MODIFY ENTITIES OF /dmo/c_supplement
+    MODIFY ENTITIES OF ZAI_DMOc_supplement
       ENTITY supplement
         UPDATE
           FIELDS ( supplementdescription )
@@ -702,7 +702,7 @@ CLASS ltcl_tdf_buffer IMPLEMENTATION.
     cl_abap_unit_assert=>assert_initial( mapped ).
 
 
-    READ ENTITIES OF /dmo/i_supplement
+    READ ENTITIES OF ZAI_DMOi_supplement
       ENTITY supplement
         FIELDS ( supplementcategory price currencycode )
         WITH CORRESPONDING #( i_mapped-supplement )
@@ -737,14 +737,14 @@ CLASS ltcl_tdf_buffer IMPLEMENTATION.
       t_c_failed_supplement_tky TYPE t_c_failed_supplement-%tky.
 
     DATA:
-      c_update_no_key      TYPE STRUCTURE FOR UPDATE /dmo/c_supplement\\supplement,
-      c_update_invalid_key TYPE STRUCTURE FOR UPDATE /dmo/c_supplement\\supplement,
-      i_update             TYPE STRUCTURE FOR UPDATE /dmo/i_supplement\\supplement.
+      c_update_no_key      TYPE STRUCTURE FOR UPDATE ZAI_DMOc_supplement\\supplement,
+      c_update_invalid_key TYPE STRUCTURE FOR UPDATE ZAI_DMOc_supplement\\supplement,
+      i_update             TYPE STRUCTURE FOR UPDATE ZAI_DMOi_supplement\\supplement.
 
     c_update_no_key      = VALUE #( %is_draft = if_abap_behv=>mk-on  supplementid = ''     ).
     c_update_invalid_key = VALUE #( %is_draft = if_abap_behv=>mk-on  supplementid = 'TEST' ).
 
-    MODIFY ENTITIES OF /dmo/c_supplement
+    MODIFY ENTITIES OF ZAI_DMOc_supplement
       ENTITY supplement
         UPDATE
           FIELDS ( supplementdescription price currencycode )
@@ -779,14 +779,14 @@ CLASS ltcl_tdf_buffer IMPLEMENTATION.
       t_c_failed_supplement_tky TYPE t_c_failed_supplement-%tky.
 
     DATA:
-      c_update_no_flag     TYPE STRUCTURE FOR UPDATE /dmo/c_supplement\\supplement,
-      c_update_invalid_key TYPE STRUCTURE FOR UPDATE /dmo/c_supplement\\supplement,
-      i_update             TYPE STRUCTURE FOR UPDATE /dmo/i_supplement\\supplement.
+      c_update_no_flag     TYPE STRUCTURE FOR UPDATE ZAI_DMOc_supplement\\supplement,
+      c_update_invalid_key TYPE STRUCTURE FOR UPDATE ZAI_DMOc_supplement\\supplement,
+      i_update             TYPE STRUCTURE FOR UPDATE ZAI_DMOi_supplement\\supplement.
 
     c_update_no_flag     = VALUE #( %is_draft = if_abap_behv=>mk-on  supplementid = 'TEST1'  supplementdescription = 'Test'  %control-supplementdescription = if_abap_behv=>mk-off ).
     c_update_invalid_key = VALUE #( %is_draft = if_abap_behv=>mk-on  supplementid = 'TEST2'  supplementdescription = 'Test'  %control-supplementdescription = if_abap_behv=>mk-on  ).
 
-    MODIFY ENTITIES OF /dmo/c_supplement
+    MODIFY ENTITIES OF ZAI_DMOc_supplement
       ENTITY supplement
         UPDATE
           FIELDS ( supplementdescription price currencycode )
@@ -836,21 +836,21 @@ CLASS ltd_custom_test_double DEFINITION FOR TESTING.
     INTERFACES if_abap_behavior_testdouble.
 
     CONSTANTS:
-      supplement_entity_name TYPE abp_root_entity_name VALUE '/DMO/I_SUPPLEMENT' ##NO_TEXT,
-      text_entity_name       TYPE abp_root_entity_name VALUE '/DMO/I_SUPPLEMENTTEXT' ##NO_TEXT,
+      supplement_entity_name TYPE abp_root_entity_name VALUE 'ZAI_DMOI_SUPPLEMENT' ##NO_TEXT,
+      text_entity_name       TYPE abp_root_entity_name VALUE 'ZAI_DMOI_SUPPLEMENTTEXT' ##NO_TEXT,
       text_sub_name          TYPE abp_behv_changes-sub_name VALUE '_SUPPLEMENTTEXT' ##NO_TEXT.
 
     DATA:
-      supplement_create TYPE TABLE FOR CREATE /dmo/i_supplement\\supplement,
-      supplement_update TYPE TABLE FOR UPDATE /dmo/i_supplement\\supplement,
-      supplement_failed TYPE RESPONSE FOR FAILED /dmo/i_supplement,
+      supplement_create TYPE TABLE FOR CREATE ZAI_DMOi_supplement\\supplement,
+      supplement_update TYPE TABLE FOR UPDATE ZAI_DMOi_supplement\\supplement,
+      supplement_failed TYPE RESPONSE FOR FAILED ZAI_DMOi_supplement,
 
-      text_create       TYPE TABLE FOR CREATE /dmo/i_supplement\\supplement\_supplementtext,
-      text_update       TYPE TABLE FOR UPDATE /dmo/i_supplement\\supplementtext,
+      text_create       TYPE TABLE FOR CREATE ZAI_DMOi_supplement\\supplement\_supplementtext,
+      text_update       TYPE TABLE FOR UPDATE ZAI_DMOi_supplement\\supplementtext,
 
-      text_rba_link     TYPE TABLE FOR READ LINK   /dmo/i_supplement\\supplement\_supplementtext,
+      text_rba_link     TYPE TABLE FOR READ LINK   ZAI_DMOi_supplement\\supplement\_supplementtext,
 
-      text_read_failed  TYPE RESPONSE FOR FAILED /dmo/i_supplement.
+      text_read_failed  TYPE RESPONSE FOR FAILED ZAI_DMOi_supplement.
 ENDCLASS.
 
 CLASS ltd_custom_test_double IMPLEMENTATION.
@@ -893,7 +893,7 @@ CLASS ltd_custom_test_double IMPLEMENTATION.
 
   METHOD if_abap_behavior_testdouble~read.
     TYPES:
-      key         TYPE STRUCTURE FOR READ IMPORT /dmo/i_supplement\\supplement\_supplementtext.
+      key         TYPE STRUCTURE FOR READ IMPORT ZAI_DMOi_supplement\\supplement\_supplementtext.
 
     DATA:
       links_to_be_added  LIKE text_rba_link.
@@ -930,7 +930,7 @@ CLASS ltd_custom_test_double IMPLEMENTATION.
 ENDCLASS.
 
 "! Using custom test double { @link .ltd_custom_test_double }.
-"! @testing BDEF:/DMO/C_SUPPLEMENT
+"! @testing BDEF:ZAI_DMOC_SUPPLEMENT
 CLASS ltcl_custom_test_double DEFINITION FINAL FOR TESTING
   DURATION SHORT
   RISK LEVEL HARMLESS.
@@ -940,9 +940,9 @@ CLASS ltcl_custom_test_double DEFINITION FINAL FOR TESTING
       entity_double TYPE REF TO ltd_custom_test_double.
 
     DATA:
-      mapped   TYPE RESPONSE FOR MAPPED   EARLY /dmo/c_supplement,
-      failed   TYPE RESPONSE FOR FAILED   EARLY /dmo/c_supplement,
-      reported TYPE RESPONSE FOR REPORTED EARLY /dmo/c_supplement.
+      mapped   TYPE RESPONSE FOR MAPPED   EARLY ZAI_DMOc_supplement,
+      failed   TYPE RESPONSE FOR FAILED   EARLY ZAI_DMOc_supplement,
+      reported TYPE RESPONSE FOR REPORTED EARLY ZAI_DMOc_supplement.
 
     METHODS:
       setup,
@@ -1023,8 +1023,8 @@ CLASS ltcl_custom_test_double IMPLEMENTATION.
 
   METHOD supplement_create.
     DATA:
-      c_create TYPE STRUCTURE FOR CREATE /dmo/c_supplement\\supplement,
-      i_create TYPE STRUCTURE FOR CREATE /dmo/i_supplement\\supplement.
+      c_create TYPE STRUCTURE FOR CREATE ZAI_DMOc_supplement\\supplement,
+      i_create TYPE STRUCTURE FOR CREATE ZAI_DMOi_supplement\\supplement.
 
     c_create = VALUE #(
                    %is_draft             = if_abap_behv=>mk-on
@@ -1034,7 +1034,7 @@ CLASS ltcl_custom_test_double IMPLEMENTATION.
                    currencycode          = 'EUR'
                  ).
 
-    MODIFY ENTITIES OF /dmo/c_supplement
+    MODIFY ENTITIES OF ZAI_DMOc_supplement
       ENTITY supplement
         CREATE AUTO FILL CID
           FIELDS ( supplementcategory supplementdescription price currencycode )
@@ -1072,10 +1072,10 @@ CLASS ltcl_custom_test_double IMPLEMENTATION.
   METHOD supplement_create_text_update.
     "Create -------------------------------
     DATA:
-      c_create TYPE STRUCTURE FOR CREATE /dmo/c_supplement\\supplement,
-      i_create TYPE STRUCTURE FOR CREATE /dmo/i_supplement\\supplement,
-      c_update TYPE STRUCTURE FOR UPDATE /dmo/c_supplement\\supplement,
-      i_update TYPE STRUCTURE FOR UPDATE /dmo/i_supplement\\supplement.
+      c_create TYPE STRUCTURE FOR CREATE ZAI_DMOc_supplement\\supplement,
+      i_create TYPE STRUCTURE FOR CREATE ZAI_DMOi_supplement\\supplement,
+      c_update TYPE STRUCTURE FOR UPDATE ZAI_DMOc_supplement\\supplement,
+      i_update TYPE STRUCTURE FOR UPDATE ZAI_DMOi_supplement\\supplement.
 
     c_create = VALUE #(
                    %cid                  = 'TESTCID'
@@ -1094,7 +1094,7 @@ CLASS ltcl_custom_test_double IMPLEMENTATION.
                    currencycode          = 'USD'
                  ).
 
-    MODIFY ENTITIES OF /dmo/c_supplement
+    MODIFY ENTITIES OF ZAI_DMOc_supplement
       ENTITY supplement
         CREATE
           FIELDS ( supplementcategory supplementdescription price currencycode )
@@ -1162,8 +1162,8 @@ CLASS ltcl_custom_test_double IMPLEMENTATION.
 
   METHOD supplement_update_text_create.
     DATA:
-      c_update TYPE STRUCTURE FOR UPDATE /dmo/c_supplement\\supplement,
-      i_update TYPE STRUCTURE FOR UPDATE /dmo/i_supplement\\supplement.
+      c_update TYPE STRUCTURE FOR UPDATE ZAI_DMOc_supplement\\supplement,
+      i_update TYPE STRUCTURE FOR UPDATE ZAI_DMOi_supplement\\supplement.
 
     c_update = VALUE #(
                    %is_draft             = if_abap_behv=>mk-on
@@ -1173,7 +1173,7 @@ CLASS ltcl_custom_test_double IMPLEMENTATION.
                    currencycode          = 'EUR'
                  ).
 
-    MODIFY ENTITIES OF /dmo/c_supplement
+    MODIFY ENTITIES OF ZAI_DMOc_supplement
       ENTITY supplement
         UPDATE
           FIELDS ( supplementdescription price currencycode )
@@ -1211,8 +1211,8 @@ CLASS ltcl_custom_test_double IMPLEMENTATION.
 
   METHOD supplement_update_text_update.
     DATA:
-      c_update TYPE STRUCTURE FOR UPDATE /dmo/c_supplement\\supplement,
-      i_update TYPE STRUCTURE FOR UPDATE /dmo/i_supplement\\supplement.
+      c_update TYPE STRUCTURE FOR UPDATE ZAI_DMOc_supplement\\supplement,
+      i_update TYPE STRUCTURE FOR UPDATE ZAI_DMOi_supplement\\supplement.
 
     c_update = VALUE #(
                    %is_draft             = if_abap_behv=>mk-on
@@ -1227,7 +1227,7 @@ CLASS ltcl_custom_test_double IMPLEMENTATION.
         target = VALUE #( %is_draft = c_update-%is_draft  supplementid = c_update-supplementid  languagecode = 'EN' )
       ) ).
 
-    MODIFY ENTITIES OF /dmo/c_supplement
+    MODIFY ENTITIES OF ZAI_DMOc_supplement
       ENTITY supplement
         UPDATE
           FIELDS ( supplementdescription price currencycode )
@@ -1265,8 +1265,8 @@ CLASS ltcl_custom_test_double IMPLEMENTATION.
 
   METHOD text_create.
     DATA:
-      c_update TYPE STRUCTURE FOR UPDATE /dmo/c_supplement\\supplement,
-      i_update TYPE STRUCTURE FOR UPDATE /dmo/i_supplement\\supplement.
+      c_update TYPE STRUCTURE FOR UPDATE ZAI_DMOc_supplement\\supplement,
+      i_update TYPE STRUCTURE FOR UPDATE ZAI_DMOi_supplement\\supplement.
 
     c_update = VALUE #(
                    %is_draft             = if_abap_behv=>mk-on
@@ -1274,7 +1274,7 @@ CLASS ltcl_custom_test_double IMPLEMENTATION.
                    supplementdescription = 'Test'
                  ).
 
-    MODIFY ENTITIES OF /dmo/c_supplement
+    MODIFY ENTITIES OF ZAI_DMOc_supplement
       ENTITY supplement
         UPDATE
           FIELDS ( supplementdescription )
@@ -1307,8 +1307,8 @@ CLASS ltcl_custom_test_double IMPLEMENTATION.
 
   METHOD text_update.
     DATA:
-      c_update TYPE STRUCTURE FOR UPDATE /dmo/c_supplement\\supplement,
-      i_update TYPE STRUCTURE FOR UPDATE /dmo/i_supplement\\supplement.
+      c_update TYPE STRUCTURE FOR UPDATE ZAI_DMOc_supplement\\supplement,
+      i_update TYPE STRUCTURE FOR UPDATE ZAI_DMOi_supplement\\supplement.
 
     c_update = VALUE #(
                    %is_draft             = if_abap_behv=>mk-on
@@ -1321,7 +1321,7 @@ CLASS ltcl_custom_test_double IMPLEMENTATION.
         target = VALUE #( %is_draft = c_update-%is_draft  supplementid = c_update-supplementid  languagecode = 'EN' )
       ) ).
 
-    MODIFY ENTITIES OF /dmo/c_supplement
+    MODIFY ENTITIES OF ZAI_DMOc_supplement
       ENTITY supplement
         UPDATE
           FIELDS ( supplementdescription )
@@ -1358,9 +1358,9 @@ CLASS ltcl_custom_test_double IMPLEMENTATION.
       t_c_failed_supplement_tky TYPE t_c_failed_supplement-%tky.
 
     DATA:
-      c_update_no_key      TYPE STRUCTURE FOR UPDATE /dmo/c_supplement\\supplement,
-      c_update_invalid_key TYPE STRUCTURE FOR UPDATE /dmo/c_supplement\\supplement,
-      i_update             TYPE STRUCTURE FOR UPDATE /dmo/i_supplement\\supplement.
+      c_update_no_key      TYPE STRUCTURE FOR UPDATE ZAI_DMOc_supplement\\supplement,
+      c_update_invalid_key TYPE STRUCTURE FOR UPDATE ZAI_DMOc_supplement\\supplement,
+      i_update             TYPE STRUCTURE FOR UPDATE ZAI_DMOi_supplement\\supplement.
 
     c_update_no_key      = VALUE #( %is_draft = if_abap_behv=>mk-on  supplementid = ''     ).
     c_update_invalid_key = VALUE #( %is_draft = if_abap_behv=>mk-on  supplementid = 'TEST' ).
@@ -1373,7 +1373,7 @@ CLASS ltcl_custom_test_double IMPLEMENTATION.
 
     entity_double->supplement_failed = entity_double->text_read_failed.
 
-    MODIFY ENTITIES OF /dmo/c_supplement
+    MODIFY ENTITIES OF ZAI_DMOc_supplement
       ENTITY supplement
         UPDATE
           FIELDS ( supplementdescription price currencycode )
@@ -1408,9 +1408,9 @@ CLASS ltcl_custom_test_double IMPLEMENTATION.
       t_c_failed_supplement_tky TYPE t_c_failed_supplement-%tky.
 
     DATA:
-      c_update_no_flag     TYPE STRUCTURE FOR UPDATE /dmo/c_supplement\\supplement,
-      c_update_invalid_key TYPE STRUCTURE FOR UPDATE /dmo/c_supplement\\supplement,
-      i_update             TYPE STRUCTURE FOR UPDATE /dmo/i_supplement\\supplement.
+      c_update_no_flag     TYPE STRUCTURE FOR UPDATE ZAI_DMOc_supplement\\supplement,
+      c_update_invalid_key TYPE STRUCTURE FOR UPDATE ZAI_DMOc_supplement\\supplement,
+      i_update             TYPE STRUCTURE FOR UPDATE ZAI_DMOi_supplement\\supplement.
 
     c_update_no_flag     = VALUE #( %is_draft = if_abap_behv=>mk-on  supplementid = 'TEST1'  supplementdescription = 'Test'  %control-supplementdescription = if_abap_behv=>mk-off ).
     c_update_invalid_key = VALUE #( %is_draft = if_abap_behv=>mk-on  supplementid = 'TEST2'  supplementdescription = 'Test'  %control-supplementdescription = if_abap_behv=>mk-on  ).
@@ -1423,7 +1423,7 @@ CLASS ltcl_custom_test_double IMPLEMENTATION.
 
     entity_double->supplement_failed = entity_double->text_read_failed.
 
-    MODIFY ENTITIES OF /dmo/c_supplement
+    MODIFY ENTITIES OF ZAI_DMOc_supplement
       ENTITY supplement
         UPDATE
           FIELDS ( supplementdescription price currencycode )

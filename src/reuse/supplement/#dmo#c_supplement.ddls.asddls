@@ -5,15 +5,15 @@
 @Search.searchable: true
 @ObjectModel.semanticKey: ['SupplementID']
 
-define root view entity /DMO/C_Supplement
+define root view entity ZAI_DMOC_Supplement
   provider contract transactional_query
-  as projection on /DMO/I_Supplement
+  as projection on ZAI_DMOI_Supplement
 {
 
   key SupplementID, 
 
       @Consumption.valueHelpDefinition: [{entity: {
-                                            name: '/DMO/I_SupplementCategory_VH',
+                                            name: 'ZAI_DMOI_SupplementCategory_VH',
                                             element: 'SupplementCategory'
                                           },
                                           useForValidation: true

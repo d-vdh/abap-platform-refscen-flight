@@ -14,10 +14,10 @@ class ltd_fields_handler implementation.
 
   method if_botd_bufdbl_fields_handler~set_readonly_fields.
     case entity_name.
-      when '/DMO/R_TRAVEL_D'.
+      when 'ZAI_DMOR_TRAVEL_D'.
         case operation.
           when if_abap_behv=>op-m-create.
-            data create_instances type table for create /DMO/R_TRAVEL_D.
+            data create_instances type table for create ZAI_DMOR_TRAVEL_D.
             create_instances = instances.
             loop at create_instances assigning field-symbol(<instance>).
               <instance>-TravelUUID = max_travel_uuid + 1.
@@ -28,7 +28,7 @@ class ltd_fields_handler implementation.
           when if_abap_behv=>op-m-create_ba.
             case association_name.
               when '_BOOKING'.
-                data cba_instances type table for create /DMO/R_TRAVEL_D\_Booking.
+                data cba_instances type table for create ZAI_DMOR_TRAVEL_D\_Booking.
                 cba_instances = instances.
                 loop at cba_instances assigning field-symbol(<cba_instance>).
                   loop at <cba_instance>-%target assigning field-symbol(<target_instance>).

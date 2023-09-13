@@ -3,7 +3,7 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <DDLS>
-    <DDLNAME>/DMO/I_AIRPORT_STDVH</DDLNAME>
+    <DDLNAME>ZAI_DMOI_AIRPORT_STDVH</DDLNAME>
     <DDLANGUAGE>E</DDLANGUAGE>
     <DDTEXT>Airport ValueHelp</DDTEXT>
     <SOURCE_TYPE>W</SOURCE_TYPE>

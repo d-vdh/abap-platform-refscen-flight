@@ -1,4 +1,4 @@
-CLASS /dmo/zz_cx_agency_country DEFINITION
+CLASS ZAI_DMOzz_cx_agency_country DEFINITION
   PUBLIC
   INHERITING FROM cx_static_check
   FINAL
@@ -10,7 +10,7 @@ CLASS /dmo/zz_cx_agency_country DEFINITION
       if_abap_behv_message.
 
     CONSTANTS:
-      message_class TYPE symsgid VALUE '/DMO/ZZ_AGENCY_CNTRY',
+      message_class TYPE symsgid VALUE 'ZAI_DMOZZ_AGENCY_CNTRY',
       BEGIN OF number_invalid,
         msgid TYPE symsgid VALUE message_class,
         msgno TYPE symsgno VALUE '001',
@@ -31,8 +31,8 @@ CLASS /dmo/zz_cx_agency_country DEFINITION
 
 
     DATA:
-      mv_phone_number TYPE /DMO/I_Agency-PhoneNumber,
-      mv_COUNTRY_CODE TYPE /DMO/I_Agency-CountryCode.
+      mv_phone_number TYPE ZAI_DMOI_Agency-PhoneNumber,
+      mv_COUNTRY_CODE TYPE ZAI_DMOI_Agency-CountryCode.
 
 
     METHODS:
@@ -41,8 +41,8 @@ CLASS /dmo/zz_cx_agency_country DEFINITION
           textid      LIKE if_t100_message=>t100key         OPTIONAL
           previous    LIKE previous                         OPTIONAL
           severity    TYPE if_abap_behv_message=>t_severity DEFAULT  if_abap_behv_message=>severity-error
-          phonenumber TYPE /dmo/i_agency-PhoneNumber        OPTIONAL
-          countrycode TYPE /dmo/i_agency-CountryCode        OPTIONAL
+          phonenumber TYPE ZAI_DMOi_agency-PhoneNumber        OPTIONAL
+          countrycode TYPE ZAI_DMOi_agency-CountryCode        OPTIONAL
             PREFERRED PARAMETER textid
         .
   PROTECTED SECTION.
@@ -51,7 +51,7 @@ ENDCLASS.
 
 
 
-CLASS /dmo/zz_cx_agency_country IMPLEMENTATION.
+CLASS ZAI_DMOzz_cx_agency_country IMPLEMENTATION.
 
 
   METHOD constructor ##ADT_SUPPRESS_GENERATION.

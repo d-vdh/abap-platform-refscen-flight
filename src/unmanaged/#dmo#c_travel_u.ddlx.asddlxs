@@ -5,7 +5,7 @@
                      title: { type: #STANDARD,
                               value: 'TravelID' } } }
 
-annotate view /DMO/C_Travel_U with
+annotate view ZAI_DMOC_Travel_U with
 
 {
   @UI.facet: [ { id:            'Travel',

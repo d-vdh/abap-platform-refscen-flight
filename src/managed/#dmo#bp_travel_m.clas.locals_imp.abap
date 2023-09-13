@@ -6,7 +6,7 @@ CLASS lhc_travel DEFINITION INHERITING FROM cl_abap_behavior_handler
 
   PRIVATE SECTION.
 
-    TYPES tt_travel_update TYPE TABLE FOR UPDATE /DMO/I_Travel_M.
+    TYPES tt_travel_update TYPE TABLE FOR UPDATE ZAI_DMOI_Travel_M.
 
     METHODS validate_customer FOR VALIDATE ON SAVE
       IMPORTING keys FOR travel~validatecustomer.
@@ -49,13 +49,13 @@ CLASS lhc_travel IMPLEMENTATION.
 
   METHOD validate_customer.
     " Read relevant travel instance data
-    READ ENTITIES OF /DMO/I_Travel_M IN LOCAL MODE
+    READ ENTITIES OF ZAI_DMOI_Travel_M IN LOCAL MODE
     ENTITY travel
      FIELDS ( customer_id )
      WITH CORRESPONDING #(  keys )
     RESULT DATA(travels).
 
-    DATA customers TYPE SORTED TABLE OF /dmo/customer WITH UNIQUE KEY customer_id.
+    DATA customers TYPE SORTED TABLE OF ZAI_DMOcustomer WITH UNIQUE KEY customer_id.
 
     " Optimization of DB select: extract distinct non-initial customer IDs
     customers = CORRESPONDING #( travels DISCARDING DUPLICATES MAPPING customer_id = customer_id EXCEPT * ).
@@ -63,7 +63,7 @@ CLASS lhc_travel IMPLEMENTATION.
     IF customers IS NOT INITIAL.
 
       " Check if customer ID exists
-      SELECT FROM /dmo/customer FIELDS customer_id
+      SELECT FROM ZAI_DMOcustomer FIELDS customer_id
         FOR ALL ENTRIES IN @customers
         WHERE customer_id = @customers-customer_id
         INTO TABLE @DATA(customers_db).
@@ -75,9 +75,9 @@ CLASS lhc_travel IMPLEMENTATION.
 
         APPEND VALUE #(  %tky = travel-%tky ) TO failed-travel.
         APPEND VALUE #(  %tky = travel-%tky
-                         %msg      = NEW /dmo/cm_flight_messages(
+                         %msg      = NEW ZAI_DMOcm_flight_messages(
                                          customer_id = travel-customer_id
-                                         textid      = /dmo/cm_flight_messages=>customer_unkown
+                                         textid      = ZAI_DMOcm_flight_messages=>customer_unkown
                                          severity    = if_abap_behv_message=>severity-error )
                          %element-customer_id = if_abap_behv=>mk-on
                       ) TO reported-travel.
@@ -90,13 +90,13 @@ CLASS lhc_travel IMPLEMENTATION.
 
   METHOD validate_agency.
     " Read relevant travel instance data
-    READ ENTITIES OF /DMO/I_Travel_M IN LOCAL MODE
+    READ ENTITIES OF ZAI_DMOI_Travel_M IN LOCAL MODE
     ENTITY travel
      FIELDS ( agency_id )
      WITH CORRESPONDING #(  keys )
     RESULT DATA(travels).
 
-    DATA agencies TYPE SORTED TABLE OF /dmo/agency WITH UNIQUE KEY agency_id.
+    DATA agencies TYPE SORTED TABLE OF ZAI_DMOagency WITH UNIQUE KEY agency_id.
 
     " Optimization of DB select: extract distinct non-initial agency IDs
     agencies = CORRESPONDING #(  travels DISCARDING DUPLICATES MAPPING agency_id = agency_id EXCEPT * ).
@@ -104,7 +104,7 @@ CLASS lhc_travel IMPLEMENTATION.
     IF  agencies IS NOT INITIAL.
 
       " check if agency ID exist
-      SELECT FROM /dmo/agency FIELDS agency_id
+      SELECT FROM ZAI_DMOagency FIELDS agency_id
         FOR ALL ENTRIES IN @agencies
         WHERE agency_id = @agencies-agency_id
         INTO TABLE @DATA(agencies_db).
@@ -117,8 +117,8 @@ CLASS lhc_travel IMPLEMENTATION.
 
         APPEND VALUE #(  %tky = travel-%tky ) TO failed-travel.
         APPEND VALUE #(  %tky = travel-%tky
-                         %msg      = NEW /dmo/cm_flight_messages(
-                                          textid    = /dmo/cm_flight_messages=>agency_unkown
+                         %msg      = NEW ZAI_DMOcm_flight_messages(
+                                          textid    = ZAI_DMOcm_flight_messages=>agency_unkown
                                           agency_id = travel-agency_id
                                           severity  = if_abap_behv_message=>severity-error )
                          %element-agency_id = if_abap_behv=>mk-on
@@ -131,7 +131,7 @@ CLASS lhc_travel IMPLEMENTATION.
 
   METHOD validate_dates.
 
-    READ ENTITIES OF /DMO/I_Travel_M IN LOCAL MODE
+    READ ENTITIES OF ZAI_DMOI_Travel_M IN LOCAL MODE
       ENTITY travel
         FIELDS ( begin_date end_date )
         WITH CORRESPONDING #( keys )
@@ -144,8 +144,8 @@ CLASS lhc_travel IMPLEMENTATION.
         APPEND VALUE #( %tky = travel-%tky ) TO failed-travel.
 
         APPEND VALUE #( %tky = travel-%tky
-                        %msg = NEW /dmo/cm_flight_messages(
-                                   textid     = /dmo/cm_flight_messages=>begin_date_bef_end_date
+                        %msg = NEW ZAI_DMOcm_flight_messages(
+                                   textid     = ZAI_DMOcm_flight_messages=>begin_date_bef_end_date
                                    severity   = if_abap_behv_message=>severity-error
                                    begin_date = travel-begin_date
                                    end_date   = travel-end_date
@@ -159,8 +159,8 @@ CLASS lhc_travel IMPLEMENTATION.
         APPEND VALUE #( %tky        = travel-%tky ) TO failed-travel.
 
         APPEND VALUE #( %tky = travel-%tky
-                        %msg = NEW /dmo/cm_flight_messages(
-                                    textid   = /dmo/cm_flight_messages=>begin_date_on_or_bef_sysdate
+                        %msg = NEW ZAI_DMOcm_flight_messages(
+                                    textid   = ZAI_DMOcm_flight_messages=>begin_date_on_or_bef_sysdate
                                     severity = if_abap_behv_message=>severity-error )
                         %element-begin_date  = if_abap_behv=>mk-on
                         %element-end_date    = if_abap_behv=>mk-on
@@ -173,7 +173,7 @@ CLASS lhc_travel IMPLEMENTATION.
 
   METHOD validate_travel_status.
 
-    READ ENTITIES OF /DMO/I_Travel_M IN LOCAL MODE
+    READ ENTITIES OF ZAI_DMOI_Travel_M IN LOCAL MODE
         ENTITY travel
           FIELDS ( overall_status )
           WITH CORRESPONDING #( keys )
@@ -189,8 +189,8 @@ CLASS lhc_travel IMPLEMENTATION.
           APPEND VALUE #( %tky = travel-%tky ) TO failed-travel.
 
           APPEND VALUE #( %tky = travel-%tky
-                          %msg = NEW /dmo/cm_flight_messages(
-                                     textid = /dmo/cm_flight_messages=>status_invalid
+                          %msg = NEW ZAI_DMOcm_flight_messages(
+                                     textid = ZAI_DMOcm_flight_messages=>status_invalid
                                      severity = if_abap_behv_message=>severity-error
                                      status = travel-overall_status )
                           %element-overall_status = if_abap_behv=>mk-on
@@ -204,25 +204,25 @@ CLASS lhc_travel IMPLEMENTATION.
   METHOD copyTravel.
 
     DATA:
-      travels       TYPE TABLE FOR CREATE /DMO/I_Travel_M\\travel,
-      bookings_cba  TYPE TABLE FOR CREATE /DMO/I_Travel_M\\travel\_booking,
-      booksuppl_cba TYPE TABLE FOR CREATE /DMO/I_Travel_M\\booking\_booksupplement.
+      travels       TYPE TABLE FOR CREATE ZAI_DMOI_Travel_M\\travel,
+      bookings_cba  TYPE TABLE FOR CREATE ZAI_DMOI_Travel_M\\travel\_booking,
+      booksuppl_cba TYPE TABLE FOR CREATE ZAI_DMOI_Travel_M\\booking\_booksupplement.
 
     READ TABLE keys WITH KEY %cid = '' INTO DATA(key_with_inital_cid).
     ASSERT key_with_inital_cid IS INITIAL.
 
-    READ ENTITIES OF /DMO/I_Travel_M IN LOCAL MODE
+    READ ENTITIES OF ZAI_DMOI_Travel_M IN LOCAL MODE
       ENTITY travel
        ALL FIELDS WITH CORRESPONDING #( keys )
     RESULT DATA(travel_read_result)
     FAILED failed.
 
-    READ ENTITIES OF /DMO/I_Travel_M IN LOCAL MODE
+    READ ENTITIES OF ZAI_DMOI_Travel_M IN LOCAL MODE
       ENTITY travel BY \_booking
        ALL FIELDS WITH CORRESPONDING #( travel_read_result )
      RESULT DATA(book_read_result).
 
-    READ ENTITIES OF /DMO/I_Travel_M IN LOCAL MODE
+    READ ENTITIES OF ZAI_DMOI_Travel_M IN LOCAL MODE
       ENTITY booking BY \_booksupplement
        ALL FIELDS WITH CORRESPONDING #( book_read_result )
     RESULT DATA(booksuppl_read_result).
@@ -264,7 +264,7 @@ CLASS lhc_travel IMPLEMENTATION.
     ENDLOOP.
 
     "create new BO instance
-    MODIFY ENTITIES OF /DMO/I_Travel_M IN LOCAL MODE
+    MODIFY ENTITIES OF ZAI_DMOI_Travel_M IN LOCAL MODE
       ENTITY travel
         CREATE FIELDS ( agency_id customer_id begin_date end_date booking_fee total_price currency_code overall_status description )
           WITH travels
@@ -283,14 +283,14 @@ CLASS lhc_travel IMPLEMENTATION.
   METHOD set_status_accepted.
 
     " Modify in local mode: BO-related updates that are not relevant for authorization checks
-    MODIFY ENTITIES OF /DMO/I_Travel_M IN LOCAL MODE
+    MODIFY ENTITIES OF ZAI_DMOI_Travel_M IN LOCAL MODE
            ENTITY travel
               UPDATE FIELDS ( overall_status )
                  WITH VALUE #( FOR key IN keys ( %tky      = key-%tky
                                                  overall_status = 'A' ) ). " Accepted
 
     " Read changed data for action result
-    READ ENTITIES OF /DMO/I_Travel_M IN LOCAL MODE
+    READ ENTITIES OF ZAI_DMOI_Travel_M IN LOCAL MODE
       ENTITY travel
          ALL FIELDS WITH
          CORRESPONDING #( keys )
@@ -303,7 +303,7 @@ CLASS lhc_travel IMPLEMENTATION.
 
   METHOD set_status_rejected.
 
-    MODIFY ENTITIES OF /DMO/I_Travel_M IN LOCAL MODE
+    MODIFY ENTITIES OF ZAI_DMOI_Travel_M IN LOCAL MODE
            ENTITY travel
               UPDATE FIELDS ( overall_status )
                  WITH VALUE #( FOR key IN keys ( %tky      = key-%tky
@@ -311,7 +311,7 @@ CLASS lhc_travel IMPLEMENTATION.
 
 
     " read changed data for result
-    READ ENTITIES OF /DMO/I_Travel_M IN LOCAL MODE
+    READ ENTITIES OF ZAI_DMOI_Travel_M IN LOCAL MODE
       ENTITY travel
          ALL FIELDS WITH
          CORRESPONDING #( keys )
@@ -324,7 +324,7 @@ CLASS lhc_travel IMPLEMENTATION.
 
   METHOD get_features.
 
-    READ ENTITIES OF /DMO/I_Travel_M IN LOCAL MODE
+    READ ENTITIES OF ZAI_DMOI_Travel_M IN LOCAL MODE
       ENTITY travel
          FIELDS (  travel_id overall_status )
          WITH CORRESPONDING #( keys )
@@ -347,14 +347,14 @@ CLASS lhc_travel IMPLEMENTATION.
 
   METHOD recalctotalprice.
     TYPES: BEGIN OF ty_amount_per_currencycode,
-             amount        TYPE /dmo/total_price,
-             currency_code TYPE /dmo/currency_code,
+             amount        TYPE ZAI_DMOtotal_price,
+             currency_code TYPE ZAI_DMOcurrency_code,
            END OF ty_amount_per_currencycode.
 
     DATA: amounts_per_currencycode TYPE STANDARD TABLE OF ty_amount_per_currencycode.
 
     " Read all relevant travel instances.
-    READ ENTITIES OF /DMO/I_Travel_M IN LOCAL MODE
+    READ ENTITIES OF ZAI_DMOI_Travel_M IN LOCAL MODE
          ENTITY travel
             FIELDS ( booking_fee currency_code )
             WITH CORRESPONDING #( keys )
@@ -363,14 +363,14 @@ CLASS lhc_travel IMPLEMENTATION.
     DELETE travels WHERE currency_code IS INITIAL.
 
     " Read all associated bookings and add them to the total price.
-    READ ENTITIES OF /DMO/I_Travel_M IN LOCAL MODE
+    READ ENTITIES OF ZAI_DMOI_Travel_M IN LOCAL MODE
       ENTITY travel BY \_booking
         FIELDS ( flight_price currency_code )
       WITH CORRESPONDING #( travels )
       RESULT DATA(bookings).
 
     " Read all associated booking supplements and add them to the total price.
-    READ ENTITIES OF /DMO/I_Travel_M IN LOCAL MODE
+    READ ENTITIES OF ZAI_DMOI_Travel_M IN LOCAL MODE
       ENTITY booking BY \_booksupplement
         FIELDS (  price currency_code )
       WITH CORRESPONDING #( bookings )
@@ -405,7 +405,7 @@ CLASS lhc_travel IMPLEMENTATION.
         IF amount_per_currencycode-currency_code = <travel>-currency_code.
           <travel>-total_price += amount_per_currencycode-amount.
         ELSE.
-          /dmo/cl_flight_amdp=>convert_currency(
+          ZAI_DMOcl_flight_amdp=>convert_currency(
              EXPORTING
                iv_amount                   =  amount_per_currencycode-amount
                iv_currency_code_source     =  amount_per_currencycode-currency_code
@@ -420,7 +420,7 @@ CLASS lhc_travel IMPLEMENTATION.
     ENDLOOP.
 
     " write back the modified total_price of travels
-    MODIFY ENTITIES OF /DMO/I_Travel_M IN LOCAL MODE
+    MODIFY ENTITIES OF ZAI_DMOI_Travel_M IN LOCAL MODE
       ENTITY travel
         UPDATE FIELDS ( total_price )
         WITH CORRESPONDING #( travels ).
@@ -429,7 +429,7 @@ CLASS lhc_travel IMPLEMENTATION.
 
   METHOD calculatetotalprice.
 
-    MODIFY ENTITIES OF /DMO/I_Travel_M IN LOCAL MODE
+    MODIFY ENTITIES OF ZAI_DMOI_Travel_M IN LOCAL MODE
       ENTITY travel
         EXECUTE recalctotalprice
         FROM CORRESPONDING #( keys ).
@@ -439,8 +439,8 @@ CLASS lhc_travel IMPLEMENTATION.
   METHOD earlynumbering_create.
 
     DATA:
-      entity        TYPE STRUCTURE FOR CREATE /DMO/I_Travel_M,
-      travel_id_max TYPE /dmo/travel_id.
+      entity        TYPE STRUCTURE FOR CREATE ZAI_DMOI_Travel_M,
+      travel_id_max TYPE ZAI_DMOtravel_id.
 
     " Ensure Travel ID is not set yet (idempotent)- must be checked when BO is draft-enabled
     LOOP AT entities INTO entity WHERE travel_id IS NOT INITIAL.
@@ -455,7 +455,7 @@ CLASS lhc_travel IMPLEMENTATION.
         cl_numberrange_runtime=>number_get(
           EXPORTING
             nr_range_nr       = '01'
-            object            = '/DMO/TRV_M'
+            object            = 'ZAI_DMOTRV_M'
             quantity          = CONV #( lines( entities_wo_travelid ) )
           IMPORTING
             number            = DATA(number_range_key)
@@ -481,8 +481,8 @@ CLASS lhc_travel IMPLEMENTATION.
         LOOP AT entities_wo_travelid INTO entity.
           APPEND VALUE #( %cid = entity-%cid
                           %key = entity-%key
-                          %msg = NEW /dmo/cm_flight_messages(
-                                      textid = /dmo/cm_flight_messages=>number_range_depleted
+                          %msg = NEW ZAI_DMOcm_flight_messages(
+                                      textid = ZAI_DMOcm_flight_messages=>number_range_depleted
                                       severity = if_abap_behv_message=>severity-warning )
                         ) TO reported-travel.
         ENDLOOP.
@@ -493,8 +493,8 @@ CLASS lhc_travel IMPLEMENTATION.
         LOOP AT entities_wo_travelid INTO entity.
           APPEND VALUE #( %cid = entity-%cid
                           %key = entity-%key
-                          %msg = NEW /dmo/cm_flight_messages(
-                                      textid = /dmo/cm_flight_messages=>not_sufficient_numbers
+                          %msg = NEW ZAI_DMOcm_flight_messages(
+                                      textid = ZAI_DMOcm_flight_messages=>not_sufficient_numbers
                                       severity = if_abap_behv_message=>severity-warning )
                         ) TO reported-travel.
           APPEND VALUE #( %cid        = entity-%cid
@@ -523,9 +523,9 @@ CLASS lhc_travel IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD earlynumbering_cba_booking.
-    DATA: max_booking_id TYPE /dmo/booking_id.
+    DATA: max_booking_id TYPE ZAI_DMObooking_id.
 
-    READ ENTITIES OF /DMO/I_Travel_M IN LOCAL MODE
+    READ ENTITIES OF ZAI_DMOI_Travel_M IN LOCAL MODE
       ENTITY travel BY \_booking
         FROM CORRESPONDING #( entities )
         LINK DATA(bookings).
@@ -534,9 +534,9 @@ CLASS lhc_travel IMPLEMENTATION.
     LOOP AT entities ASSIGNING FIELD-SYMBOL(<travel_group>) GROUP BY <travel_group>-travel_id.
 
       " Get highest booking_id from bookings belonging to travel
-      max_booking_id = REDUCE #( INIT max = CONV /dmo/booking_id( '0' )
+      max_booking_id = REDUCE #( INIT max = CONV ZAI_DMObooking_id( '0' )
                                  FOR  booking IN bookings USING KEY entity WHERE ( source-travel_id  = <travel_group>-travel_id )
-                                 NEXT max = COND /dmo/booking_id( WHEN booking-target-booking_id > max
+                                 NEXT max = COND ZAI_DMObooking_id( WHEN booking-target-booking_id > max
                                                                     THEN booking-target-booking_id
                                                                     ELSE max )
                                ).
@@ -544,7 +544,7 @@ CLASS lhc_travel IMPLEMENTATION.
       max_booking_id = REDUCE #( INIT max = max_booking_id
                                  FOR  entity IN entities USING KEY entity WHERE ( travel_id  = <travel_group>-travel_id )
                                  FOR  target IN entity-%target
-                                 NEXT max = COND /dmo/booking_id( WHEN   target-booking_id > max
+                                 NEXT max = COND ZAI_DMObooking_id( WHEN   target-booking_id > max
                                                                     THEN target-booking_id
                                                                     ELSE max )
                                ).
@@ -570,7 +570,7 @@ CLASS lhc_travel IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD validate_currencycode.
-    READ ENTITIES OF /DMO/I_Travel_M IN LOCAL MODE
+    READ ENTITIES OF ZAI_DMOI_Travel_M IN LOCAL MODE
       ENTITY travel
         FIELDS ( currency_code )
         WITH CORRESPONDING #( keys )
@@ -594,8 +594,8 @@ CLASS lhc_travel IMPLEMENTATION.
         " Raise message for empty Currency
         APPEND VALUE #( %tky                   = travel-%tky ) TO failed-travel.
         APPEND VALUE #( %tky                   = travel-%tky
-                        %msg                   = NEW /dmo/cm_flight_messages(
-                                                        textid    = /dmo/cm_flight_messages=>currency_required
+                        %msg                   = NEW ZAI_DMOcm_flight_messages(
+                                                        textid    = ZAI_DMOcm_flight_messages=>currency_required
                                                         severity  = if_abap_behv_message=>severity-error )
                         %element-currency_code = if_abap_behv=>mk-on
                       ) TO reported-travel.
@@ -603,8 +603,8 @@ CLASS lhc_travel IMPLEMENTATION.
         " Raise message for not existing Currency
         APPEND VALUE #( %tky                   = travel-%tky ) TO failed-travel.
         APPEND VALUE #( %tky                   = travel-%tky
-                        %msg                   = NEW /dmo/cm_flight_messages(
-                                                        textid        = /dmo/cm_flight_messages=>currency_not_existing
+                        %msg                   = NEW ZAI_DMOcm_flight_messages(
+                                                        textid        = ZAI_DMOcm_flight_messages=>currency_not_existing
                                                         severity      = if_abap_behv_message=>severity-error
                                                         currency_code = travel-currency_code )
                         %element-currency_code = if_abap_behv=>mk-on
@@ -638,9 +638,9 @@ CLASS lcl_save IMPLEMENTATION.
 *
 ********************************************************************************
 
-    DATA travel_log        TYPE STANDARD TABLE OF /dmo/log_travel.
-    DATA travel_log_create TYPE STANDARD TABLE OF /dmo/log_travel.
-    DATA travel_log_update TYPE STANDARD TABLE OF /dmo/log_travel.
+    DATA travel_log        TYPE STANDARD TABLE OF ZAI_DMOlog_travel.
+    DATA travel_log_create TYPE STANDARD TABLE OF ZAI_DMOlog_travel.
+    DATA travel_log_update TYPE STANDARD TABLE OF ZAI_DMOlog_travel.
 
     " (1) Get instance data of all instances that have been created
     IF create-travel IS NOT INITIAL.
@@ -689,8 +689,8 @@ CLASS lcl_save IMPLEMENTATION.
 
       ENDLOOP.
 
-      " Inserts rows specified in lt_travel_log_c into the DB table /dmo/log_travel
-      INSERT /dmo/log_travel FROM TABLE @travel_log_create.
+      " Inserts rows specified in lt_travel_log_c into the DB table ZAI_DMOlog_travel
+      INSERT ZAI_DMOlog_travel FROM TABLE @travel_log_create.
 
     ENDIF.
 
@@ -745,8 +745,8 @@ CLASS lcl_save IMPLEMENTATION.
       ENDLOOP.
 
 
-      " Inserts rows specified in lt_travel_log_u into the DB table /dmo/log_travel
-      INSERT /dmo/log_travel FROM TABLE @travel_log_update.
+      " Inserts rows specified in lt_travel_log_u into the DB table ZAI_DMOlog_travel
+      INSERT ZAI_DMOlog_travel FROM TABLE @travel_log_update.
 
     ENDIF.
 
@@ -766,8 +766,8 @@ CLASS lcl_save IMPLEMENTATION.
 
       ENDLOOP.
 
-      " Inserts rows specified in lt_travel_log into the DB table /dmo/log_travel
-      INSERT /dmo/log_travel FROM TABLE @travel_log.
+      " Inserts rows specified in lt_travel_log into the DB table ZAI_DMOlog_travel
+      INSERT ZAI_DMOlog_travel FROM TABLE @travel_log.
 
     ENDIF.
 
@@ -777,13 +777,13 @@ CLASS lcl_save IMPLEMENTATION.
 * Implements unmanaged save
 *
 ********************************************************************************
-    DATA booksuppls_db TYPE STANDARD TABLE OF /dmo/booksuppl_m.
+    DATA booksuppls_db TYPE STANDARD TABLE OF ZAI_DMObooksuppl_m.
 
     " (1) Get instance data of all instances that have been created
     IF create-booksuppl IS NOT INITIAL.
       booksuppls_db = CORRESPONDING #( create-booksuppl MAPPING FROM ENTITY ).
 
-      CALL FUNCTION '/DMO/FLIGHT_BOOKSUPPL_C' EXPORTING values = booksuppls_db.
+      CALL FUNCTION 'ZAI_DMOFLIGHT_BOOKSUPPL_C' EXPORTING values = booksuppls_db.
 
     ENDIF.
 
@@ -792,7 +792,7 @@ CLASS lcl_save IMPLEMENTATION.
     IF booksuppls_db IS NOT INITIAL.
 
       " Read all field values from database
-      SELECT * FROM /dmo/booksuppl_m FOR ALL ENTRIES IN @booksuppls_db
+      SELECT * FROM ZAI_DMObooksuppl_m FOR ALL ENTRIES IN @booksuppls_db
                WHERE booking_supplement_id = @booksuppls_db-booking_supplement_id
                INTO TABLE @booksuppls_db .
 
@@ -818,7 +818,7 @@ CLASS lcl_save IMPLEMENTATION.
       ENDLOOP.
 
       " Update the complete instance data
-      CALL FUNCTION '/DMO/FLIGHT_BOOKSUPPL_U' EXPORTING values = booksuppls_db.
+      CALL FUNCTION 'ZAI_DMOFLIGHT_BOOKSUPPL_U' EXPORTING values = booksuppls_db.
 
     ENDIF.
 
@@ -826,7 +826,7 @@ CLASS lcl_save IMPLEMENTATION.
     IF delete-booksuppl IS NOT INITIAL.
       booksuppls_db = CORRESPONDING #( delete-booksuppl MAPPING FROM ENTITY ).
 
-      CALL FUNCTION '/DMO/FLIGHT_BOOKSUPPL_D' EXPORTING values = booksuppls_db.
+      CALL FUNCTION 'ZAI_DMOFLIGHT_BOOKSUPPL_D' EXPORTING values = booksuppls_db.
 
     ENDIF.
 

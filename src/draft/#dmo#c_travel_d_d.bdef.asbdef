@@ -3,7 +3,7 @@ strict(2);
 use draft;
 use side effects;
 
-define behavior for /DMO/C_Travel_D_D alias Travel
+define behavior for ZAI_DMOC_Travel_D_D alias Travel
 use etag
 {
   use create;
@@ -27,7 +27,7 @@ use etag
   use association _Booking { create; with draft; }
 }
 
-define behavior for /DMO/C_Booking_D_D alias Booking
+define behavior for ZAI_DMOC_Booking_D_D alias Booking
 use etag
 {
   use update;
@@ -37,7 +37,7 @@ use etag
   use association _Travel { with draft; }
 }
 
-define behavior for /DMO/C_BookingSupplement_D_D alias BookingSupplement
+define behavior for ZAI_DMOC_BookingSupplement_D_D alias BookingSupplement
 use etag
 {
   use update;

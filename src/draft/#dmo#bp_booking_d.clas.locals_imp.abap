@@ -29,20 +29,20 @@ CLASS lhc_booking IMPLEMENTATION.
 
   METHOD setBookingNumber.
     DATA:
-      max_bookingid   TYPE /dmo/booking_id,
-      bookings_update TYPE TABLE FOR UPDATE /DMO/R_Travel_D\\Booking,
-      booking         TYPE STRUCTURE FOR READ RESULT /DMO/R_Booking_D.
+      max_bookingid   TYPE ZAI_DMObooking_id,
+      bookings_update TYPE TABLE FOR UPDATE ZAI_DMOR_Travel_D\\Booking,
+      booking         TYPE STRUCTURE FOR READ RESULT ZAI_DMOR_Booking_D.
 
     "Read all travels for the requested bookings
     " If multiple bookings of the same travel are requested, the travel is returned only once.
-    READ ENTITIES OF /DMO/R_Travel_D IN LOCAL MODE
+    READ ENTITIES OF ZAI_DMOR_Travel_D IN LOCAL MODE
       ENTITY Booking BY \_Travel
         FIELDS ( TravelUUID )
         WITH CORRESPONDING #( keys )
       RESULT DATA(travels).
 
     " Read all bookings for all affected travels
-    READ ENTITIES OF /DMO/R_Travel_D IN LOCAL MODE
+    READ ENTITIES OF ZAI_DMOR_Travel_D IN LOCAL MODE
       ENTITY Travel BY \_Booking
         FIELDS ( BookingID )
         WITH CORRESPONDING #( travels )
@@ -76,7 +76,7 @@ CLASS lhc_booking IMPLEMENTATION.
     ENDLOOP.
 
     " Provide a booking ID for all bookings that have none.
-    MODIFY ENTITIES OF /DMO/R_Travel_D IN LOCAL MODE
+    MODIFY ENTITIES OF ZAI_DMOR_Travel_D IN LOCAL MODE
       ENTITY booking
         UPDATE FIELDS ( BookingID )
         WITH bookings_update.
@@ -85,7 +85,7 @@ CLASS lhc_booking IMPLEMENTATION.
 
   METHOD setBookingDate.
 
-    READ ENTITIES OF /DMO/R_Travel_D IN LOCAL MODE
+    READ ENTITIES OF ZAI_DMOR_Travel_D IN LOCAL MODE
       ENTITY Booking
         FIELDS ( BookingDate )
         WITH CORRESPONDING #( keys )
@@ -98,7 +98,7 @@ CLASS lhc_booking IMPLEMENTATION.
       <booking>-BookingDate = cl_abap_context_info=>get_system_date( ).
     ENDLOOP.
 
-    MODIFY ENTITIES OF /DMO/R_Travel_D IN LOCAL MODE
+    MODIFY ENTITIES OF ZAI_DMOR_Travel_D IN LOCAL MODE
       ENTITY Booking
         UPDATE  FIELDS ( BookingDate )
         WITH CORRESPONDING #( bookings ).
@@ -108,14 +108,14 @@ CLASS lhc_booking IMPLEMENTATION.
   METHOD calculateTotalPrice.
 
     " Read all parent UUIDs
-    READ ENTITIES OF /DMO/R_Travel_D IN LOCAL MODE
+    READ ENTITIES OF ZAI_DMOR_Travel_D IN LOCAL MODE
       ENTITY Booking BY \_Travel
         FIELDS ( TravelUUID  )
         WITH CORRESPONDING #(  keys  )
       RESULT DATA(travels).
 
     " Trigger Re-Calculation on Root Node
-    MODIFY ENTITIES OF /DMO/R_Travel_D IN LOCAL MODE
+    MODIFY ENTITIES OF ZAI_DMOR_Travel_D IN LOCAL MODE
       ENTITY Travel
         EXECUTE reCalcTotalPrice
           FROM CORRESPONDING  #( travels ).
@@ -125,18 +125,18 @@ CLASS lhc_booking IMPLEMENTATION.
 
   METHOD validateCustomer.
 
-    READ ENTITIES OF /DMO/R_Travel_D IN LOCAL MODE
+    READ ENTITIES OF ZAI_DMOR_Travel_D IN LOCAL MODE
       ENTITY Booking
         FIELDS (  CustomerID )
         WITH CORRESPONDING #( keys )
     RESULT DATA(bookings).
 
-    READ ENTITIES OF /DMO/R_Travel_D IN LOCAL MODE
+    READ ENTITIES OF ZAI_DMOR_Travel_D IN LOCAL MODE
       ENTITY Booking BY \_Travel
         FROM CORRESPONDING #( bookings )
       LINK DATA(travel_booking_links).
 
-    DATA customers TYPE SORTED TABLE OF /dmo/customer WITH UNIQUE KEY customer_id.
+    DATA customers TYPE SORTED TABLE OF ZAI_DMOcustomer WITH UNIQUE KEY customer_id.
 
     " Optimization of DB select: extract distinct non-initial customer IDs
     customers = CORRESPONDING #( bookings DISCARDING DUPLICATES MAPPING customer_id = CustomerID EXCEPT * ).
@@ -144,7 +144,7 @@ CLASS lhc_booking IMPLEMENTATION.
 
     IF  customers IS NOT INITIAL.
       " Check if customer ID exists
-      SELECT FROM /dmo/customer FIELDS customer_id
+      SELECT FROM ZAI_DMOcustomer FIELDS customer_id
                                 FOR ALL ENTRIES IN @customers
                                 WHERE customer_id = @customers-customer_id
       INTO TABLE @DATA(valid_customers).
@@ -160,8 +160,8 @@ CLASS lhc_booking IMPLEMENTATION.
 
         APPEND VALUE #( %tky                = booking-%tky
                         %state_area         = 'VALIDATE_CUSTOMER'
-                         %msg                = NEW /dmo/cm_flight_messages(
-                                                                textid = /dmo/cm_flight_messages=>enter_customer_id
+                         %msg                = NEW ZAI_DMOcm_flight_messages(
+                                                                textid = ZAI_DMOcm_flight_messages=>enter_customer_id
                                                                 severity = if_abap_behv_message=>severity-error )
                         %path               = VALUE #( travel-%tky = travel_booking_links[ KEY id  source-%tky = booking-%tky ]-target-%tky )
                         %element-CustomerID = if_abap_behv=>mk-on
@@ -172,8 +172,8 @@ CLASS lhc_booking IMPLEMENTATION.
 
         APPEND VALUE #( %tky                = booking-%tky
                         %state_area         = 'VALIDATE_CUSTOMER'
-                         %msg                = NEW /dmo/cm_flight_messages(
-                                                                textid = /dmo/cm_flight_messages=>customer_unkown
+                         %msg                = NEW ZAI_DMOcm_flight_messages(
+                                                                textid = ZAI_DMOcm_flight_messages=>customer_unkown
                                                                 customer_id = booking-customerId
                                                                 severity = if_abap_behv_message=>severity-error )
                         %path               = VALUE #( travel-%tky = travel_booking_links[ KEY id  source-%tky = booking-%tky ]-target-%tky )
@@ -187,13 +187,13 @@ CLASS lhc_booking IMPLEMENTATION.
 
   METHOD validateConnection.
 
-    READ ENTITIES OF /DMO/R_Travel_D IN LOCAL MODE
+    READ ENTITIES OF ZAI_DMOR_Travel_D IN LOCAL MODE
       ENTITY Booking
         FIELDS ( BookingID AirlineID ConnectionID FlightDate )
         WITH CORRESPONDING #( keys )
       RESULT DATA(bookings).
 
-    READ ENTITIES OF /DMO/R_Travel_D IN LOCAL MODE
+    READ ENTITIES OF ZAI_DMOR_Travel_D IN LOCAL MODE
       ENTITY Booking BY \_Travel
         FROM CORRESPONDING #( bookings )
       LINK DATA(travel_booking_links).
@@ -209,8 +209,8 @@ CLASS lhc_booking IMPLEMENTATION.
 
         APPEND VALUE #( %tky                = <booking>-%tky
                         %state_area         = 'VALIDATE_CONNECTION'
-                         %msg                = NEW /dmo/cm_flight_messages(
-                                                                textid = /dmo/cm_flight_messages=>enter_airline_id
+                         %msg                = NEW ZAI_DMOcm_flight_messages(
+                                                                textid = ZAI_DMOcm_flight_messages=>enter_airline_id
                                                                 severity = if_abap_behv_message=>severity-error )
                         %path              = VALUE #( travel-%tky = travel_booking_links[ KEY id  source-%tky = <booking>-%tky ]-target-%tky )
                         %element-AirlineID = if_abap_behv=>mk-on
@@ -222,8 +222,8 @@ CLASS lhc_booking IMPLEMENTATION.
 
         APPEND VALUE #( %tky                = <booking>-%tky
                         %state_area         = 'VALIDATE_CONNECTION'
-                        %msg                = NEW /dmo/cm_flight_messages(
-                                                                textid = /dmo/cm_flight_messages=>enter_connection_id
+                        %msg                = NEW ZAI_DMOcm_flight_messages(
+                                                                textid = ZAI_DMOcm_flight_messages=>enter_connection_id
                                                                 severity = if_abap_behv_message=>severity-error )
                         %path               = VALUE #( travel-%tky = travel_booking_links[ KEY id  source-%tky = <booking>-%tky ]-target-%tky )
                         %element-ConnectionID = if_abap_behv=>mk-on
@@ -235,8 +235,8 @@ CLASS lhc_booking IMPLEMENTATION.
 
         APPEND VALUE #( %tky                = <booking>-%tky
                         %state_area         = 'VALIDATE_CONNECTION'
-                        %msg                = NEW /dmo/cm_flight_messages(
-                                                                textid = /dmo/cm_flight_messages=>enter_flight_date
+                        %msg                = NEW ZAI_DMOcm_flight_messages(
+                                                                textid = ZAI_DMOcm_flight_messages=>enter_flight_date
                                                                 severity = if_abap_behv_message=>severity-error )
                         %path               = VALUE #( travel-%tky = travel_booking_links[ KEY id  source-%tky = <booking>-%tky ]-target-%tky )
                         %element-FlightDate = if_abap_behv=>mk-on
@@ -247,7 +247,7 @@ CLASS lhc_booking IMPLEMENTATION.
          <booking>-ConnectionID IS NOT INITIAL AND
          <booking>-FlightDate IS NOT INITIAL.
 
-        SELECT SINGLE Carrier_ID, Connection_ID, Flight_Date   FROM /dmo/flight  WHERE  carrier_id    = @<booking>-AirlineID
+        SELECT SINGLE Carrier_ID, Connection_ID, Flight_Date   FROM ZAI_DMOflight  WHERE  carrier_id    = @<booking>-AirlineID
                                                                AND  connection_id = @<booking>-ConnectionID
                                                                AND  flight_date   = @<booking>-FlightDate
                                                                INTO  @DATA(flight).
@@ -257,8 +257,8 @@ CLASS lhc_booking IMPLEMENTATION.
 
           APPEND VALUE #( %tky                 = <booking>-%tky
                           %state_area          = 'VALIDATE_CONNECTION'
-                          %msg                 = NEW /dmo/cm_flight_messages(
-                                                                textid      = /dmo/cm_flight_messages=>no_flight_exists
+                          %msg                 = NEW ZAI_DMOcm_flight_messages(
+                                                                textid      = ZAI_DMOcm_flight_messages=>no_flight_exists
                                                                 carrier_id  = <booking>-AirlineID
                                                                 flight_date = <booking>-FlightDate
                                                                 severity    = if_abap_behv_message=>severity-error )
@@ -277,13 +277,13 @@ CLASS lhc_booking IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD validateCurrencyCode.
-    READ ENTITIES OF /DMO/R_Travel_D IN LOCAL MODE
+    READ ENTITIES OF ZAI_DMOR_Travel_D IN LOCAL MODE
       ENTITY booking
         FIELDS ( currencycode )
         WITH CORRESPONDING #( keys )
       RESULT DATA(bookings).
 
-      READ ENTITIES OF /DMO/R_Travel_D IN LOCAL MODE
+      READ ENTITIES OF ZAI_DMOR_Travel_D IN LOCAL MODE
       ENTITY Booking BY \_Travel
         FROM CORRESPONDING #( bookings )
       LINK DATA(travel_booking_links).
@@ -310,8 +310,8 @@ CLASS lhc_booking IMPLEMENTATION.
         APPEND VALUE #( %tky                   = booking-%tky ) TO failed-booking.
         APPEND VALUE #( %tky                   = booking-%tky
                         %state_area            = 'VALIDATE_CURRENCYCODE'
-                        %msg                   = NEW /dmo/cm_flight_messages(
-                                                        textid    = /dmo/cm_flight_messages=>currency_required
+                        %msg                   = NEW ZAI_DMOcm_flight_messages(
+                                                        textid    = ZAI_DMOcm_flight_messages=>currency_required
                                                         severity  = if_abap_behv_message=>severity-error )
                         %path                  = VALUE #( travel-%tky = travel_booking_links[ KEY id  source-%tky = booking-%tky ]-target-%tky )
                         %element-currencycode = if_abap_behv=>mk-on
@@ -321,8 +321,8 @@ CLASS lhc_booking IMPLEMENTATION.
         APPEND VALUE #( %tky                   = booking-%tky ) TO failed-booking.
         APPEND VALUE #( %tky                   = booking-%tky
                         %state_area            = 'VALIDATE_CURRENCYCODE'
-                        %msg                   = NEW /dmo/cm_flight_messages(
-                                                        textid        = /dmo/cm_flight_messages=>currency_not_existing
+                        %msg                   = NEW ZAI_DMOcm_flight_messages(
+                                                        textid        = ZAI_DMOcm_flight_messages=>currency_not_existing
                                                         severity      = if_abap_behv_message=>severity-error
                                                         currency_code = booking-currencycode )
                         %path                  = VALUE #( travel-%tky = travel_booking_links[ KEY id  source-%tky = booking-%tky ]-target-%tky )

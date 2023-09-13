@@ -1,4 +1,4 @@
-extend view entity /DMO/R_AgencyDraft with
+extend view entity ZAI_DMOR_AgencyDraft with
 {
-  Agency./dmo/zzsloganzag as /DMO/ZZSloganZAG
+  Agency.ZAI_DMOzzsloganzag as ZAI_DMOZZSloganZAG
 }

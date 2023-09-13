@@ -2,15 +2,15 @@
 @EndUserText.label: 'Connection ValueHelp'
 @Search.searchable: true
 
-define view entity /DMO/I_Connection_StdVH
-  as select from /DMO/I_Connection
+define view entity ZAI_DMOI_Connection_StdVH
+  as select from ZAI_DMOI_Connection
 {
 
       @Search.defaultSearchElement: true
       @ObjectModel.text.element: ['AirlineName']
       @UI.textArrangement: #TEXT_FIRST
       @UI.lineItem: [{ position: 10, importance: #HIGH }]
-      @Consumption.valueHelpDefinition: [{entity: {name: '/DMO/I_Carrier_StdVH', element: 'AirlineID' }, useForValidation: true}]
+      @Consumption.valueHelpDefinition: [{entity: {name: 'ZAI_DMOI_Carrier_StdVH', element: 'AirlineID' }, useForValidation: true}]
   key AirlineID,
 
       @Search.defaultSearchElement: true
@@ -28,7 +28,7 @@ define view entity /DMO/I_Connection_StdVH
       @ObjectModel.text.element: ['DepartureAirportName']
       @UI.textArrangement: #TEXT_FIRST
       @UI.lineItem: [{ position: 30, importance: #HIGH }]
-      @Consumption.valueHelpDefinition: [{entity: {name: '/DMO/I_Airport_StdVH', element: 'AirportID' }, useForValidation: true}]
+      @Consumption.valueHelpDefinition: [{entity: {name: 'ZAI_DMOI_Airport_StdVH', element: 'AirportID' }, useForValidation: true}]
       DepartureAirport,
 
       @UI.hidden: true
@@ -40,7 +40,7 @@ define view entity /DMO/I_Connection_StdVH
       @ObjectModel.text.element: ['DestinationAirportName']
       @UI.textArrangement: #TEXT_FIRST
       @UI.lineItem: [{ position: 30, importance: #HIGH }]
-      @Consumption.valueHelpDefinition: [{entity: {name: '/DMO/I_Airport_StdVH', element: 'AirportID' }, useForValidation: true}]
+      @Consumption.valueHelpDefinition: [{entity: {name: 'ZAI_DMOI_Airport_StdVH', element: 'AirportID' }, useForValidation: true}]
       DestinationAirport,
 
       @UI.hidden: true

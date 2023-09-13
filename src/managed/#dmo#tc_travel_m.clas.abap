@@ -1,5 +1,5 @@
-"! @testing BDEF:/DMO/I_TRAVEL_M
-CLASS /dmo/tc_travel_m DEFINITION
+"! @testing BDEF:ZAI_DMOI_TRAVEL_M
+CLASS ZAI_DMOtc_travel_m DEFINITION
   FOR TESTING
   RISK LEVEL HARMLESS
   DURATION SHORT
@@ -15,11 +15,11 @@ CLASS /dmo/tc_travel_m DEFINITION
       cds_test_environment TYPE REF TO if_cds_test_environment,
       sql_test_environment TYPE REF TO if_osql_test_environment,
 
-      begin_date           TYPE /dmo/begin_date,
-      end_date             TYPE /dmo/end_date,
+      begin_date           TYPE ZAI_DMObegin_date,
+      end_date             TYPE ZAI_DMOend_date,
 
-      agency_mock_data     TYPE STANDARD TABLE OF /dmo/agency,
-      customer_mock_data   TYPE STANDARD TABLE OF /dmo/customer.
+      agency_mock_data     TYPE STANDARD TABLE OF ZAI_DMOagency,
+      customer_mock_data   TYPE STANDARD TABLE OF ZAI_DMOcustomer.
 
     CONSTANTS cid         TYPE abp_behv_cid    VALUE 'ROOT1'.
     CONSTANTS cid_node    TYPE abp_behv_cid    VALUE 'NODE1'.
@@ -47,7 +47,7 @@ ENDCLASS.
 
 
 
-CLASS /dmo/tc_travel_m IMPLEMENTATION.
+CLASS ZAI_DMOtc_travel_m IMPLEMENTATION.
 
   METHOD class_setup.
     agency_mock_data     = VALUE #( ( agency_id   = '987654' name      = 'Miles and More'   ) ).
@@ -55,16 +55,16 @@ CLASS /dmo/tc_travel_m IMPLEMENTATION.
 
     cds_test_environment = cl_cds_test_environment=>create_for_multiple_cds(
                                VALUE #(
-                                   ( i_for_entity = '/DMO/I_TRAVEL_M'            )
-                                   ( i_for_entity = '/DMO/I_BOOKING_M'           )
-                                   ( i_for_entity = '/DMO/I_BOOKSUPPL_M' )
+                                   ( i_for_entity = 'ZAI_DMOI_TRAVEL_M'            )
+                                   ( i_for_entity = 'ZAI_DMOI_BOOKING_M'           )
+                                   ( i_for_entity = 'ZAI_DMOI_BOOKSUPPL_M' )
                                  )
                              ).
 
     sql_test_environment = cl_osql_test_environment=>create( i_dependency_list = VALUE #(
-        ( '/DMO/AGENCY' )
-        ( '/DMO/CUSTOMER' )
-        ( '/DMO/LOG_TRAVEL' )
+        ( 'ZAI_DMOAGENCY' )
+        ( 'ZAI_DMOCUSTOMER' )
+        ( 'ZAI_DMOLOG_TRAVEL' )
       ) ) .
 
     sql_test_environment->insert_test_data( agency_mock_data   ).
@@ -93,7 +93,7 @@ CLASS /dmo/tc_travel_m IMPLEMENTATION.
     end_date   = cl_abap_context_info=>get_system_date( ) + 30.
 
     " Create a Travel with invalid begin_date
-    MODIFY ENTITIES OF /dmo/i_travel_m
+    MODIFY ENTITIES OF ZAI_DMOi_travel_m
       ENTITY travel
         CREATE FIELDS ( agency_id customer_id begin_date end_date description booking_fee currency_code overall_status ) WITH
         VALUE #( (         %cid = cid
@@ -120,7 +120,7 @@ CLASS /dmo/tc_travel_m IMPLEMENTATION.
 
     " Trigger Validations
     COMMIT ENTITIES
-    RESPONSE OF /DMO/I_Travel_M
+    RESPONSE OF ZAI_DMOI_Travel_M
     FAILED DATA(failed_commit)
     REPORTED DATA(reported_commit).
 
@@ -135,7 +135,7 @@ CLASS /dmo/tc_travel_m IMPLEMENTATION.
     cl_abap_unit_assert=>assert_equals( act = reported_commit-travel[ 1 ]-%element-begin_date  exp = if_abap_behv=>mk-on ).
     cl_abap_unit_assert=>assert_equals( act = reported_commit-travel[ 1 ]-%element-end_date  exp = if_abap_behv=>mk-on ).
     cl_abap_unit_assert=>assert_equals( exp = 004 act = reported_commit-travel[ 1 ]-%msg->if_t100_message~t100key-msgno ).
-    cl_abap_unit_assert=>assert_equals( exp = '/DMO/CM_FLIGHT' act = reported_commit-travel[ 1 ]-%msg->if_t100_message~t100key-msgid ).
+    cl_abap_unit_assert=>assert_equals( exp = 'ZAI_DMOCM_FLIGHT' act = reported_commit-travel[ 1 ]-%msg->if_t100_message~t100key-msgid ).
 
 
   ENDMETHOD.
@@ -147,7 +147,7 @@ CLASS /dmo/tc_travel_m IMPLEMENTATION.
     end_date   = cl_abap_context_info=>get_system_date( ) + 30.
 
     " Create a Travel with valid begin_date
-    MODIFY ENTITIES OF /dmo/i_travel_m
+    MODIFY ENTITIES OF ZAI_DMOi_travel_m
       ENTITY travel
         CREATE FIELDS ( agency_id customer_id begin_date end_date description booking_fee currency_code overall_status ) WITH
         VALUE #( (         %cid = cid
@@ -174,7 +174,7 @@ CLASS /dmo/tc_travel_m IMPLEMENTATION.
 
     " Trigger Validations
     COMMIT ENTITIES
-    RESPONSE OF /DMO/I_Travel_M
+    RESPONSE OF ZAI_DMOI_Travel_M
     FAILED DATA(failed_commit)
     REPORTED DATA(reported_commit).
 
@@ -192,7 +192,7 @@ CLASS /dmo/tc_travel_m IMPLEMENTATION.
     end_date   = cl_abap_context_info=>get_system_date( ) + 30.
 
     " Create a Travel, Booking and Supplement
-    MODIFY ENTITIES OF /dmo/i_travel_m
+    MODIFY ENTITIES OF ZAI_DMOi_travel_m
       ENTITY travel
         CREATE FIELDS (    agency_id customer_id begin_date end_date description booking_fee currency_code overall_status ) WITH
         VALUE #( (         %cid = cid
@@ -229,7 +229,7 @@ CLASS /dmo/tc_travel_m IMPLEMENTATION.
      REPORTED DATA(reported_cba).
 
     " Read determination result
-    READ ENTITIES OF /dmo/i_travel_m
+    READ ENTITIES OF ZAI_DMOi_travel_m
      ENTITY travel
        FIELDS ( total_price )
        WITH VALUE #( ( travel_id = mapped_cba-travel[ 1 ]-%tky ) )
@@ -249,7 +249,7 @@ CLASS /dmo/tc_travel_m IMPLEMENTATION.
     end_date   = cl_abap_context_info=>get_system_date( ) + 30.
 
     " Create a travel
-    MODIFY ENTITIES OF /dmo/i_travel_m
+    MODIFY ENTITIES OF ZAI_DMOi_travel_m
      ENTITY travel
        CREATE FIELDS (    agency_id customer_id begin_date end_date description booking_fee currency_code overall_status ) WITH
        VALUE #( (         %cid = cid
@@ -275,7 +275,7 @@ CLASS /dmo/tc_travel_m IMPLEMENTATION.
     cl_abap_unit_assert=>assert_initial( reported_create ).
 
     " Execute action
-    MODIFY ENTITIES OF /dmo/i_travel_m
+    MODIFY ENTITIES OF ZAI_DMOi_travel_m
      ENTITY travel
        EXECUTE acceptTravel FROM VALUE #( ( travel_id = mapped_create-travel[ 1 ]-%tky ) )
     FAILED DATA(failed_action)
@@ -297,7 +297,7 @@ CLASS /dmo/tc_travel_m IMPLEMENTATION.
     end_date   = cl_abap_context_info=>get_system_date( ) + 30.
 
     " Create a Travel
-    MODIFY ENTITIES OF /dmo/i_travel_m
+    MODIFY ENTITIES OF ZAI_DMOi_travel_m
      ENTITY travel
        CREATE FIELDS (    agency_id customer_id begin_date end_date description booking_fee currency_code overall_status ) WITH
        VALUE #( (         %cid = cid
@@ -323,14 +323,14 @@ CLASS /dmo/tc_travel_m IMPLEMENTATION.
     cl_abap_unit_assert=>assert_initial( reported_create ).
 
     " Execute action
-    MODIFY ENTITIES OF /dmo/i_travel_m
+    MODIFY ENTITIES OF ZAI_DMOi_travel_m
      ENTITY travel
        EXECUTE acceptTravel FROM VALUE #( ( travel_id = mapped_create-travel[ 1 ]-%tky ) )
     FAILED DATA(failed_action)
     REPORTED DATA(reported_action).
 
     " Read action result
-    READ ENTITIES OF /dmo/i_travel_m
+    READ ENTITIES OF ZAI_DMOi_travel_m
      ENTITY travel
        FIELDS ( overall_status )
        WITH VALUE #( ( travel_id = mapped_create-travel[ 1 ]-%tky ) )
@@ -353,7 +353,7 @@ CLASS /dmo/tc_travel_m IMPLEMENTATION.
     end_date   = cl_abap_context_info=>get_system_date( ) + 30.
 
     " Create a Travel with overall status "Cancelled"
-    MODIFY ENTITIES OF /dmo/i_travel_m
+    MODIFY ENTITIES OF ZAI_DMOi_travel_m
     ENTITY travel
       CREATE FIELDS (    agency_id customer_id begin_date end_date description booking_fee currency_code overall_status ) WITH
       VALUE #( (         %cid = cid
@@ -379,7 +379,7 @@ CLASS /dmo/tc_travel_m IMPLEMENTATION.
     cl_abap_unit_assert=>assert_initial( reported_create ).
 
     " Create a Booking for the created Travel
-    MODIFY ENTITIES OF /dmo/i_travel_m
+    MODIFY ENTITIES OF ZAI_DMOi_travel_m
     ENTITY travel
       CREATE BY \_booking FIELDS ( booking_date customer_id carrier_id connection_id flight_date flight_price currency_code booking_status ) WITH
       VALUE #( (         travel_id = mapped_create-travel[ 1 ]-%tky
@@ -415,7 +415,7 @@ CLASS /dmo/tc_travel_m IMPLEMENTATION.
     end_date   = cl_abap_context_info=>get_system_date( ) + 30.
 
     " Create a Travel with overall status "Accepted"
-    MODIFY ENTITIES OF /dmo/i_travel_m
+    MODIFY ENTITIES OF ZAI_DMOi_travel_m
     ENTITY travel
       CREATE FIELDS (    agency_id customer_id begin_date end_date description booking_fee currency_code overall_status ) WITH
       VALUE #( (         %cid = cid
@@ -441,7 +441,7 @@ CLASS /dmo/tc_travel_m IMPLEMENTATION.
     cl_abap_unit_assert=>assert_initial( reported_create ).
 
     " Create a Booking for the created Travel
-    MODIFY ENTITIES OF /dmo/i_travel_m
+    MODIFY ENTITIES OF ZAI_DMOi_travel_m
     ENTITY travel
       CREATE BY \_booking FIELDS ( booking_date customer_id carrier_id connection_id flight_date flight_price currency_code booking_status ) WITH
       VALUE #( (         travel_id = mapped_create-travel[ 1 ]-%tky
@@ -478,7 +478,7 @@ CLASS /dmo/tc_travel_m IMPLEMENTATION.
     end_date   = cl_abap_context_info=>get_system_date( ) + 30.
 
     " Create a Travel
-    MODIFY ENTITIES OF /dmo/i_travel_m
+    MODIFY ENTITIES OF ZAI_DMOi_travel_m
     ENTITY travel
       CREATE FIELDS (    agency_id customer_id begin_date end_date description booking_fee currency_code overall_status ) WITH
       VALUE #( (         %cid = cid
@@ -505,7 +505,7 @@ CLASS /dmo/tc_travel_m IMPLEMENTATION.
 
     " Trigger additional save
     COMMIT ENTITIES
-    RESPONSE OF /DMO/I_Travel_M
+    RESPONSE OF ZAI_DMOI_Travel_M
     FAILED DATA(failed_commit)
     REPORTED DATA(reported_commit).
 
@@ -514,7 +514,7 @@ CLASS /dmo/tc_travel_m IMPLEMENTATION.
     cl_abap_unit_assert=>assert_initial( act = reported_commit ).
 
     " Ensure that a create operation has been executed
-    SELECT changed_field_name FROM /dmo/log_travel WHERE changing_operation = 'CREATE' ORDER BY changed_field_name  INTO TABLE @DATA(log_fields).
+    SELECT changed_field_name FROM ZAI_DMOlog_travel WHERE changing_operation = 'CREATE' ORDER BY changed_field_name  INTO TABLE @DATA(log_fields).
     cl_abap_unit_assert=>assert_equals( act = lines( log_fields )  exp = 2 ).
     cl_abap_unit_assert=>assert_equals( act = log_fields[ 1 ] exp = 'booking_fee' ).
     cl_abap_unit_assert=>assert_equals( act = log_fields[ 2 ] exp = 'overall_status' ).

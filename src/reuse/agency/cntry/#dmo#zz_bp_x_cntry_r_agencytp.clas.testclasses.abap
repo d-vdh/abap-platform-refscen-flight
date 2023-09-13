@@ -1,4 +1,4 @@
-"! @testing BDEF:/DMO/ZZ_X_COUNTRY_R_AGENCYTP
+"! @testing BDEF:ZAI_DMOZZ_X_COUNTRY_R_AGENCYTP
 CLASS ltcl_agency_w_cds_tdf DEFINITION FINAL FOR TESTING
   DURATION SHORT
   RISK LEVEL HARMLESS.
@@ -61,7 +61,7 @@ CLASS ltcl_agency_w_cds_tdf IMPLEMENTATION.
 
   METHOD class_setup.
     cds_test_environment = cl_cds_test_environment=>create(
-                             i_for_entity                = '/dmo/i_agencytp'
+                             i_for_entity                = 'ZAI_DMOi_agencytp'
                              i_select_base_dependencies = abap_true
                            ).
   ENDMETHOD.
@@ -83,7 +83,7 @@ CLASS ltcl_agency_w_cds_tdf IMPLEMENTATION.
 
   METHOD validatecountry_valid.
 
-    DATA agency_mock_data TYPE STANDARD TABLE OF /dmo/agency.
+    DATA agency_mock_data TYPE STANDARD TABLE OF ZAI_DMOagency.
     agency_mock_data = VALUE #(
         country_code = 'DE'
         ( agency_id = '1' phone_number = '+49'     )
@@ -92,7 +92,7 @@ CLASS ltcl_agency_w_cds_tdf IMPLEMENTATION.
       ).
     cds_test_environment->insert_test_data( agency_mock_data ).
 
-    DATA reported TYPE RESPONSE FOR REPORTED LATE  /dmo/i_agencytp.
+    DATA reported TYPE RESPONSE FOR REPORTED LATE  ZAI_DMOi_agencytp.
 
     class_under_test->validatediallingcode(
       EXPORTING
@@ -105,30 +105,30 @@ CLASS ltcl_agency_w_cds_tdf IMPLEMENTATION.
     cl_abap_unit_assert=>assert_equals(
         msg = 'Reported has not the correct amount of messages'
         exp = lines( agency_mock_data )
-        act = lines( reported-/dmo/agency )
+        act = lines( reported-ZAI_DMOagency )
       ).
 
   ENDMETHOD.
 
   METHOD validatecountry_invalidnumber.
     TYPES BEGIN OF ts_agency_test_data.
-    INCLUDE TYPE /dmo/agency.
+    INCLUDE TYPE ZAI_DMOagency.
     TYPES t100 LIKE if_t100_message=>t100key.
     TYPES END OF ts_agency_test_data.
     TYPES tt_agency_test_data TYPE STANDARD TABLE OF ts_agency_test_data.
 
     DATA:
       agency_test_data          TYPE tt_agency_test_data,
-      agency_mock_data          TYPE STANDARD TABLE OF /dmo/agency,
-      reported                  TYPE RESPONSE FOR REPORTED LATE  /dmo/i_agencytp,
-      reported_with_message     TYPE STRUCTURE FOR REPORTED LATE /dmo/i_agencytp,
-      reported_clear_state_area TYPE STRUCTURE FOR REPORTED LATE /dmo/i_agencytp.
+      agency_mock_data          TYPE STANDARD TABLE OF ZAI_DMOagency,
+      reported                  TYPE RESPONSE FOR REPORTED LATE  ZAI_DMOi_agencytp,
+      reported_with_message     TYPE STRUCTURE FOR REPORTED LATE ZAI_DMOi_agencytp,
+      reported_clear_state_area TYPE STRUCTURE FOR REPORTED LATE ZAI_DMOi_agencytp.
 
     agency_test_data = VALUE #(
-        ( agency_id = '1' phone_number = '49'     country_code = 'DE'  t100 = CORRESPONDING #( /dmo/zz_cx_agency_country=>number_invalid      ) )
-        ( agency_id = '2' phone_number = '49'     country_code = 'D'   t100 = CORRESPONDING #( /dmo/zz_cx_agency_country=>number_invalid      ) )
-        ( agency_id = '3' phone_number = '+49'    country_code = 'D'   t100 = CORRESPONDING #( /dmo/zz_cx_agency_country=>combination_invalid ) )
-        ( agency_id = '4' phone_number = '008955' country_code = 'DE'  t100 = CORRESPONDING #( /dmo/zz_cx_agency_country=>combination_invalid ) )
+        ( agency_id = '1' phone_number = '49'     country_code = 'DE'  t100 = CORRESPONDING #( ZAI_DMOzz_cx_agency_country=>number_invalid      ) )
+        ( agency_id = '2' phone_number = '49'     country_code = 'D'   t100 = CORRESPONDING #( ZAI_DMOzz_cx_agency_country=>number_invalid      ) )
+        ( agency_id = '3' phone_number = '+49'    country_code = 'D'   t100 = CORRESPONDING #( ZAI_DMOzz_cx_agency_country=>combination_invalid ) )
+        ( agency_id = '4' phone_number = '008955' country_code = 'DE'  t100 = CORRESPONDING #( ZAI_DMOzz_cx_agency_country=>combination_invalid ) )
       ).
     agency_mock_data = CORRESPONDING #( agency_test_data ).
     cds_test_environment->insert_test_data( agency_mock_data ).
@@ -145,14 +145,14 @@ CLASS ltcl_agency_w_cds_tdf IMPLEMENTATION.
     cl_abap_unit_assert=>assert_equals(
         msg = 'Reported has not the correct amount of messages'
         exp = 2 * lines( agency_test_data )
-        act = lines( reported-/dmo/agency )
+        act = lines( reported-ZAI_DMOagency )
         quit = if_abap_unit_constant=>quit-no
       ).
 
     LOOP AT agency_test_data ASSIGNING FIELD-SYMBOL(<agency>).
       CLEAR: reported_with_message, reported_clear_state_area.
 
-      LOOP AT reported-/dmo/agency INTO DATA(reported_line) USING KEY entity WHERE agencyid = <agency>-agency_id.
+      LOOP AT reported-ZAI_DMOagency INTO DATA(reported_line) USING KEY entity WHERE agencyid = <agency>-agency_id.
         IF reported_line-%msg IS BOUND.
           reported_with_message     = reported_line.
         ELSE.
@@ -196,15 +196,15 @@ CLASS ltcl_agency_w_cds_tdf IMPLEMENTATION.
 
   METHOD determinecountrycode.
     TYPES BEGIN OF ts_agency_test_data.
-    INCLUDE TYPE /dmo/agency.
-    TYPES exp_country_code TYPE /dmo/agency-country_code.
+    INCLUDE TYPE ZAI_DMOagency.
+    TYPES exp_country_code TYPE ZAI_DMOagency-country_code.
     TYPES END OF ts_agency_test_data.
     TYPES tt_agency_test_data TYPE STANDARD TABLE OF ts_agency_test_data.
 
     DATA:
       agency_test_data          TYPE tt_agency_test_data,
-      agency_mock_data          TYPE STANDARD TABLE OF /dmo/agency,
-      reported                  TYPE RESPONSE FOR REPORTED LATE  /dmo/i_agencytp.
+      agency_mock_data          TYPE STANDARD TABLE OF ZAI_DMOagency,
+      reported                  TYPE RESPONSE FOR REPORTED LATE  ZAI_DMOi_agencytp.
 
     agency_test_data = VALUE #(
         ( agency_id = '1' phone_number = '+49 1234'    country_code = 'EN'  exp_country_code = 'EN' )
@@ -227,8 +227,8 @@ CLASS ltcl_agency_w_cds_tdf IMPLEMENTATION.
 
     cl_abap_unit_assert=>assert_initial( act = reported ).
 
-    READ ENTITIES OF /dmo/i_agencytp IN LOCAL MODE
-        ENTITY /dmo/agency
+    READ ENTITIES OF ZAI_DMOi_agencytp IN LOCAL MODE
+        ENTITY ZAI_DMOagency
           FIELDS ( countrycode ) WITH CORRESPONDING #( agency_test_data MAPPING agencyid = agency_id EXCEPT * )
         RESULT DATA(agencies_afterwards).
 
@@ -248,15 +248,15 @@ CLASS ltcl_agency_w_cds_tdf IMPLEMENTATION.
 
   METHOD determinediallingcode.
     TYPES BEGIN OF ts_agency_test_data.
-    INCLUDE TYPE /dmo/agency.
-    TYPES exp_phone_number TYPE /dmo/agency-phone_number.
+    INCLUDE TYPE ZAI_DMOagency.
+    TYPES exp_phone_number TYPE ZAI_DMOagency-phone_number.
     TYPES END OF ts_agency_test_data.
     TYPES tt_agency_test_data TYPE STANDARD TABLE OF ts_agency_test_data.
 
     DATA:
       agency_test_data          TYPE tt_agency_test_data,
-      agency_mock_data          TYPE STANDARD TABLE OF /dmo/agency,
-      reported                  TYPE RESPONSE FOR REPORTED LATE  /dmo/i_agencytp.
+      agency_mock_data          TYPE STANDARD TABLE OF ZAI_DMOagency,
+      reported                  TYPE RESPONSE FOR REPORTED LATE  ZAI_DMOi_agencytp.
 
     agency_test_data = VALUE #(
         ( agency_id = '1' country_code = 'EN'  phone_number = '+49'   exp_phone_number = '+49'  )
@@ -276,8 +276,8 @@ CLASS ltcl_agency_w_cds_tdf IMPLEMENTATION.
 
     cl_abap_unit_assert=>assert_initial( act = reported ).
 
-    READ ENTITIES OF /dmo/i_agencytp IN LOCAL MODE
-        ENTITY /dmo/agency
+    READ ENTITIES OF ZAI_DMOi_agencytp IN LOCAL MODE
+        ENTITY ZAI_DMOagency
           FIELDS ( phonenumber ) WITH CORRESPONDING #( agency_test_data MAPPING agencyid = agency_id EXCEPT * )
         RESULT DATA(agencies_afterwards).
 
@@ -296,11 +296,11 @@ CLASS ltcl_agency_w_cds_tdf IMPLEMENTATION.
 
   METHOD get_global_authorizations.
     DATA:
-      requested_authorizations TYPE STRUCTURE FOR GLOBAL AUTHORIZATION REQUEST /dmo/i_agencytp\\/dmo/agency,
-      result                   TYPE STRUCTURE FOR GLOBAL AUTHORIZATION RESULT /dmo/i_agencytp\\/dmo/agency,
-      reported                 TYPE RESPONSE  FOR REPORTED EARLY /dmo/i_agencytp.
+      requested_authorizations TYPE STRUCTURE FOR GLOBAL AUTHORIZATION REQUEST ZAI_DMOi_agencytp\\ZAI_DMOagency,
+      result                   TYPE STRUCTURE FOR GLOBAL AUTHORIZATION RESULT ZAI_DMOi_agencytp\\ZAI_DMOagency,
+      reported                 TYPE RESPONSE  FOR REPORTED EARLY ZAI_DMOi_agencytp.
 
-    requested_authorizations-%action-/dmo/createfromtemplate = if_abap_behv=>mk-on.
+    requested_authorizations-%action-ZAI_DMOcreatefromtemplate = if_abap_behv=>mk-on.
 
     class_under_test->get_global_authorizations(
       EXPORTING
@@ -318,12 +318,12 @@ CLASS ltcl_agency_w_cds_tdf IMPLEMENTATION.
     CONSTANTS:
       cid TYPE abp_behv_cid VALUE 'Test'.
     DATA:
-      agency_mock_data TYPE STANDARD TABLE OF /dmo/agency,
-      mapped           TYPE RESPONSE FOR MAPPED EARLY /dmo/i_agencytp,
-      reported         TYPE RESPONSE FOR REPORTED EARLY /dmo/i_agencytp,
-      failed           TYPE RESPONSE FOR FAILED EARLY /dmo/i_agencytp.
+      agency_mock_data TYPE STANDARD TABLE OF ZAI_DMOagency,
+      mapped           TYPE RESPONSE FOR MAPPED EARLY ZAI_DMOi_agencytp,
+      reported         TYPE RESPONSE FOR REPORTED EARLY ZAI_DMOi_agencytp,
+      failed           TYPE RESPONSE FOR FAILED EARLY ZAI_DMOi_agencytp.
 
-    DATA(agency_to_test) = VALUE /dmo/agency(
+    DATA(agency_to_test) = VALUE ZAI_DMOagency(
         agency_id             = '1'
         name                  = 'Test'
         street                = 'Street'
@@ -354,15 +354,15 @@ CLASS ltcl_agency_w_cds_tdf IMPLEMENTATION.
 
     cl_abap_unit_assert=>assert_initial( reported ).
     cl_abap_unit_assert=>assert_initial( failed   ).
-    cl_abap_unit_assert=>assert_initial( mapped-/dmo/zz_review ).
+    cl_abap_unit_assert=>assert_initial( mapped-ZAI_DMOzz_review ).
 
-    cl_abap_unit_assert=>assert_not_initial( mapped-/dmo/agency ).
+    cl_abap_unit_assert=>assert_not_initial( mapped-ZAI_DMOagency ).
     cl_abap_unit_assert=>assert_equals(
-        act = lines( mapped-/dmo/agency )
+        act = lines( mapped-ZAI_DMOagency )
         exp = 1
       ).
 
-    DATA(mapped_line) = mapped-/dmo/agency[ 1 ].
+    DATA(mapped_line) = mapped-ZAI_DMOagency[ 1 ].
     cl_abap_unit_assert=>assert_equals(
         act = mapped_line-%cid
         exp = cid
@@ -373,8 +373,8 @@ CLASS ltcl_agency_w_cds_tdf IMPLEMENTATION.
       ).
     cl_abap_unit_assert=>assert_not_initial( mapped_line-%pid ).
 
-    READ ENTITIES OF /dmo/i_agencytp
-      ENTITY /dmo/agency
+    READ ENTITIES OF ZAI_DMOi_agencytp
+      ENTITY ZAI_DMOagency
         FIELDS (
           name
           street
@@ -387,8 +387,8 @@ CLASS ltcl_agency_w_cds_tdf IMPLEMENTATION.
           attachment
           mimetype
           filename
-          /dmo/zzsloganzag
-        ) WITH CORRESPONDING #( mapped-/dmo/agency )
+          ZAI_DMOzzsloganzag
+        ) WITH CORRESPONDING #( mapped-ZAI_DMOagency )
       RESULT DATA(copied_agencies).
 
     cl_abap_unit_assert=>assert_equals(
@@ -418,11 +418,11 @@ CLASS ltcl_agency_w_cds_tdf IMPLEMENTATION.
   METHOD createfromtemplate_invalid.
     CONSTANTS:
       cid       TYPE abp_behv_cid VALUE 'Test',
-      agency_id TYPE /dmo/agency_id VALUE '42'.
+      agency_id TYPE ZAI_DMOagency_id VALUE '42'.
     DATA:
-      mapped   TYPE RESPONSE FOR MAPPED EARLY /dmo/i_agencytp,
-      reported TYPE RESPONSE FOR REPORTED EARLY /dmo/i_agencytp,
-      failed   TYPE RESPONSE FOR FAILED EARLY /dmo/i_agencytp.
+      mapped   TYPE RESPONSE FOR MAPPED EARLY ZAI_DMOi_agencytp,
+      reported TYPE RESPONSE FOR REPORTED EARLY ZAI_DMOi_agencytp,
+      failed   TYPE RESPONSE FOR FAILED EARLY ZAI_DMOi_agencytp.
 
 
     class_under_test->createfromtemplate(
@@ -442,15 +442,15 @@ CLASS ltcl_agency_w_cds_tdf IMPLEMENTATION.
 
     cl_abap_unit_assert=>assert_initial( reported ).
     cl_abap_unit_assert=>assert_initial( mapped ).
-    cl_abap_unit_assert=>assert_initial( failed-/dmo/zz_review ).
+    cl_abap_unit_assert=>assert_initial( failed-ZAI_DMOzz_review ).
 
     cl_abap_unit_assert=>assert_equals(
-        act = lines( failed-/dmo/agency )
+        act = lines( failed-ZAI_DMOagency )
         exp = 1
       ).
 
     cl_abap_unit_assert=>assert_equals(
-        act = failed-/dmo/agency[ 1 ]-%fail-cause
+        act = failed-ZAI_DMOagency[ 1 ]-%fail-cause
         exp = if_abap_behv=>cause-not_found
       ).
   ENDMETHOD.

@@ -5,8 +5,8 @@
 
 @ObjectModel.semanticKey: ['Reviewer']
 
-define view entity /DMO/ZZ_C_Agency_ReviewTP
-  as projection on /DMO/ZZ_R_Agency_ReviewTP
+define view entity ZAI_DMOZZ_C_Agency_ReviewTP
+  as projection on ZAI_DMOZZ_R_Agency_ReviewTP
 {
   key AgencyId,
   key ReviewId,
@@ -18,5 +18,5 @@ define view entity /DMO/ZZ_C_Agency_ReviewTP
       LocalCreatedAt,
       LocalLastChangedAt,
       /* Associations */
-      _Agency : redirected to parent /DMO/C_AgencyTP
+      _Agency : redirected to parent ZAI_DMOC_AgencyTP
 }

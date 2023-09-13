@@ -8,7 +8,7 @@ CLASS lhc_Agency DEFINITION INHERITING FROM cl_abap_behavior_handler
       validate_dialling_code    TYPE string VALUE 'VALIDATE_DIALLING_CODE' ##NO_TEXT.
 
     TYPES: BEGIN OF t_countries,
-             number TYPE /dmo/phone_number,
+             number TYPE ZAI_DMOphone_number,
              code   TYPE land1,
            END OF t_countries.
 
@@ -18,15 +18,15 @@ CLASS lhc_Agency DEFINITION INHERITING FROM cl_abap_behavior_handler
   PRIVATE SECTION.
 
     METHODS validateDiallingCode FOR VALIDATE ON SAVE
-      IMPORTING keys FOR /DMO/Agency~/DMO/validateDiallingCode.
+      IMPORTING keys FOR ZAI_DMOAgency~ZAI_DMOvalidateDiallingCode.
     METHODS determineCountryCode FOR DETERMINE ON MODIFY
-      IMPORTING keys FOR /DMO/Agency~/DMO/determineCountryCode.
+      IMPORTING keys FOR ZAI_DMOAgency~ZAI_DMOdetermineCountryCode.
     METHODS determineDiallingCode FOR DETERMINE ON MODIFY
-      IMPORTING keys FOR /DMO/Agency~/DMO/determineDiallingCode.
+      IMPORTING keys FOR ZAI_DMOAgency~ZAI_DMOdetermineDiallingCode.
     METHODS get_global_authorizations FOR GLOBAL AUTHORIZATION
-      IMPORTING REQUEST requested_authorizations FOR /DMO/Agency RESULT result.
+      IMPORTING REQUEST requested_authorizations FOR ZAI_DMOAgency RESULT result.
     METHODS createFromTemplate FOR MODIFY
-      IMPORTING keys FOR ACTION /DMO/Agency~/DMO/createFromTemplate.
+      IMPORTING keys FOR ACTION ZAI_DMOAgency~ZAI_DMOcreateFromTemplate.
 
 ENDCLASS.
 
@@ -36,14 +36,14 @@ CLASS lhc_Agency IMPLEMENTATION.
 
   METHOD validateDiallingCode.
 
-    READ ENTITIES OF /dmo/i_agencytp IN LOCAL MODE
-      ENTITY /DMO/Agency
+    READ ENTITIES OF ZAI_DMOi_agencytp IN LOCAL MODE
+      ENTITY ZAI_DMOAgency
        FIELDS ( PhoneNumber CountryCode ) WITH CORRESPONDING #( keys )
       RESULT DATA(agencies).
 
     LOOP AT agencies INTO DATA(agency).
       APPEND VALUE #( %tky        = agency-%tky
-                      %state_area = validate_dialling_code ) TO reported-/DMO/Agency.
+                      %state_area = validate_dialling_code ) TO reported-ZAI_DMOAgency.
 
       IF agency-PhoneNumber IS INITIAL.
         CONTINUE.
@@ -57,19 +57,19 @@ CLASS lhc_Agency IMPLEMENTATION.
 
         APPEND VALUE #( %tky        = agency-%tky
                         %state_area = validate_dialling_code
-                        %msg        = NEW /dmo/zz_cx_agency_country( textid      = /dmo/zz_cx_agency_country=>number_invalid
+                        %msg        = NEW ZAI_DMOzz_cx_agency_country( textid      = ZAI_DMOzz_cx_agency_country=>number_invalid
                                                              phonenumber = agency-PhoneNumber )
                         %element-PhoneNumber = if_abap_behv=>mk-on )
-                        TO reported-/DMO/Agency.
+                        TO reported-ZAI_DMOAgency.
 
       ELSEIF NOT line_exists( countries[ number = agency-phonenumber(2) code = agency-CountryCode ] )
       AND NOT line_exists( countries[ number = agency-phonenumber(3) code = agency-CountryCode ] )
       AND NOT line_exists( countries[ number = agency-phonenumber(4) code = agency-CountryCode ] ).
         APPEND VALUE #( %tky        = agency-%tky
                         %state_area = validate_dialling_code
-                        %msg        = NEW /dmo/zz_cx_agency_country( textid      = /dmo/zz_cx_agency_country=>combination_invalid )
+                        %msg        = NEW ZAI_DMOzz_cx_agency_country( textid      = ZAI_DMOzz_cx_agency_country=>combination_invalid )
                         %element-PhoneNumber = if_abap_behv=>mk-on )
-                        TO reported-/DMO/Agency.
+                        TO reported-ZAI_DMOAgency.
 
       ENDIF.
 
@@ -80,13 +80,13 @@ CLASS lhc_Agency IMPLEMENTATION.
 
   METHOD determineCountryCode.
 
-    READ ENTITIES OF /dmo/i_agencytp IN LOCAL MODE
-        ENTITY /DMO/Agency
+    READ ENTITIES OF ZAI_DMOi_agencytp IN LOCAL MODE
+        ENTITY ZAI_DMOAgency
           FIELDS ( PhoneNumber CountryCode ) WITH CORRESPONDING #( keys )
         RESULT DATA(agencies).
 
     DELETE agencies WHERE CountryCode IS NOT INITIAL.
-    DATA: agencies_to_update TYPE TABLE FOR UPDATE /dmo/i_agencytp.
+    DATA: agencies_to_update TYPE TABLE FOR UPDATE ZAI_DMOi_agencytp.
 
     LOOP AT countries INTO DATA(country).
       DATA(country_with_00) = country-number.
@@ -99,8 +99,8 @@ CLASS lhc_Agency IMPLEMENTATION.
       ENDLOOP.
     ENDLOOP.
 
-    MODIFY ENTITIES OF /dmo/i_agencytp IN LOCAL MODE
-      ENTITY /DMO/Agency
+    MODIFY ENTITIES OF ZAI_DMOi_agencytp IN LOCAL MODE
+      ENTITY ZAI_DMOAgency
         UPDATE FIELDS ( countrycode ) WITH agencies_to_update
       REPORTED DATA(reported_modify).
 
@@ -108,13 +108,13 @@ CLASS lhc_Agency IMPLEMENTATION.
 
   METHOD determineDiallingCode.
 
-    READ ENTITIES OF /dmo/i_agencytp IN LOCAL MODE
-        ENTITY /DMO/Agency
+    READ ENTITIES OF ZAI_DMOi_agencytp IN LOCAL MODE
+        ENTITY ZAI_DMOAgency
           FIELDS ( PhoneNumber CountryCode ) WITH CORRESPONDING #( keys )
         RESULT DATA(agencies).
 
     DELETE agencies WHERE PhoneNumber IS NOT INITIAL.
-    DATA: agencies_to_update TYPE TABLE FOR UPDATE /dmo/i_agencytp.
+    DATA: agencies_to_update TYPE TABLE FOR UPDATE ZAI_DMOi_agencytp.
 
     LOOP AT agencies INTO DATA(agency).
       DATA(PhoneNumber) = VALUE #( countries[ code = agency-countrycode ]-number OPTIONAL ) .
@@ -124,8 +124,8 @@ CLASS lhc_Agency IMPLEMENTATION.
       ENDIF.
     ENDLOOP.
 
-    MODIFY ENTITIES OF /dmo/i_agencytp IN LOCAL MODE
-      ENTITY /DMO/Agency
+    MODIFY ENTITIES OF ZAI_DMOi_agencytp IN LOCAL MODE
+      ENTITY ZAI_DMOAgency
         UPDATE FIELDS ( PhoneNumber ) WITH agencies_to_update
       REPORTED DATA(reported_modify).
 
@@ -153,21 +153,21 @@ CLASS lhc_Agency IMPLEMENTATION.
 
   METHOD createFromTemplate.
 
-    READ ENTITIES OF /DMO/I_AgencyTP IN LOCAL MODE
-      ENTITY /DMO/Agency
+    READ ENTITIES OF ZAI_DMOI_AgencyTP IN LOCAL MODE
+      ENTITY ZAI_DMOAgency
         FIELDS ( CountryCode PostalCode City Street ) WITH CORRESPONDING #( keys )
       RESULT DATA(agencies)
       FAILED failed.
 
-    DATA: agencies_to_create TYPE TABLE FOR CREATE /DMO/I_AgencyTP.
+    DATA: agencies_to_create TYPE TABLE FOR CREATE ZAI_DMOI_AgencyTP.
     LOOP AT agencies INTO DATA(agency).
       APPEND CORRESPONDING #( agency EXCEPT agencyid ) TO agencies_to_create ASSIGNING FIELD-SYMBOL(<agency_to_create>).
       <agency_to_create>-%cid = keys[ KEY id  %tky = agency-%tky ]-%cid.
       <agency_to_create>-%is_draft = if_abap_behv=>mk-on.
     ENDLOOP.
 
-    MODIFY ENTITIES OF /DMO/I_AgencyTP IN LOCAL MODE
-      ENTITY /DMO/Agency
+    MODIFY ENTITIES OF ZAI_DMOI_AgencyTP IN LOCAL MODE
+      ENTITY ZAI_DMOAgency
         CREATE FIELDS ( CountryCode PostalCode City Street ) WITH agencies_to_create
       MAPPED mapped.
 

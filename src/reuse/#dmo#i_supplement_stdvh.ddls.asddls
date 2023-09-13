@@ -6,8 +6,8 @@
 @ObjectModel.semanticKey: ['SupplementID']
 @ObjectModel.dataCategory:#VALUE_HELP
 
-define view entity /DMO/I_Supplement_StdVH
-  as select from /DMO/I_Supplement as Supplement
+define view entity ZAI_DMOI_Supplement_StdVH
+  as select from ZAI_DMOI_Supplement as Supplement
 
 {
       @ObjectModel.text.element: ['SupplementText']
@@ -22,7 +22,7 @@ define view entity /DMO/I_Supplement_StdVH
       _SupplementText[ 1: LanguageCode = $session.system_language ].Description         as SupplementText,
 
       @Consumption.valueHelpDefinition: [{entity: {
-                                            name: '/DMO/I_SupplementCategory_VH',
+                                            name: 'ZAI_DMOI_SupplementCategory_VH',
                                             element: 'SupplementCategory'
                                           }}]
       @ObjectModel.text.element: ['SupplementCategoryText']

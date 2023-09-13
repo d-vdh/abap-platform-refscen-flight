@@ -2,10 +2,10 @@ managed;
 strict ( 2 );
 with draft;
 
-define behavior for /DMO/R_Travel_D alias Travel
-implementation in class /dmo/bp_travel_d unique
-persistent table /dmo/a_travel_d
-draft table /dmo/d_travel_d
+define behavior for ZAI_DMOR_Travel_D alias Travel
+implementation in class ZAI_DMObp_travel_d unique
+persistent table ZAI_DMOa_travel_d
+draft table ZAI_DMOd_travel_d
 lock master
 total etag LastChangedAt
 authorization master ( global, instance )
@@ -23,7 +23,7 @@ etag master LocalLastChangedAt
 
   action ( features : instance, authorization : update ) acceptTravel result [1] $self;
   action ( features : instance, authorization : update ) rejectTravel result [1] $self;
-  action ( features : instance, authorization : update ) deductDiscount parameter /dmo/a_travel_discount result [1] $self;
+  action ( features : instance, authorization : update ) deductDiscount parameter ZAI_DMOa_travel_discount result [1] $self;
   internal action reCalcTotalPrice;
 
   determination setTravelNumber on save { create; }
@@ -63,7 +63,7 @@ etag master LocalLastChangedAt
     validation Bookingsupplement~validateSupplement;
     validation Bookingsupplement~validateCurrencyCode;
   }
-  mapping for /dmo/a_travel_d
+  mapping for ZAI_DMOa_travel_d
     {
       AgencyID           = agency_id;
       BeginDate          = begin_date;
@@ -85,10 +85,10 @@ etag master LocalLastChangedAt
 
 }
 
-define behavior for /DMO/R_Booking_D alias Booking
-implementation in class /dmo/bp_booking_d unique
-persistent table /dmo/a_booking_d
-draft table /dmo/d_booking_d
+define behavior for ZAI_DMOR_Booking_D alias Booking
+implementation in class ZAI_DMObp_booking_d unique
+persistent table ZAI_DMOa_booking_d
+draft table ZAI_DMOd_booking_d
 lock dependent by _Travel
 authorization dependent by _Travel
 etag master LocalLastChangedAt
@@ -115,7 +115,7 @@ etag master LocalLastChangedAt
   side effects
   { field FlightPrice affects field _Travel.TotalPrice; }
 
-  mapping for /dmo/a_booking_d
+  mapping for ZAI_DMOa_booking_d
     {
       AirlineID          = carrier_id;
       BookingDate        = booking_date;
@@ -135,10 +135,10 @@ etag master LocalLastChangedAt
 
 }
 
-define behavior for /DMO/R_BookingSupplement_D alias BookingSupplement
-implementation in class /dmo/bp_bookingsupplement_d unique
-persistent table /dmo/a_bksuppl_d
-draft table /dmo/d_bksuppl_d
+define behavior for ZAI_DMOR_BookingSupplement_D alias BookingSupplement
+implementation in class ZAI_DMObp_bookingsupplement_d unique
+persistent table ZAI_DMOa_bksuppl_d
+draft table ZAI_DMOd_bksuppl_d
 lock dependent by _Travel
 authorization dependent by _Travel
 etag master LocalLastChangedAt
@@ -162,7 +162,7 @@ etag master LocalLastChangedAt
   side effects
   { field BookSupplPrice affects field _Travel.TotalPrice; }
 
-  mapping for /dmo/a_bksuppl_d
+  mapping for ZAI_DMOa_bksuppl_d
     {
       BookSupplPrice      = price;
       BookSupplUUID       = booksuppl_uuid;

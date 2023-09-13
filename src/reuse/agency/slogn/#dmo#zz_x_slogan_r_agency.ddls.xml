@@ -3,9 +3,9 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <DDLS>
-    <DDLNAME>/DMO/ZZ_X_SLOGAN_R_AGENCY</DDLNAME>
+    <DDLNAME>ZAI_DMOZZ_X_SLOGAN_R_AGENCY</DDLNAME>
     <DDLANGUAGE>E</DDLANGUAGE>
-    <PARENTNAME>/DMO/R_AGENCYTP</PARENTNAME>
+    <PARENTNAME>ZAI_DMOR_AGENCYTP</PARENTNAME>
     <DDTEXT>Extension View: Slogan</DDTEXT>
     <SOURCE_TYPE>X</SOURCE_TYPE>
    </DDLS>

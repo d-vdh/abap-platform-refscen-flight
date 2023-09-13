@@ -12,7 +12,7 @@
          }]
      }
 
-annotate view /DMO/ZZ_C_Agency_ReviewTP with
+annotate view ZAI_DMOZZ_C_Agency_ReviewTP with
 {
 
   @UI.facet: [
@@ -94,13 +94,13 @@ annotate view /DMO/ZZ_C_Agency_ReviewTP with
   HelpfulTotal;
 
   @UI.lineItem:       [
-      { type: #FOR_ACTION, dataAction: '/DMO/reviewWasHelpful',    label: 'Helpful'     },
-      { type: #FOR_ACTION, dataAction: '/DMO/reviewWasNotHelpful', label: 'Not Helpful' },
+      { type: #FOR_ACTION, dataAction: 'ZAI_DMOreviewWasHelpful',    label: 'Helpful'     },
+      { type: #FOR_ACTION, dataAction: 'ZAI_DMOreviewWasNotHelpful', label: 'Not Helpful' },
       { position: 3 }
    ]
   @UI.identification: [
-      { type: #FOR_ACTION, dataAction: '/DMO/reviewWasHelpful',    label: 'Helpful'     },
-      { type: #FOR_ACTION, dataAction: '/DMO/reviewWasNotHelpful', label: 'Not Helpful' },
+      { type: #FOR_ACTION, dataAction: 'ZAI_DMOreviewWasHelpful',    label: 'Helpful'     },
+      { type: #FOR_ACTION, dataAction: 'ZAI_DMOreviewWasNotHelpful', label: 'Not Helpful' },
       { position: 3 }
    ]
   Reviewer;

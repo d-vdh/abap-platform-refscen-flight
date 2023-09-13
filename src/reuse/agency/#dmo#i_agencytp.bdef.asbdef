@@ -2,7 +2,7 @@ interface;
 use draft;
 extensible;
 
-define behavior for /DMO/I_AgencyTP alias /DMO/Agency
+define behavior for ZAI_DMOI_AgencyTP alias ZAI_DMOAgency
 {
   use create;
   use update;

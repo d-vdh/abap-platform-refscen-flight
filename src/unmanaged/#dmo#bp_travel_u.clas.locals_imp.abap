@@ -6,10 +6,10 @@ CLASS lhc_travel DEFINITION
 
   PRIVATE SECTION.
 
-    TYPES tt_travel_failed    TYPE TABLE FOR FAILED   /dmo/i_travel_u.
-    TYPES tt_travel_reported  TYPE TABLE FOR REPORTED /dmo/i_travel_u.
-    TYPES tt_booking_failed   TYPE TABLE FOR FAILED   /dmo/i_booking_u.
-    TYPES tt_booking_reported TYPE TABLE FOR REPORTED /dmo/i_booking_u.
+    TYPES tt_travel_failed    TYPE TABLE FOR FAILED   ZAI_DMOi_travel_u.
+    TYPES tt_travel_reported  TYPE TABLE FOR REPORTED ZAI_DMOi_travel_u.
+    TYPES tt_booking_failed   TYPE TABLE FOR FAILED   ZAI_DMOi_booking_u.
+    TYPES tt_booking_reported TYPE TABLE FOR REPORTED ZAI_DMOi_booking_u.
 
     METHODS get_instance_features FOR INSTANCE FEATURES
       IMPORTING keys REQUEST requested_features FOR travel RESULT result.
@@ -44,8 +44,8 @@ CLASS lhc_travel DEFINITION
     METHODS map_messages
       IMPORTING
         cid          TYPE string         OPTIONAL
-        travel_id    TYPE /dmo/travel_id OPTIONAL
-        messages     TYPE /dmo/t_message
+        travel_id    TYPE ZAI_DMOtravel_id OPTIONAL
+        messages     TYPE ZAI_DMOt_message
       EXPORTING
         failed_added TYPE abap_bool
       CHANGING
@@ -56,7 +56,7 @@ CLASS lhc_travel DEFINITION
       IMPORTING
         cid          TYPE string
         is_dependend TYPE abap_bool       DEFAULT  abap_false
-        messages     TYPE /dmo/t_message
+        messages     TYPE ZAI_DMOt_message
       EXPORTING
         failed_added TYPE abap_bool
       CHANGING
@@ -72,7 +72,7 @@ CLASS lhc_travel IMPLEMENTATION.
 *
 ********************************************************************************
   METHOD get_instance_features.
-    READ ENTITIES OF /DMO/I_Travel_U IN LOCAL MODE
+    READ ENTITIES OF ZAI_DMOI_Travel_U IN LOCAL MODE
       ENTITY Travel
         FIELDS ( TravelID Status )
         WITH CORRESPONDING #( keys )
@@ -105,18 +105,18 @@ CLASS lhc_travel IMPLEMENTATION.
 *
 **********************************************************************
   METHOD create.
-    DATA: messages   TYPE /dmo/t_message,
-          travel_in  TYPE /dmo/travel,
-          travel_out TYPE /dmo/travel.
+    DATA: messages   TYPE ZAI_DMOt_message,
+          travel_in  TYPE ZAI_DMOtravel,
+          travel_out TYPE ZAI_DMOtravel.
 
     LOOP AT entities ASSIGNING FIELD-SYMBOL(<travel_create>).
 
       travel_in = CORRESPONDING #( <travel_create> MAPPING FROM ENTITY USING CONTROL ).
 
-      CALL FUNCTION '/DMO/FLIGHT_TRAVEL_CREATE'
+      CALL FUNCTION 'ZAI_DMOFLIGHT_TRAVEL_CREATE'
         EXPORTING
-          is_travel         = CORRESPONDING /dmo/s_travel_in( travel_in )
-          iv_numbering_mode = /dmo/if_flight_legacy=>numbering_mode-late
+          is_travel         = CORRESPONDING ZAI_DMOs_travel_in( travel_in )
+          iv_numbering_mode = ZAI_DMOif_flight_legacy=>numbering_mode-late
         IMPORTING
           es_travel         = travel_out
           et_messages       = messages.
@@ -149,9 +149,9 @@ CLASS lhc_travel IMPLEMENTATION.
 *
 **********************************************************************
   METHOD update.
-    DATA: messages TYPE /dmo/t_message,
-          travel   TYPE /dmo/travel,
-          travelx  TYPE /dmo/s_travel_inx. "refers to x structure (> BAPIs)
+    DATA: messages TYPE ZAI_DMOt_message,
+          travel   TYPE ZAI_DMOtravel,
+          travelx  TYPE ZAI_DMOs_travel_inx. "refers to x structure (> BAPIs)
 
     LOOP AT entities ASSIGNING FIELD-SYMBOL(<travel_update>).
 
@@ -160,9 +160,9 @@ CLASS lhc_travel IMPLEMENTATION.
       travelx-travel_id = <travel_update>-TravelID.
       travelx-_intx     = CORRESPONDING #( <travel_update> MAPPING FROM ENTITY ).
 
-      CALL FUNCTION '/DMO/FLIGHT_TRAVEL_UPDATE'
+      CALL FUNCTION 'ZAI_DMOFLIGHT_TRAVEL_UPDATE'
         EXPORTING
-          is_travel   = CORRESPONDING /dmo/s_travel_in( travel )
+          is_travel   = CORRESPONDING ZAI_DMOs_travel_in( travel )
           is_travelx  = travelx
         IMPORTING
           et_messages = messages.
@@ -187,11 +187,11 @@ CLASS lhc_travel IMPLEMENTATION.
 *
 **********************************************************************
   METHOD delete.
-    DATA: messages TYPE /dmo/t_message.
+    DATA: messages TYPE ZAI_DMOt_message.
 
     LOOP AT keys ASSIGNING FIELD-SYMBOL(<travel_delete>).
 
-      CALL FUNCTION '/DMO/FLIGHT_TRAVEL_DELETE'
+      CALL FUNCTION 'ZAI_DMOFLIGHT_TRAVEL_DELETE'
         EXPORTING
           iv_travel_id = <travel_delete>-travelid
         IMPORTING
@@ -217,12 +217,12 @@ CLASS lhc_travel IMPLEMENTATION.
 *
 **********************************************************************
   METHOD read.
-    DATA: travel_out TYPE /dmo/travel,
-          messages   TYPE /dmo/t_message.
+    DATA: travel_out TYPE ZAI_DMOtravel,
+          messages   TYPE ZAI_DMOt_message.
 
     LOOP AT keys ASSIGNING FIELD-SYMBOL(<travel_to_read>) GROUP BY <travel_to_read>-%tky.
 
-      CALL FUNCTION '/DMO/FLIGHT_TRAVEL_READ'
+      CALL FUNCTION 'ZAI_DMOFLIGHT_TRAVEL_READ'
         EXPORTING
           iv_travel_id = <travel_to_read>-travelid
         IMPORTING
@@ -255,7 +255,7 @@ CLASS lhc_travel IMPLEMENTATION.
   METHOD lock.
     TRY.
         "Instantiate lock object
-        DATA(lock) = cl_abap_lock_object_factory=>get_instance( iv_name = '/DMO/ETRAVEL' ).
+        DATA(lock) = cl_abap_lock_object_factory=>get_instance( iv_name = 'ZAI_DMOETRAVEL' ).
       CATCH cx_abap_lock_failure INTO DATA(exception).
         RAISE SHORTDUMP exception.
     ENDTRY.
@@ -272,7 +272,7 @@ CLASS lhc_travel IMPLEMENTATION.
            EXPORTING
                 travel_id = <travel>-TravelID
                 messages  =  VALUE #( (
-                                           msgid = '/DMO/CM_FLIGHT_LEGAC'
+                                           msgid = 'ZAI_DMOCM_FLIGHT_LEGAC'
                                            msgty = 'E'
                                            msgno = '032'
                                            msgv1 = <travel>-travelid
@@ -296,15 +296,15 @@ CLASS lhc_travel IMPLEMENTATION.
 *
 **********************************************************************
   METHOD rba_Booking.
-    DATA: travel_out  TYPE /dmo/travel,
-          booking_out TYPE /dmo/t_booking,
+    DATA: travel_out  TYPE ZAI_DMOtravel,
+          booking_out TYPE ZAI_DMOt_booking,
           booking     LIKE LINE OF result,
-          messages    TYPE /dmo/t_message.
+          messages    TYPE ZAI_DMOt_message.
 
 
     LOOP AT keys_rba ASSIGNING FIELD-SYMBOL(<travel_rba>) GROUP BY <travel_rba>-TravelID.
 
-      CALL FUNCTION '/DMO/FLIGHT_TRAVEL_READ'
+      CALL FUNCTION 'ZAI_DMOFLIGHT_TRAVEL_READ'
         EXPORTING
           iv_travel_id = <travel_rba>-travelid
         IMPORTING
@@ -360,16 +360,16 @@ CLASS lhc_travel IMPLEMENTATION.
 *
 **********************************************************************
   METHOD cba_Booking.
-    DATA: messages        TYPE /dmo/t_message,
-          booking_old     TYPE /dmo/t_booking,
-          booking         TYPE /dmo/booking,
-          last_booking_id TYPE /dmo/booking_id VALUE '0'.
+    DATA: messages        TYPE ZAI_DMOt_message,
+          booking_old     TYPE ZAI_DMOt_booking,
+          booking         TYPE ZAI_DMObooking,
+          last_booking_id TYPE ZAI_DMObooking_id VALUE '0'.
 
     LOOP AT entities_cba ASSIGNING FIELD-SYMBOL(<travel>).
 
       DATA(travelid) = <travel>-travelid.
 
-      CALL FUNCTION '/DMO/FLIGHT_TRAVEL_READ'
+      CALL FUNCTION 'ZAI_DMOFLIGHT_TRAVEL_READ'
         EXPORTING
           iv_travel_id = travelid
         IMPORTING
@@ -413,15 +413,15 @@ CLASS lhc_travel IMPLEMENTATION.
           last_booking_id += 1.
           booking-booking_id = last_booking_id.
 
-          CALL FUNCTION '/DMO/FLIGHT_TRAVEL_UPDATE'
+          CALL FUNCTION 'ZAI_DMOFLIGHT_TRAVEL_UPDATE'
             EXPORTING
-              is_travel   = VALUE /dmo/s_travel_in( travel_id = travelid )
-              is_travelx  = VALUE /dmo/s_travel_inx( travel_id = travelid )
-              it_booking  = VALUE /dmo/t_booking_in( ( CORRESPONDING #( booking ) ) )
-              it_bookingx = VALUE /dmo/t_booking_inx(
+              is_travel   = VALUE ZAI_DMOs_travel_in( travel_id = travelid )
+              is_travelx  = VALUE ZAI_DMOs_travel_inx( travel_id = travelid )
+              it_booking  = VALUE ZAI_DMOt_booking_in( ( CORRESPONDING #( booking ) ) )
+              it_bookingx = VALUE ZAI_DMOt_booking_inx(
                 (
                   booking_id  = booking-booking_id
-                  action_code = /dmo/if_flight_legacy=>action_code-create
+                  action_code = ZAI_DMOif_flight_legacy=>action_code-create
                 )
               )
             IMPORTING
@@ -459,8 +459,8 @@ CLASS lhc_travel IMPLEMENTATION.
 *
 **********************************************************************
   METHOD set_status_booked.
-    DATA: messages                 TYPE /dmo/t_message,
-          travel_out               TYPE /dmo/travel,
+    DATA: messages                 TYPE ZAI_DMOt_message,
+          travel_out               TYPE ZAI_DMOtravel,
           travel_set_status_booked LIKE LINE OF result.
 
     CLEAR result.
@@ -469,7 +469,7 @@ CLASS lhc_travel IMPLEMENTATION.
 
       DATA(travelid) = <travel_set_status_booked>-travelid.
 
-      CALL FUNCTION '/DMO/FLIGHT_TRAVEL_SET_BOOKING'
+      CALL FUNCTION 'ZAI_DMOFLIGHT_TRAVEL_SET_BOOKING'
         EXPORTING
           iv_travel_id = travelid
         IMPORTING
@@ -487,7 +487,7 @@ CLASS lhc_travel IMPLEMENTATION.
         ).
 
       IF failed_added = abap_false.
-        CALL FUNCTION '/DMO/FLIGHT_TRAVEL_READ'
+        CALL FUNCTION 'ZAI_DMOFLIGHT_TRAVEL_READ'
           EXPORTING
             iv_travel_id = travelid
           IMPORTING
@@ -514,7 +514,7 @@ CLASS lhc_travel IMPLEMENTATION.
       IF message-msgty = 'E' OR message-msgty = 'A'.
         APPEND VALUE #( %cid        = cid
                         travelid    = travel_id
-                        %fail-cause = /dmo/cl_travel_auxiliary=>get_cause_from_message(
+                        %fail-cause = ZAI_DMOcl_travel_auxiliary=>get_cause_from_message(
                                         msgid = message-msgid
                                         msgno = message-msgno
                                       ) )
@@ -542,7 +542,7 @@ CLASS lhc_travel IMPLEMENTATION.
     LOOP AT messages INTO DATA(message).
       IF message-msgty = 'E' OR message-msgty = 'A'.
         APPEND VALUE #( %cid        = cid
-                        %fail-cause = /dmo/cl_travel_auxiliary=>get_cause_from_message(
+                        %fail-cause = ZAI_DMOcl_travel_auxiliary=>get_cause_from_message(
                                         msgid = message-msgid
                                         msgno = message-msgno
                                         is_dependend = is_dependend
@@ -605,11 +605,11 @@ CLASS lsc_I_TRAVEL_U IMPLEMENTATION.
 
   METHOD adjust_numbers.
 
-    DATA: travel_mapping       TYPE /dmo/if_flight_legacy=>tt_ln_travel_mapping,
-          booking_mapping      TYPE /dmo/if_flight_legacy=>tt_ln_booking_mapping,
-          bookingsuppl_mapping TYPE /dmo/if_flight_legacy=>tt_ln_bookingsuppl_mapping.
+    DATA: travel_mapping       TYPE ZAI_DMOif_flight_legacy=>tt_ln_travel_mapping,
+          booking_mapping      TYPE ZAI_DMOif_flight_legacy=>tt_ln_booking_mapping,
+          bookingsuppl_mapping TYPE ZAI_DMOif_flight_legacy=>tt_ln_bookingsuppl_mapping.
 
-    CALL FUNCTION '/DMO/FLIGHT_TRAVEL_ADJ_NUMBERS'
+    CALL FUNCTION 'ZAI_DMOFLIGHT_TRAVEL_ADJ_NUMBERS'
       IMPORTING
         et_travel_mapping       = travel_mapping
         et_booking_mapping      = booking_mapping
@@ -633,11 +633,11 @@ CLASS lsc_I_TRAVEL_U IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD save.
-    CALL FUNCTION '/DMO/FLIGHT_TRAVEL_SAVE'.
+    CALL FUNCTION 'ZAI_DMOFLIGHT_TRAVEL_SAVE'.
   ENDMETHOD.
 
   METHOD cleanup.
-    CALL FUNCTION '/DMO/FLIGHT_TRAVEL_INITIALIZE'.
+    CALL FUNCTION 'ZAI_DMOFLIGHT_TRAVEL_INITIALIZE'.
   ENDMETHOD.
 
   METHOD cleanup_finalize.

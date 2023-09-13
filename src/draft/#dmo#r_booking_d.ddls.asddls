@@ -1,19 +1,19 @@
 @EndUserText.label: 'Booking View Entity for Draft RefScen'
 @AccessControl.authorizationCheck: #NOT_REQUIRED
 
-define view entity /DMO/R_Booking_D
-  as select from /dmo/a_booking_d
+define view entity ZAI_DMOR_Booking_D
+  as select from ZAI_DMOa_booking_d
 
-  association        to parent /DMO/R_Travel_D     as _Travel        on  $projection.TravelUUID = _Travel.TravelUUID
-  composition [0..*] of /DMO/R_BookingSupplement_D as _BookingSupplement
+  association        to parent ZAI_DMOR_Travel_D     as _Travel        on  $projection.TravelUUID = _Travel.TravelUUID
+  composition [0..*] of ZAI_DMOR_BookingSupplement_D as _BookingSupplement
 
-  association [1..1] to /DMO/I_Customer            as _Customer      on  $projection.CustomerID = _Customer.CustomerID
-  association [1..1] to /DMO/I_Carrier             as _Carrier       on  $projection.AirlineID = _Carrier.AirlineID
-  association [1..1] to /DMO/I_Connection          as _Connection    on  $projection.AirlineID    = _Connection.AirlineID
+  association [1..1] to ZAI_DMOI_Customer            as _Customer      on  $projection.CustomerID = _Customer.CustomerID
+  association [1..1] to ZAI_DMOI_Carrier             as _Carrier       on  $projection.AirlineID = _Carrier.AirlineID
+  association [1..1] to ZAI_DMOI_Connection          as _Connection    on  $projection.AirlineID    = _Connection.AirlineID
                                                                      and $projection.ConnectionID = _Connection.ConnectionID
-  association [1..1] to /DMO/I_Booking_Status_VH   as _BookingStatus on  $projection.BookingStatus = _BookingStatus.BookingStatus
+  association [1..1] to ZAI_DMOI_Booking_Status_VH   as _BookingStatus on  $projection.BookingStatus = _BookingStatus.BookingStatus
 
-{ ///dmo/a_booking_d
+{ //ZAI_DMOa_booking_d
   key booking_uuid          as BookingUUID,
       parent_uuid           as TravelUUID,
 

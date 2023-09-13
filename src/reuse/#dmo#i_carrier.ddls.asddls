@@ -3,8 +3,8 @@
 
 @Search.searchable: true
 
-define view entity /DMO/I_Carrier
-  as select from /dmo/carrier as Airline
+define view entity ZAI_DMOI_Carrier
+  as select from ZAI_DMOcarrier as Airline
 
   association [0..1] to I_Currency as _Currency on $projection.CurrencyCode = _Currency.Currency
 

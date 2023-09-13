@@ -1,4 +1,4 @@
-extend view entity /DMO/R_AgencyTP with
+extend view entity ZAI_DMOR_AgencyTP with
 {
-  _Extension./DMO/ZZSloganZAG
+  _Extension.ZAI_DMOZZSloganZAG
 }

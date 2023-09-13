@@ -22,11 +22,11 @@ ENDCLASS.
 CLASS lhc_booking IMPLEMENTATION.
 
   METHOD calculatetotalprice.
-    DATA: travel_ids TYPE STANDARD TABLE OF /dmo/i_travel_m WITH UNIQUE HASHED KEY key COMPONENTS travel_id.
+    DATA: travel_ids TYPE STANDARD TABLE OF ZAI_DMOi_travel_m WITH UNIQUE HASHED KEY key COMPONENTS travel_id.
 
     travel_ids = CORRESPONDING #( keys DISCARDING DUPLICATES MAPPING travel_id = travel_id ).
 
-    MODIFY ENTITIES OF /DMO/I_Travel_M IN LOCAL MODE
+    MODIFY ENTITIES OF ZAI_DMOI_Travel_M IN LOCAL MODE
       ENTITY Travel
         EXECUTE ReCalcTotalPrice
         FROM CORRESPONDING #( travel_ids ).
@@ -37,7 +37,7 @@ CLASS lhc_booking IMPLEMENTATION.
 
   METHOD validateStatus.
 
-    READ ENTITIES OF /dmo/i_travel_m IN LOCAL MODE
+    READ ENTITIES OF ZAI_DMOi_travel_m IN LOCAL MODE
       ENTITY booking
         FIELDS ( booking_status )
         WITH CORRESPONDING #( keys )
@@ -53,8 +53,8 @@ CLASS lhc_booking IMPLEMENTATION.
           APPEND VALUE #( %tky = booking-%tky ) TO failed-booking.
 
           APPEND VALUE #( %tky = booking-%tky
-                          %msg = NEW /dmo/cm_flight_messages(
-                                     textid = /dmo/cm_flight_messages=>status_invalid
+                          %msg = NEW ZAI_DMOcm_flight_messages(
+                                     textid = ZAI_DMOcm_flight_messages=>status_invalid
                                      status = booking-booking_status
                                      severity = if_abap_behv_message=>severity-error )
                           %element-booking_status = if_abap_behv=>mk-on
@@ -69,7 +69,7 @@ CLASS lhc_booking IMPLEMENTATION.
 
   METHOD get_features.
 
-    READ ENTITIES OF /dmo/i_travel_m IN LOCAL MODE
+    READ ENTITIES OF ZAI_DMOi_travel_m IN LOCAL MODE
       ENTITY booking
          FIELDS ( booking_id booking_status )
          WITH CORRESPONDING #( keys )
@@ -86,9 +86,9 @@ CLASS lhc_booking IMPLEMENTATION.
 
 
   METHOD earlynumbering_cba_booksupplem.
-    DATA: max_booking_suppl_id TYPE /dmo/booking_supplement_id .
+    DATA: max_booking_suppl_id TYPE ZAI_DMObooking_supplement_id .
 
-    READ ENTITIES OF /dmo/i_travel_m IN LOCAL MODE
+    READ ENTITIES OF ZAI_DMOi_travel_m IN LOCAL MODE
       ENTITY booking BY \_booksupplement
         FROM CORRESPONDING #( entities )
         LINK DATA(booking_supplements).
@@ -97,11 +97,11 @@ CLASS lhc_booking IMPLEMENTATION.
     LOOP AT entities ASSIGNING FIELD-SYMBOL(<booking_group>) GROUP BY <booking_group>-%tky.
 
       " Get highest bookingsupplement_id from bookings belonging to booking
-      max_booking_suppl_id = REDUCE #( INIT max = CONV /dmo/booking_supplement_id( '0' )
+      max_booking_suppl_id = REDUCE #( INIT max = CONV ZAI_DMObooking_supplement_id( '0' )
                                        FOR  booksuppl IN booking_supplements USING KEY entity
                                                                              WHERE (     source-travel_id  = <booking_group>-travel_id
                                                                                      AND source-booking_id = <booking_group>-booking_id )
-                                       NEXT max = COND /dmo/booking_supplement_id( WHEN   booksuppl-target-booking_supplement_id > max
+                                       NEXT max = COND ZAI_DMObooking_supplement_id( WHEN   booksuppl-target-booking_supplement_id > max
                                                                           THEN booksuppl-target-booking_supplement_id
                                                                           ELSE max )
                                      ).
@@ -111,7 +111,7 @@ CLASS lhc_booking IMPLEMENTATION.
                                                                WHERE (     travel_id  = <booking_group>-travel_id
                                                                        AND booking_id = <booking_group>-booking_id )
                                        FOR  target IN entity-%target
-                                       NEXT max = COND /dmo/booking_supplement_id( WHEN   target-booking_supplement_id > max
+                                       NEXT max = COND ZAI_DMObooking_supplement_id( WHEN   target-booking_supplement_id > max
                                                                                      THEN target-booking_supplement_id
                                                                                      ELSE max )
                                      ).
@@ -136,7 +136,7 @@ CLASS lhc_booking IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD validate_currencycode.
-    READ ENTITIES OF /DMO/I_Travel_M IN LOCAL MODE
+    READ ENTITIES OF ZAI_DMOI_Travel_M IN LOCAL MODE
       ENTITY booking
         FIELDS ( currency_code )
         WITH CORRESPONDING #( keys )
@@ -160,8 +160,8 @@ CLASS lhc_booking IMPLEMENTATION.
         " Raise message for empty Currency
         APPEND VALUE #( %tky                   = booking-%tky ) TO failed-booking.
         APPEND VALUE #( %tky                   = booking-%tky
-                        %msg                   = NEW /dmo/cm_flight_messages(
-                                                        textid    = /dmo/cm_flight_messages=>currency_required
+                        %msg                   = NEW ZAI_DMOcm_flight_messages(
+                                                        textid    = ZAI_DMOcm_flight_messages=>currency_required
                                                         severity  = if_abap_behv_message=>severity-error )
                         %element-currency_code = if_abap_behv=>mk-on
                         %path                  = VALUE #(  travel-travel_id    = booking-travel_id )
@@ -170,8 +170,8 @@ CLASS lhc_booking IMPLEMENTATION.
         " Raise message for not existing Currency
         APPEND VALUE #( %tky                   = booking-%tky ) TO failed-booking.
         APPEND VALUE #( %tky                   = booking-%tky
-                        %msg                   = NEW /dmo/cm_flight_messages(
-                                                        textid    = /dmo/cm_flight_messages=>currency_not_existing
+                        %msg                   = NEW ZAI_DMOcm_flight_messages(
+                                                        textid    = ZAI_DMOcm_flight_messages=>currency_not_existing
                                                         severity  = if_abap_behv_message=>severity-error
                                                         currency_code = booking-currency_code )
                         %path                  = VALUE #(  travel-travel_id    = booking-travel_id )

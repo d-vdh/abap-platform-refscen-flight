@@ -1,7 +1,7 @@
 projection;
 strict(2);
 
-define behavior for /DMO/C_Travel_Approver_M alias Approver
+define behavior for ZAI_DMOC_Travel_Approver_M alias Approver
 use etag
 {
   field ( readonly ) BeginDate, EndDate, TotalPrice, CustomerID;

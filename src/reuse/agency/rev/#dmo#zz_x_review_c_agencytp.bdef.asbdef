@@ -1,17 +1,17 @@
 extension for projection;
 
-extend behavior for /DMO/Agency
+extend behavior for ZAI_DMOAgency
 {
-  use association /DMO/ZZ_ReviewZAG { create; with draft; }
+  use association ZAI_DMOZZ_ReviewZAG { create; with draft; }
 }
 
-define behavior for /DMO/ZZ_C_Agency_ReviewTP alias /DMO/ZZ_Review
+define behavior for ZAI_DMOZZ_C_Agency_ReviewTP alias ZAI_DMOZZ_Review
 {
   use update;
   use delete;
 
-  use action /DMO/reviewWasHelpful;
-  use action /DMO/reviewWasNotHelpful;
+  use action ZAI_DMOreviewWasHelpful;
+  use action ZAI_DMOreviewWasNotHelpful;
 
   use association _Agency { with draft; }
 }

@@ -1,50 +1,50 @@
-"! <p class="shorttext synchronized" lang="en">/DMO/R_TRAVEL_D consumer as code under test for RAP BO TDF</p>
-"! A consumer of /DMO/R_TRAVEL_D BO for demonstration of RAP BO Test double framework which is used as code under test.<br/>
-"! The consumer methods has EML statements with draft instances, as dependency on /DMO/R_TRAVEL_D BO, which can be isolated using RAP BO test double framework.<br/><br/>
-"! Check test classes from {@link /DMO/TC_BOTD_TRAVEL_D_DEMOS} for demos.
-CLASS /dmo/tc_travel_d_bo_consumer DEFINITION
+"! <p class="shorttext synchronized" lang="en">ZAI_DMOR_TRAVEL_D consumer as code under test for RAP BO TDF</p>
+"! A consumer of ZAI_DMOR_TRAVEL_D BO for demonstration of RAP BO Test double framework which is used as code under test.<br/>
+"! The consumer methods has EML statements with draft instances, as dependency on ZAI_DMOR_TRAVEL_D BO, which can be isolated using RAP BO test double framework.<br/><br/>
+"! Check test classes from {@link ZAI_DMOTC_BOTD_TRAVEL_D_DEMOS} for demos.
+CLASS ZAI_DMOtc_travel_d_bo_consumer DEFINITION
   PUBLIC
   FINAL
   CREATE PUBLIC .
 
   PUBLIC SECTION.
   types:
-    failed_travel_type type response for failed early /DMO/R_TRAVEL_D .
+    failed_travel_type type response for failed early ZAI_DMOR_TRAVEL_D .
   types:
-    reported_travel_type type response for reported early /DMO/R_TRAVEL_D .
+    reported_travel_type type response for reported early ZAI_DMOR_TRAVEL_D .
   types:
-    mapped_travel_type type response for mapped early /DMO/R_TRAVEL_D .
+    mapped_travel_type type response for mapped early ZAI_DMOR_TRAVEL_D .
   types:
   ""MODIFY
-    create_travel_input_type type table for create /DMO/R_TRAVEL_D .
+    create_travel_input_type type table for create ZAI_DMOR_TRAVEL_D .
   types:
-    create_booking_by_assoc_in_typ type table for create /DMO/R_TRAVEL_D\_Booking .
+    create_booking_by_assoc_in_typ type table for create ZAI_DMOR_TRAVEL_D\_Booking .
   types:
-    update_travel_input_type type table for update /DMO/R_TRAVEL_D .
+    update_travel_input_type type table for update ZAI_DMOR_TRAVEL_D .
   types:
-    update_booking_input_type type table for update /DMO/R_TRAVEL_D\\BOOKING .
+    update_booking_input_type type table for update ZAI_DMOR_TRAVEL_D\\BOOKING .
   types:
-    delete_travel_input_type type table for delete /DMO/R_TRAVEL_D .
+    delete_travel_input_type type table for delete ZAI_DMOR_TRAVEL_D .
   types:
-    accept_travel_act_in_type type table for action import  /DMO/R_TRAVEL_D~acceptTravel .
+    accept_travel_act_in_type type table for action import  ZAI_DMOR_TRAVEL_D~acceptTravel .
   types:
-    accept_travel_act_res_type type table for action result  /DMO/R_TRAVEL_D~acceptTravel .
+    accept_travel_act_res_type type table for action result  ZAI_DMOR_TRAVEL_D~acceptTravel .
   types:
-    deduct_discount_act_in_type type table for action import  /DMO/R_TRAVEL_D~deductDiscount .
+    deduct_discount_act_in_type type table for action import  ZAI_DMOR_TRAVEL_D~deductDiscount .
   types:
-    deduct_discount_act_res_type type table for action result  /DMO/R_TRAVEL_D~deductDiscount .
+    deduct_discount_act_res_type type table for action result  ZAI_DMOR_TRAVEL_D~deductDiscount .
 
   types:
   ""READ
-    read_travel_input_type type table for read import /DMO/R_TRAVEL_D .
+    read_travel_input_type type table for read import ZAI_DMOR_TRAVEL_D .
   types:
-    read_booking_by_assoc_in_typ type table for read import /DMO/R_TRAVEL_D\_Booking .
+    read_booking_by_assoc_in_typ type table for read import ZAI_DMOR_TRAVEL_D\_Booking .
   types:
-    read_travel_result_type type table for read result /DMO/R_TRAVEL_D .
+    read_travel_result_type type table for read result ZAI_DMOR_TRAVEL_D .
   types:
-    read_booking_by_assoc_res_typ type table for read result /DMO/R_TRAVEL_D\_Booking .
+    read_booking_by_assoc_res_typ type table for read result ZAI_DMOR_TRAVEL_D\_Booking .
   types:
-    read_booking_by_assoc_link_typ type table for read link /DMO/R_TRAVEL_D\_Booking .
+    read_booking_by_assoc_link_typ type table for read link ZAI_DMOR_TRAVEL_D\_Booking .
 
   methods CREATE_TRAVEL
     importing
@@ -145,14 +145,14 @@ ENDCLASS.
 
 
 
-CLASS /dmo/tc_travel_d_bo_consumer IMPLEMENTATION.
+CLASS ZAI_DMOtc_travel_d_bo_consumer IMPLEMENTATION.
 
   method create_travel.
 
   "This is a demo code under test and only includes the EML operation to be isolated.
   "In actual scenario there will be additional business logic that forms the code to be tested.
 
-    modify entities of /DMO/R_TRAVEL_D
+    modify entities of ZAI_DMOR_TRAVEL_D
      entity travel
        create from travel
      reported reported
@@ -168,7 +168,7 @@ CLASS /dmo/tc_travel_d_bo_consumer IMPLEMENTATION.
   "This is a demo code under test and only includes the EML operation to be isolated.
   "In actual scenario there will be additional business logic that forms the code to be tested.
 
-    modify entities of /DMO/R_TRAVEL_D
+    modify entities of ZAI_DMOR_TRAVEL_D
      entity travel
        update from travel
      reported reported
@@ -184,7 +184,7 @@ CLASS /dmo/tc_travel_d_bo_consumer IMPLEMENTATION.
     "This is a demo code under test and only includes the EML operation to be isolated.
     "In actual scenario there will be additional business logic that forms the code to be tested.
 
-      modify entities of /DMO/R_TRAVEL_D
+      modify entities of ZAI_DMOR_TRAVEL_D
        entity travel
          create by \_Booking
           from booking_by_travel
@@ -201,7 +201,7 @@ CLASS /dmo/tc_travel_d_bo_consumer IMPLEMENTATION.
     "This is a demo code under test and only includes the EML operation to be isolated.
     "In actual scenario there will be additional business logic that forms the code to be tested.
 
-      modify entities of /DMO/R_TRAVEL_D
+      modify entities of ZAI_DMOR_TRAVEL_D
        entity travel
          create from travel
          execute acceptTravel from value #( ( %cid_ref = travel[ 1 ]-%cid ) )
@@ -219,7 +219,7 @@ CLASS /dmo/tc_travel_d_bo_consumer IMPLEMENTATION.
   "This is a demo code under test and only includes the EML operation to be isolated.
   "In actual scenario there will be additional business logic that forms the code to be tested.
 
-    modify entities of /dmo/r_travel_d
+    modify entities of ZAI_DMOr_travel_d
      entity travel
        create from create_travel
        create by \_Booking from create_ba_booking
@@ -237,7 +237,7 @@ CLASS /dmo/tc_travel_d_bo_consumer IMPLEMENTATION.
     "This is a demo code under test and only includes the EML operation to be isolated.
     "In actual scenario there will be additional business logic that forms the code to be tested.
 
-      modify entities of /DMO/R_TRAVEL_D
+      modify entities of ZAI_DMOR_TRAVEL_D
        entity travel
          create from travel
        reported reported
@@ -245,7 +245,7 @@ CLASS /dmo/tc_travel_d_bo_consumer IMPLEMENTATION.
        mapped mapped.
 
       if mapped is not initial.
-        modify entities of /DMO/R_TRAVEL_D
+        modify entities of ZAI_DMOR_TRAVEL_D
          entity travel
            execute acceptTravel from value #( ( %key-TravelUUID = mapped-travel[ 1 ]-TravelUUID ) )
          reported reported
@@ -263,7 +263,7 @@ CLASS /dmo/tc_travel_d_bo_consumer IMPLEMENTATION.
     "In actual scenario there will be additional business logic that forms the code to be tested.
 
     " Create a BO hierarchy using Deep Create
-    modify entities of /DMO/R_TRAVEL_D
+    modify entities of ZAI_DMOR_TRAVEL_D
      entity travel
              create fields ( customerid begindate enddate ) with
                          value #( ( %cid        = 'CID_100'    " Preliminary ID for new travel instance
@@ -306,7 +306,7 @@ CLASS /dmo/tc_travel_d_bo_consumer IMPLEMENTATION.
     "This is a demo code under test and only includes the EML operation to be isolated.
     "In actual scenario there will be additional business logic that forms the code to be tested.
 
-      read entities of /DMO/R_TRAVEL_D
+      read entities of ZAI_DMOR_TRAVEL_D
        entity travel
          by \_Booking
           from travel
@@ -324,7 +324,7 @@ CLASS /dmo/tc_travel_d_bo_consumer IMPLEMENTATION.
     "This is a demo code under test and only includes the EML operation to be isolated.
     "In actual scenario there will be additional business logic that forms the code to be tested.
 
-      read entities of /DMO/R_TRAVEL_D
+      read entities of ZAI_DMOR_TRAVEL_D
        entity travel
          from travel
        result result
@@ -340,7 +340,7 @@ CLASS /dmo/tc_travel_d_bo_consumer IMPLEMENTATION.
     "This is a demo code under test and only includes the EML operation to be isolated.
     "In actual scenario there will be additional business logic that forms the code to be tested.
 
-      modify entities of /DMO/R_TRAVEL_D
+      modify entities of ZAI_DMOR_TRAVEL_D
        entity travel
          delete from travel
        reported reported
@@ -355,7 +355,7 @@ CLASS /dmo/tc_travel_d_bo_consumer IMPLEMENTATION.
     "This is a demo code under test and only includes the EML operation to be isolated.
     "In actual scenario there will be additional business logic that forms the code to be tested.
 
-     modify entities of /DMO/R_TRAVEL_D
+     modify entities of ZAI_DMOR_TRAVEL_D
       entity travel
        execute acceptTravel from accept_travel_input
         result result
@@ -371,7 +371,7 @@ CLASS /dmo/tc_travel_d_bo_consumer IMPLEMENTATION.
     "This is a demo code under test and only includes the EML operation to be isolated.
     "In actual scenario there will be additional business logic that forms the code to be tested.
 
-     modify entities of /DMO/R_TRAVEL_D
+     modify entities of ZAI_DMOR_TRAVEL_D
       entity travel
        execute deductDiscount from deduct_discount_input
         result result

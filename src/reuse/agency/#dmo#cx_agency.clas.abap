@@ -1,4 +1,4 @@
-CLASS /dmo/cx_agency DEFINITION
+CLASS ZAI_DMOcx_agency DEFINITION
   PUBLIC
   INHERITING FROM cx_static_check
   FINAL
@@ -10,7 +10,7 @@ CLASS /dmo/cx_agency DEFINITION
       if_abap_behv_message.
 
     CONSTANTS:
-      message_class TYPE symsgid VALUE '/DMO/CM_AGENCY',
+      message_class TYPE symsgid VALUE 'ZAI_DMOCM_AGENCY',
       BEGIN OF name_required,
         msgid TYPE symsgid VALUE message_class,
         msgno TYPE symsgno VALUE '001',
@@ -112,11 +112,11 @@ CLASS /dmo/cx_agency DEFINITION
 
 
     DATA:
-      mv_country_code TYPE /DMO/R_AgencyTP-CountryCode,
+      mv_country_code TYPE ZAI_DMOR_AgencyTP-CountryCode,
       mv_numbers_left TYPE i,
-      mv_attachment     TYPE /DMO/R_AgencyTP-attachment,
-      mv_mimetype       TYPE /DMO/R_AgencyTP-mimetype,
-      mv_filename       TYPE /DMO/R_AgencyTP-Filename.
+      mv_attachment     TYPE ZAI_DMOR_AgencyTP-attachment,
+      mv_mimetype       TYPE ZAI_DMOR_AgencyTP-mimetype,
+      mv_filename       TYPE ZAI_DMOR_AgencyTP-Filename.
 
 
     METHODS:
@@ -125,11 +125,11 @@ CLASS /dmo/cx_agency DEFINITION
           textid       LIKE if_t100_message=>t100key         OPTIONAL
           previous     LIKE previous                         OPTIONAL
           severity     TYPE if_abap_behv_message=>t_severity DEFAULT  if_abap_behv_message=>severity-error
-          countrycode  TYPE /DMO/R_AgencyTP-CountryCode      OPTIONAL
+          countrycode  TYPE ZAI_DMOR_AgencyTP-CountryCode      OPTIONAL
           numbers_left TYPE i                                OPTIONAL
-          attachment   TYPE /DMO/R_AgencyTP-attachment      OPTIONAL
-          mimetype     TYPE /DMO/R_AgencyTP-mimetype        OPTIONAL
-          filename     TYPE /DMO/R_AgencyTP-Filename        OPTIONAL
+          attachment   TYPE ZAI_DMOR_AgencyTP-attachment      OPTIONAL
+          mimetype     TYPE ZAI_DMOR_AgencyTP-mimetype        OPTIONAL
+          filename     TYPE ZAI_DMOR_AgencyTP-Filename        OPTIONAL
             PREFERRED PARAMETER textid
         .
   PROTECTED SECTION.
@@ -138,7 +138,7 @@ ENDCLASS.
 
 
 
-CLASS /dmo/cx_agency IMPLEMENTATION.
+CLASS ZAI_DMOcx_agency IMPLEMENTATION.
 
   METHOD constructor ##ADT_SUPPRESS_GENERATION.
     super->constructor( previous = previous ).

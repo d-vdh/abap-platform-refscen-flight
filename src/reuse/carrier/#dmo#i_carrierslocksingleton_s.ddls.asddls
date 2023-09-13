@@ -1,10 +1,10 @@
 @AccessControl.authorizationCheck: #NOT_REQUIRED
 @EndUserText.label: 'Carrier Singleton Root View'
 
-define root view entity /DMO/I_CarriersLockSingleton_S
+define root view entity ZAI_DMOI_CarriersLockSingleton_S
   as select from    I_Language
-    left outer join /dmo/carrier as carr on 0 = 0
-  composition [0..*] of /DMO/I_Carrier_S as _Airline
+    left outer join ZAI_DMOcarrier as carr on 0 = 0
+  composition [0..*] of ZAI_DMOI_Carrier_S as _Airline
 
 {
   key 1                          as CarrierSingletonID,

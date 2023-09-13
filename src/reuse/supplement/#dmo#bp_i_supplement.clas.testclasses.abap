@@ -1,4 +1,4 @@
-"! @testing BDEF:/DMO/I_Supplement
+"! @testing BDEF:ZAI_DMOI_Supplement
 CLASS ltc_supplement DEFINITION FINAL FOR TESTING
   DURATION SHORT
   RISK LEVEL HARMLESS.
@@ -14,11 +14,11 @@ CLASS ltc_supplement DEFINITION FINAL FOR TESTING
       class_teardown.
 
     DATA:
-      mapped        TYPE RESPONSE FOR MAPPED   EARLY /dmo/i_supplement,
-      failed        TYPE RESPONSE FOR FAILED   EARLY /dmo/i_supplement,
-      reported      TYPE RESPONSE FOR REPORTED EARLY /dmo/i_supplement,
-      failed_late   TYPE RESPONSE FOR FAILED   LATE  /dmo/i_supplement,
-      reported_late TYPE RESPONSE FOR REPORTED LATE  /dmo/i_supplement.
+      mapped        TYPE RESPONSE FOR MAPPED   EARLY ZAI_DMOi_supplement,
+      failed        TYPE RESPONSE FOR FAILED   EARLY ZAI_DMOi_supplement,
+      reported      TYPE RESPONSE FOR REPORTED EARLY ZAI_DMOi_supplement,
+      failed_late   TYPE RESPONSE FOR FAILED   LATE  ZAI_DMOi_supplement,
+      reported_late TYPE RESPONSE FOR REPORTED LATE  ZAI_DMOi_supplement.
 
 
     METHODS:
@@ -62,7 +62,7 @@ CLASS ltc_supplement IMPLEMENTATION.
     CREATE OBJECT class_under_test FOR TESTING.
 
     cds_test_environment = cl_cds_test_environment=>create(
-        i_for_entity = '/DMO/I_SUPPLEMENT'
+        i_for_entity = 'ZAI_DMOI_SUPPLEMENT'
       ).
 
     sql_test_environment = cl_osql_test_environment=>create(
@@ -106,10 +106,10 @@ CLASS ltc_supplement IMPLEMENTATION.
 
   METHOD validate_price_success.
     DATA:
-      supplement  TYPE /dmo/supplement,
-      supplements TYPE STANDARD TABLE OF /dmo/supplement.
+      supplement  TYPE ZAI_DMOsupplement,
+      supplements TYPE STANDARD TABLE OF ZAI_DMOsupplement.
 
-    supplement = VALUE /dmo/supplement(
+    supplement = VALUE ZAI_DMOsupplement(
         supplement_id       = 'XX123'
         supplement_category = 'XX'
         price               = '42'
@@ -148,14 +148,14 @@ CLASS ltc_supplement IMPLEMENTATION.
   METHOD validate_price_failed.
     TYPES:
       BEGIN OF check_table,
-        supplement_id    TYPE /dmo/supplement_id,
+        supplement_id    TYPE ZAI_DMOsupplement_id,
         clear_state_area TYPE abap_bool,
         message_price    TYPE symsgno,
         message_currency TYPE symsgno,
       END OF check_table.
 
     DATA:
-      supplements     TYPE STANDARD TABLE OF /dmo/supplement WITH KEY supplement_id,
+      supplements     TYPE STANDARD TABLE OF ZAI_DMOsupplement WITH KEY supplement_id,
       exp_check_table TYPE STANDARD TABLE OF check_table     WITH KEY supplement_id,
       act_check_table TYPE STANDARD TABLE OF check_table     WITH KEY supplement_id.
 
@@ -273,7 +273,7 @@ CLASS ltc_supplement IMPLEMENTATION.
 
   METHOD earlynumbering_idempotency.
     DATA:
-      entity          TYPE STRUCTURE FOR CREATE /dmo/i_supplement\\supplement,
+      entity          TYPE STRUCTURE FOR CREATE ZAI_DMOi_supplement\\supplement,
       act_mapped_line LIKE LINE OF mapped-supplement,
       exp_mapped_line LIKE LINE OF mapped-supplement.
 
@@ -307,7 +307,7 @@ CLASS ltc_supplement IMPLEMENTATION.
           EXPORTING
                     nr_range_nr1       = '01'
                     subobject         = CONV #( 'BV' )
-                    object            = '/DMO/SUPPL'
+                    object            = 'ZAI_DMOSUPPL'
           IMPORTING
             interval     = DATA(interval)
         ).
@@ -320,7 +320,7 @@ CLASS ltc_supplement IMPLEMENTATION.
     ENDTRY.
 
     DATA:
-      entity          TYPE STRUCTURE FOR CREATE /dmo/i_supplement\\supplement,
+      entity          TYPE STRUCTURE FOR CREATE ZAI_DMOi_supplement\\supplement,
       act_mapped_line LIKE LINE OF mapped-supplement,
       exp_mapped_line LIKE LINE OF mapped-supplement.
 
@@ -357,7 +357,7 @@ CLASS ltc_supplement IMPLEMENTATION.
           EXPORTING
                     nr_range_nr1       = '01'
                     subobject         = CONV #( 'XX' )
-                    object            = '/DMO/SUPPL'
+                    object            = 'ZAI_DMOSUPPL'
           IMPORTING
             interval     = DATA(interval)
         ).
@@ -367,7 +367,7 @@ CLASS ltc_supplement IMPLEMENTATION.
     ENDTRY.
 
     DATA:
-      entity          TYPE STRUCTURE FOR CREATE /dmo/i_supplement\\supplement,
+      entity          TYPE STRUCTURE FOR CREATE ZAI_DMOi_supplement\\supplement,
       act_mapped_line LIKE LINE OF mapped-supplement,
       exp_mapped_line LIKE LINE OF mapped-supplement.
 
@@ -410,9 +410,9 @@ CLASS ltc_supplement IMPLEMENTATION.
 
   METHOD get_global_authorizations.
     DATA:
-      requested_authorizations TYPE STRUCTURE FOR GLOBAL AUTHORIZATION REQUEST /dmo/i_supplement\\supplement,
-      result                   TYPE STRUCTURE FOR GLOBAL AUTHORIZATION RESULT /dmo/i_supplement\\supplement,
-      reported                 TYPE RESPONSE  FOR REPORTED EARLY /dmo/i_supplement.
+      requested_authorizations TYPE STRUCTURE FOR GLOBAL AUTHORIZATION REQUEST ZAI_DMOi_supplement\\supplement,
+      result                   TYPE STRUCTURE FOR GLOBAL AUTHORIZATION RESULT ZAI_DMOi_supplement\\supplement,
+      reported                 TYPE RESPONSE  FOR REPORTED EARLY ZAI_DMOi_supplement.
 
     requested_authorizations-%create = if_abap_behv=>mk-on.
 

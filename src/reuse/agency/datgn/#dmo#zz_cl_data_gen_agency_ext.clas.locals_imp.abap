@@ -21,7 +21,7 @@ CLASS lcl_abstract DEFINITION ABSTRACT CREATE PUBLIC.
 
   PROTECTED SECTION.
     TYPES:
-      ts_agency_with_indicators TYPE /dmo/agency WITH INDICATORS control.
+      ts_agency_with_indicators TYPE ZAI_DMOagency WITH INDICATORS control.
 
     CLASS-DATA:
       out       TYPE REF TO if_oo_adt_classrun_out.
@@ -40,7 +40,7 @@ CLASS lcl_abstract IMPLEMENTATION.
 
   METHOD _initialize.
     SELECT
-      FROM /dmo/agency
+      FROM ZAI_DMOagency
       FIELDS agency_id, name, city
       INTO CORRESPONDING FIELDS OF TABLE @gt_agency.    "#EC CI_NOWHERE
 
@@ -61,7 +61,7 @@ CLASS lcl_slogan DEFINITION
     TYPES:
       BEGIN OF t_slogan,
         id          TYPE i,
-        text        TYPE /dmo/zz_free_text_comment,
+        text        TYPE ZAI_DMOzz_free_text_comment,
         followed_by TYPE STANDARD TABLE OF i WITH DEFAULT KEY,
         root        TYPE abap_bool,
         posible_end TYPE abap_bool,
@@ -114,7 +114,7 @@ CLASS lcl_slogan IMPLEMENTATION.
 
     _slogan_iterate( ).
 
-    UPDATE /dmo/agency FROM TABLE @gt_agency INDICATORS SET STRUCTURE control.
+    UPDATE ZAI_DMOagency FROM TABLE @gt_agency INDICATORS SET STRUCTURE control.
   ENDMETHOD.
 
   METHOD _slogan_iterate.
@@ -123,18 +123,18 @@ CLASS lcl_slogan IMPLEMENTATION.
 
     DATA(roots) = FILTER tt_slogan( mt_text USING KEY filter WHERE root = abap_true ).
     LOOP AT gt_agency ASSIGNING FIELD-SYMBOL(<agency>).
-      <agency>-control-/dmo/zzsloganzag = if_abap_behv=>mk-on.
+      <agency>-control-ZAI_DMOzzsloganzag = if_abap_behv=>mk-on.
       DATA(next) = roots[ floor( go_rnd->get_next( ) * lines( roots ) ) + 1 ].
-      <agency>-/dmo/zzsloganzag = next-text.
+      <agency>-ZAI_DMOzzsloganzag = next-text.
       WHILE next-followed_by IS NOT INITIAL.
         IF next-posible_end = abap_true AND go_rnd->get_next( ) > '0.6'.
           EXIT.
         ENDIF.
         id = floor( go_rnd->get_next( ) * lines( next-followed_by ) ) + 1.
         next = mt_text[ id = next-followed_by[ id ] ].
-        <agency>-/dmo/zzsloganzag &&= ` ` && next-text.
+        <agency>-ZAI_DMOzzsloganzag &&= ` ` && next-text.
       ENDWHILE.
-      REPLACE ALL OCCURRENCES OF agencys_name IN <agency>-/dmo/zzsloganzag WITH <agency>-name.
+      REPLACE ALL OCCURRENCES OF agencys_name IN <agency>-ZAI_DMOzzsloganzag WITH <agency>-name.
     ENDLOOP.
   ENDMETHOD.
 
@@ -151,7 +151,7 @@ CLASS lcl_review_generator DEFINITION
   PUBLIC SECTION.
 
     TYPES:
-      tt_review                 TYPE STANDARD TABLE OF /dmo/zz_agn_reva WITH KEY agency_id review_id.
+      tt_review                 TYPE STANDARD TABLE OF ZAI_DMOzz_agn_reva WITH KEY agency_id review_id.
 
 
 
@@ -195,7 +195,7 @@ CLASS lcl_review_generator DEFINITION
           VALUE(rv_review_amount) TYPE i,
       _get_review_rating_avg
         RETURNING
-          VALUE(rv_review_rating_average) TYPE /dmo/zz_rating.
+          VALUE(rv_review_rating_average) TYPE ZAI_DMOzz_rating.
 
 
 ENDCLASS.
@@ -212,21 +212,21 @@ CREATE PUBLIC.
     METHODS:
       constructor
         IMPORTING
-          is_agency         TYPE /dmo/agency
-          iv_rating_average TYPE /dmo/zz_rating,
+          is_agency         TYPE ZAI_DMOagency
+          iv_rating_average TYPE ZAI_DMOzz_rating,
       generate
         RETURNING
-          VALUE(rs_review) TYPE /dmo/zz_agn_reva.
+          VALUE(rs_review) TYPE ZAI_DMOzz_agn_reva.
 
   PROTECTED SECTION.
     DATA:
-      mv_rating_average TYPE /dmo/zz_rating.
+      mv_rating_average TYPE ZAI_DMOzz_rating.
 
   PRIVATE SECTION.
     TYPES:
       BEGIN OF ts_id_map,
-        agency_id TYPE /dmo/agency_id,
-        review_id TYPE /dmo/zz_review_id,
+        agency_id TYPE ZAI_DMOagency_id,
+        review_id TYPE ZAI_DMOzz_review_id,
       END OF ts_id_map,
       tt_id_map TYPE STANDARD TABLE OF ts_id_map WITH KEY agency_id.
 
@@ -239,9 +239,9 @@ CREATE PUBLIC.
     METHODS:
       _get_review_rating
         IMPORTING
-          iv_target_rating        TYPE /dmo/zz_rating
+          iv_target_rating        TYPE ZAI_DMOzz_rating
         RETURNING
-          VALUE(rv_review_rating) TYPE /dmo/zz_rating,
+          VALUE(rv_review_rating) TYPE ZAI_DMOzz_rating,
       _calculate_helpfulness.
 
     CLASS-DATA:
@@ -249,8 +249,8 @@ CREATE PUBLIC.
       go_rnd    TYPE REF TO cl_abap_random_float.
 
     DATA:
-      ms_agency TYPE /dmo/agency,
-      ms_review TYPE /dmo/zz_agn_reva.
+      ms_agency TYPE ZAI_DMOagency,
+      ms_review TYPE ZAI_DMOzz_agn_reva.
 ENDCLASS.
 
 
@@ -264,7 +264,7 @@ CREATE PRIVATE.
       BEGIN OF t_review_text,
         id          TYPE i,
         rating      TYPE SORTED TABLE OF i WITH UNIQUE KEY table_line,
-        text        TYPE /dmo/zz_free_text_comment,
+        text        TYPE ZAI_DMOzz_free_text_comment,
         followed_by TYPE STANDARD TABLE OF i WITH DEFAULT KEY,
         root        TYPE abap_bool,
         posible_end TYPE abap_bool,
@@ -273,7 +273,7 @@ CREATE PRIVATE.
                                           WITH NON-UNIQUE SORTED KEY root COMPONENTS root,
       BEGIN OF t_review_text_edges,
         id                 TYPE i,
-        followed_by_rating TYPE /dmo/zz_rating,
+        followed_by_rating TYPE ZAI_DMOzz_rating,
         followed_by        TYPE i,
       END OF t_review_text_edges,
       tt_review_text_edges TYPE SORTED TABLE OF t_review_text_edges WITH NON-UNIQUE KEY primary_key COMPONENTS id followed_by_rating.
@@ -285,16 +285,16 @@ CREATE PRIVATE.
 
       get_instance_for_rating
         IMPORTING
-          iv_rating             TYPE /dmo/zz_rating
+          iv_rating             TYPE ZAI_DMOzz_rating
         RETURNING
           VALUE(ro_review_text) TYPE REF TO lcl_review_text.
 
     METHODS:
       generate_text_for_agency
         IMPORTING
-          is_agency      TYPE /dmo/agency
+          is_agency      TYPE ZAI_DMOagency
         RETURNING
-          VALUE(rv_text) TYPE /dmo/zz_free_text_comment.
+          VALUE(rv_text) TYPE ZAI_DMOzz_free_text_comment.
   PROTECTED SECTION.
   PRIVATE SECTION.
     CONSTANTS:
@@ -303,7 +303,7 @@ CREATE PRIVATE.
 
     TYPES:
       BEGIN OF ts_roots_by_rating,
-        rating TYPE /dmo/zz_rating,
+        rating TYPE ZAI_DMOzz_rating,
         roots  TYPE tt_review_text,
       END OF ts_roots_by_rating,
       tt_roots_by_rating TYPE STANDARD TABLE OF ts_roots_by_rating WITH KEY rating.
@@ -320,15 +320,15 @@ CREATE PRIVATE.
       _calculate_roots_by_rating.
 
     DATA:
-      mv_rating       TYPE /dmo/zz_rating,
-      ms_agency       TYPE /dmo/agency,
-      mv_text         TYPE /dmo/zz_free_text_comment,
+      mv_rating       TYPE ZAI_DMOzz_rating,
+      ms_agency       TYPE ZAI_DMOagency,
+      mv_text         TYPE ZAI_DMOzz_free_text_comment,
       mt_root_visited TYPE STANDARD TABLE OF i.
 
     METHODS:
       constructor
         IMPORTING
-          iv_rating TYPE /dmo/zz_rating,
+          iv_rating TYPE ZAI_DMOzz_rating,
       _replace_wildcards,
       _get_next
         IMPORTING
@@ -371,9 +371,9 @@ CLASS lcl_review_generator IMPLEMENTATION.
 
     _review_iterate( ).
 
-    DELETE FROM /dmo/zz_agn_reva.                       "#EC CI_NOWHERE
+    DELETE FROM ZAI_DMOzz_agn_reva.                       "#EC CI_NOWHERE
 
-    INSERT /dmo/zz_agn_reva FROM TABLE @mt_reviews_to_create.
+    INSERT ZAI_DMOzz_agn_reva FROM TABLE @mt_reviews_to_create.
 
   ENDMETHOD.
 

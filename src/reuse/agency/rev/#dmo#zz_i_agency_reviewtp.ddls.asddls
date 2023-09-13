@@ -1,7 +1,7 @@
 @AccessControl.authorizationCheck: #NOT_REQUIRED
 @EndUserText.label: 'Agency Review'
-define view entity /DMO/ZZ_I_Agency_ReviewTP
-  as projection on /DMO/ZZ_R_Agency_ReviewTP
+define view entity ZAI_DMOZZ_I_Agency_ReviewTP
+  as projection on ZAI_DMOZZ_R_Agency_ReviewTP
 {
   key AgencyId,
   key ReviewId,
@@ -13,5 +13,5 @@ define view entity /DMO/ZZ_I_Agency_ReviewTP
       LocalCreatedAt,
       LocalLastChangedAt,
       /* Associations */
-      _Agency : redirected to parent /DMO/I_AgencyTP
+      _Agency : redirected to parent ZAI_DMOI_AgencyTP
 }

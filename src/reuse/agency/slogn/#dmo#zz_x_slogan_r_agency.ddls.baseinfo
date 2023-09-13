@@ -3,8 +3,8 @@
 {
 "FROM":
 [
-"/DMO/E_AGENCY",
-"/DMO/I_AGENCY"
+"ZAI_DMOE_AGENCY",
+"ZAI_DMOI_AGENCY"
 ],
 "ASSOCIATED":
 [],

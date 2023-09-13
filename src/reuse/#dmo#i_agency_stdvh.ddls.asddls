@@ -2,8 +2,8 @@
 @EndUserText.label: 'Agency ValueHelp'
 @Search.searchable: true
 
-define view entity /DMO/I_Agency_StdVH
-  as select from /DMO/I_Agency as Agency
+define view entity ZAI_DMOI_Agency_StdVH
+  as select from ZAI_DMOI_Agency as Agency
 {
       @Search.defaultSearchElement: true
       @ObjectModel.text.element: ['Name']

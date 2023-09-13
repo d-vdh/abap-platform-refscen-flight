@@ -1,5 +1,5 @@
-CLASS /dmo/bp_bookingsupplement_d DEFINITION PUBLIC ABSTRACT FINAL FOR BEHAVIOR OF /dmo/r_travel_d.
+CLASS ZAI_DMObp_bookingsupplement_d DEFINITION PUBLIC ABSTRACT FINAL FOR BEHAVIOR OF ZAI_DMOr_travel_d.
 ENDCLASS.
 
-CLASS /dmo/bp_bookingsupplement_d IMPLEMENTATION.
+CLASS ZAI_DMObp_bookingsupplement_d IMPLEMENTATION.
 ENDCLASS.

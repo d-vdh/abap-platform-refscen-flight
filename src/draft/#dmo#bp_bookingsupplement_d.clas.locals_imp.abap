@@ -20,20 +20,20 @@ CLASS lhc_bookingsupplement IMPLEMENTATION.
 
   METHOD setBookSupplNumber.
     DATA:
-      max_bookingsupplementid   TYPE /dmo/booking_supplement_id,
-      bookingsupplements_update TYPE TABLE FOR UPDATE /DMO/R_Travel_D\\BookingSupplement,
-      bookingsupplement         TYPE STRUCTURE FOR READ RESULT /DMO/R_BookingSupplement_D.
+      max_bookingsupplementid   TYPE ZAI_DMObooking_supplement_id,
+      bookingsupplements_update TYPE TABLE FOR UPDATE ZAI_DMOR_Travel_D\\BookingSupplement,
+      bookingsupplement         TYPE STRUCTURE FOR READ RESULT ZAI_DMOR_BookingSupplement_D.
 
     "Read all bookings for the requested booking supplements
     " If multiple booking supplements of the same booking are requested, the booking is returned only once.
-    READ ENTITIES OF /DMO/R_Travel_D IN LOCAL MODE
+    READ ENTITIES OF ZAI_DMOR_Travel_D IN LOCAL MODE
       ENTITY BookingSupplement BY \_Booking
         FIELDS (  BookingUUID  )
         WITH CORRESPONDING #( keys )
       RESULT DATA(bookings).
 
     " Read all booking supplements for the affected bookings
-    READ ENTITIES OF /DMO/R_Travel_D IN LOCAL MODE
+    READ ENTITIES OF ZAI_DMOR_Travel_D IN LOCAL MODE
       ENTITY Booking BY \_BookingSupplement
         FIELDS ( BookingSupplementID )
         WITH CORRESPONDING #( bookings )
@@ -65,7 +65,7 @@ CLASS lhc_bookingsupplement IMPLEMENTATION.
     ENDLOOP.
 
     " Provide a booking supplement ID for all booking supplements that have none.
-    MODIFY ENTITIES OF /DMO/R_Travel_D IN LOCAL MODE
+    MODIFY ENTITIES OF ZAI_DMOR_Travel_D IN LOCAL MODE
       ENTITY BookingSupplement
         UPDATE FIELDS ( BookingSupplementID ) WITH bookingsupplements_update.
 
@@ -73,14 +73,14 @@ CLASS lhc_bookingsupplement IMPLEMENTATION.
 
   METHOD calculateTotalPrice.
     " Read all parent UUIDs
-    READ ENTITIES OF /DMO/R_Travel_D IN LOCAL MODE
+    READ ENTITIES OF ZAI_DMOR_Travel_D IN LOCAL MODE
       ENTITY BookingSupplement BY \_Travel
         FIELDS ( TravelUUID  )
         WITH CORRESPONDING #(  keys  )
       RESULT DATA(travels).
 
     " Trigger Re-Calculation on Root Node
-    MODIFY ENTITIES OF /DMO/R_Travel_D IN LOCAL MODE
+    MODIFY ENTITIES OF ZAI_DMOR_Travel_D IN LOCAL MODE
       ENTITY Travel
         EXECUTE reCalcTotalPrice
           FROM CORRESPONDING  #( travels ).
@@ -89,7 +89,7 @@ CLASS lhc_bookingsupplement IMPLEMENTATION.
 
   METHOD validateSupplement.
 
-    READ ENTITIES OF /DMO/R_Travel_D IN LOCAL MODE
+    READ ENTITIES OF ZAI_DMOR_Travel_D IN LOCAL MODE
       ENTITY BookingSupplement
         FIELDS ( SupplementID )
         WITH CORRESPONDING #(  keys )
@@ -98,18 +98,18 @@ CLASS lhc_bookingsupplement IMPLEMENTATION.
 
     failed = CORRESPONDING #( DEEP read_failed ).
 
-    READ ENTITIES OF /DMO/R_Travel_D IN LOCAL MODE
+    READ ENTITIES OF ZAI_DMOR_Travel_D IN LOCAL MODE
       ENTITY BookingSupplement BY \_Booking
         FROM CORRESPONDING #( bookingsupplements )
       LINK DATA(booksuppl_booking_links).
 
-    READ ENTITIES OF /DMO/R_Travel_D IN LOCAL MODE
+    READ ENTITIES OF ZAI_DMOR_Travel_D IN LOCAL MODE
       ENTITY BookingSupplement BY \_Travel
         FROM CORRESPONDING #( bookingsupplements )
       LINK DATA(booksuppl_travel_links).
 
 
-    DATA supplements TYPE SORTED TABLE OF /dmo/supplement WITH UNIQUE KEY supplement_id.
+    DATA supplements TYPE SORTED TABLE OF ZAI_DMOsupplement WITH UNIQUE KEY supplement_id.
 
     " Optimization of DB select: extract distinct non-initial customer IDs
     supplements = CORRESPONDING #( bookingsupplements DISCARDING DUPLICATES MAPPING supplement_id = SupplementID EXCEPT * ).
@@ -117,7 +117,7 @@ CLASS lhc_bookingsupplement IMPLEMENTATION.
 
     IF  supplements IS NOT INITIAL.
       " Check if customer ID exists
-      SELECT FROM /dmo/supplement FIELDS supplement_id
+      SELECT FROM ZAI_DMOsupplement FIELDS supplement_id
                                   FOR ALL ENTRIES IN @supplements
                                   WHERE supplement_id = @supplements-supplement_id
       INTO TABLE @DATA(valid_supplements).
@@ -134,8 +134,8 @@ CLASS lhc_bookingsupplement IMPLEMENTATION.
 
         APPEND VALUE #( %tky                  = <bookingsupplement>-%tky
                         %state_area           = 'VALIDATE_SUPPLEMENT'
-                        %msg                  = NEW /dmo/cm_flight_messages(
-                                                                textid = /dmo/cm_flight_messages=>enter_supplement_id
+                        %msg                  = NEW ZAI_DMOcm_flight_messages(
+                                                                textid = ZAI_DMOcm_flight_messages=>enter_supplement_id
                                                                 severity = if_abap_behv_message=>severity-error )
                         %path                 = VALUE #( booking-%tky = booksuppl_booking_links[ KEY id  source-%tky = <bookingsupplement>-%tky ]-target-%tky
                                                          travel-%tky  = booksuppl_travel_links[  KEY id  source-%tky = <bookingsupplement>-%tky ]-target-%tky )
@@ -148,8 +148,8 @@ CLASS lhc_bookingsupplement IMPLEMENTATION.
 
         APPEND VALUE #( %tky                  = <bookingsupplement>-%tky
                         %state_area           = 'VALIDATE_SUPPLEMENT'
-                        %msg                  = NEW /dmo/cm_flight_messages(
-                                                                textid = /dmo/cm_flight_messages=>supplement_unknown
+                        %msg                  = NEW ZAI_DMOcm_flight_messages(
+                                                                textid = ZAI_DMOcm_flight_messages=>supplement_unknown
                                                                 severity = if_abap_behv_message=>severity-error )
                         %path                 = VALUE #( booking-%tky = booksuppl_booking_links[ KEY id  source-%tky = <bookingsupplement>-%tky ]-target-%tky
                                                           travel-%tky = booksuppl_travel_links[  KEY id  source-%tky = <bookingsupplement>-%tky ]-target-%tky )
@@ -162,18 +162,18 @@ CLASS lhc_bookingsupplement IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD validateCurrencyCode.
-    READ ENTITIES OF /DMO/R_Travel_D IN LOCAL MODE
+    READ ENTITIES OF ZAI_DMOR_Travel_D IN LOCAL MODE
       ENTITY BookingSupplement
         FIELDS ( currencycode )
         WITH CORRESPONDING #( keys )
       RESULT DATA(booking_supplements).
 
-    READ ENTITIES OF /DMO/R_Travel_D IN LOCAL MODE
+    READ ENTITIES OF ZAI_DMOR_Travel_D IN LOCAL MODE
       ENTITY BookingSupplement BY \_Booking
         FROM CORRESPONDING #( booking_supplements )
       LINK DATA(booksuppl_booking_links).
 
-    READ ENTITIES OF /DMO/R_Travel_D IN LOCAL MODE
+    READ ENTITIES OF ZAI_DMOR_Travel_D IN LOCAL MODE
       ENTITY BookingSupplement BY \_Travel
         FROM CORRESPONDING #( booking_supplements )
       LINK DATA(booksuppl_travel_links).
@@ -200,8 +200,8 @@ CLASS lhc_bookingsupplement IMPLEMENTATION.
         APPEND VALUE #( %tky                   = booking_supplement-%tky ) TO failed-bookingsupplement.
         APPEND VALUE #( %tky                   = booking_supplement-%tky
                         %state_area            = 'VALIDATE_CURRENCYCODE'
-                        %msg                   = NEW /dmo/cm_flight_messages(
-                                                        textid    = /dmo/cm_flight_messages=>currency_required
+                        %msg                   = NEW ZAI_DMOcm_flight_messages(
+                                                        textid    = ZAI_DMOcm_flight_messages=>currency_required
                                                         severity  = if_abap_behv_message=>severity-error )
                         %path                 = VALUE #( booking-%tky = booksuppl_booking_links[ KEY id  source-%tky = booking_supplement-%tky ]-target-%tky
                                                          travel-%tky  = booksuppl_travel_links[  KEY id  source-%tky = booking_supplement-%tky ]-target-%tky )
@@ -212,8 +212,8 @@ CLASS lhc_bookingsupplement IMPLEMENTATION.
         APPEND VALUE #( %tky                   = booking_supplement-%tky ) TO failed-bookingsupplement.
         APPEND VALUE #( %tky                   = booking_supplement-%tky
                         %state_area            = 'VALIDATE_CURRENCYCODE'
-                        %msg                   = NEW /dmo/cm_flight_messages(
-                                                        textid        = /dmo/cm_flight_messages=>currency_not_existing
+                        %msg                   = NEW ZAI_DMOcm_flight_messages(
+                                                        textid        = ZAI_DMOcm_flight_messages=>currency_not_existing
                                                         severity      = if_abap_behv_message=>severity-error )
                         %path                 = VALUE #( booking-%tky = booksuppl_booking_links[ KEY id  source-%tky = booking_supplement-%tky ]-target-%tky
                                                          travel-%tky  = booksuppl_travel_links[  KEY id  source-%tky = booking_supplement-%tky ]-target-%tky )

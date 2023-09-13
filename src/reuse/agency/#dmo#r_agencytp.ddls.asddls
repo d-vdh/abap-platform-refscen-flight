@@ -14,10 +14,10 @@
   allowNewCompositions: true
 }
 
-define root view entity /DMO/R_AgencyTP
-  as select from /DMO/I_Agency as Agency
+define root view entity ZAI_DMOR_AgencyTP
+  as select from ZAI_DMOI_Agency as Agency
   association [0..1] to I_Country     as _Country   on $projection.CountryCode = _Country.Country
-  association [1]    to /DMO/E_Agency as _Extension on $projection.AgencyID = _Extension.AgencyId
+  association [1]    to ZAI_DMOE_Agency as _Extension on $projection.AgencyID = _Extension.AgencyId
 {
 
   key AgencyID,

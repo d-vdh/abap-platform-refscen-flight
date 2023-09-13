@@ -15,9 +15,9 @@
   }, allowNewCompositions: true  
 }
 
-define root view entity /DMO/C_AgencyTP
+define root view entity ZAI_DMOC_AgencyTP
   provider contract transactional_query
-  as projection on /DMO/R_AgencyTP as Agency
+  as projection on ZAI_DMOR_AgencyTP as Agency
 {
   key     AgencyID,
 

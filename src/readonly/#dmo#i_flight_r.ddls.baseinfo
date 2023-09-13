@@ -3,11 +3,11 @@
 {
 "FROM":
 [
-"/DMO/FLIGHT"
+"ZAI_DMOFLIGHT"
 ],
 "ASSOCIATED":
 [
-"/DMO/I_CARRIER"
+"ZAI_DMOI_CARRIER"
 ],
 "BASE":
 [],

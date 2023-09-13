@@ -3,7 +3,7 @@
 {
 "FROM":
 [
-"/DMO/CUSTOMER"
+"ZAI_DMOCUSTOMER"
 ],
 "ASSOCIATED":
 [

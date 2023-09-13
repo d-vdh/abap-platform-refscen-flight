@@ -1,11 +1,11 @@
-managed implementation in class /dmo/bp_i_carrierslocksingle_s unique;
+managed implementation in class ZAI_DMObp_i_carrierslocksingle_s unique;
 
 strict(2);
 with draft;
 
-define behavior for /DMO/I_CarriersLockSingleton_S alias CarriersLockSingleton
+define behavior for ZAI_DMOI_CarriersLockSingleton_S alias CarriersLockSingleton
 with unmanaged save
-draft table /dmo/d_carr_lock
+draft table ZAI_DMOd_carr_lock
 lock master
 total etag LastChangedAtMax
 authorization master ( global )
@@ -26,9 +26,9 @@ authorization master ( global )
   }
 }
 
-define behavior for /DMO/I_Carrier_S alias Carrier
-persistent table /dmo/carrier
-draft table /dmo/d_carrier
+define behavior for ZAI_DMOI_Carrier_S alias Carrier
+persistent table ZAI_DMOcarrier
+draft table ZAI_DMOd_carrier
 lock dependent by _CarrierSingleton
 authorization dependent by _CarrierSingleton
 etag master LocalLastChangedAt
@@ -45,7 +45,7 @@ etag master LocalLastChangedAt
   validation validateName on save { create; field Name; }
   validation validateCurrencyCode on save { create; field CurrencyCode; }
 
-  mapping for /dmo/carrier
+  mapping for ZAI_DMOcarrier
   { AirlineID = carrier_id;
     CurrencyCode = currency_code;
     Name = name;

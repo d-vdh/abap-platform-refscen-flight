@@ -1,15 +1,15 @@
 @AccessControl.authorizationCheck: #NOT_REQUIRED
 @EndUserText.label: 'Travel view - CDS data model'
 
-define root view entity /DMO/I_Travel_M
-  as select from /dmo/travel_m as Travel -- the travel table is the data source for this view
+define root view entity ZAI_DMOI_Travel_M
+  as select from ZAI_DMOtravel_m as Travel -- the travel table is the data source for this view
 
-  composition [0..*] of /DMO/I_Booking_M as _Booking
+  composition [0..*] of ZAI_DMOI_Booking_M as _Booking
 
-  association [0..1] to /DMO/I_Agency    as _Agency   on $projection.agency_id = _Agency.AgencyID
-  association [0..1] to /DMO/I_Customer  as _Customer on $projection.customer_id = _Customer.CustomerID
+  association [0..1] to ZAI_DMOI_Agency    as _Agency   on $projection.agency_id = _Agency.AgencyID
+  association [0..1] to ZAI_DMOI_Customer  as _Customer on $projection.customer_id = _Customer.CustomerID
   association [0..1] to I_Currency       as _Currency on $projection.currency_code = _Currency.Currency
-  association [1..1] to /DMO/I_Overall_Status_VH as _OverallStatus on $projection.overall_status = _OverallStatus.OverallStatus
+  association [1..1] to ZAI_DMOI_Overall_Status_VH as _OverallStatus on $projection.overall_status = _OverallStatus.OverallStatus
 
 
 {

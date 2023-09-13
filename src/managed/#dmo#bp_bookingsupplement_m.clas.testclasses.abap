@@ -1,4 +1,4 @@
-"! @testing BDEF:/DMO/I_Travel_M
+"! @testing BDEF:ZAI_DMOI_Travel_M
 CLASS ltcl_bookingsupplement DEFINITION FINAL FOR TESTING
   DURATION SHORT
   RISK LEVEL HARMLESS.
@@ -6,19 +6,19 @@ CLASS ltcl_bookingsupplement DEFINITION FINAL FOR TESTING
   PRIVATE SECTION.
 
     CONSTANTS:
-      travel_id1             TYPE /dmo/travel_id             VALUE '11',
-      travel_id2             TYPE /dmo/travel_id             VALUE '12',
-      travel_id3             TYPE /dmo/travel_id             VALUE '13',
-      travel_id4             TYPE /dmo/travel_id             VALUE '14',
-      booking_id1            TYPE /dmo/booking_id            VALUE '21',
-      booking_id2            TYPE /dmo/booking_id            VALUE '22',
-      booking_id3            TYPE /dmo/booking_id            VALUE '23',
-      booking_id4            TYPE /dmo/booking_id            VALUE '24',
-      booking_supplement_id1 TYPE /dmo/booking_supplement_id VALUE '31',
-      booking_supplement_id2 TYPE /dmo/booking_supplement_id VALUE '32',
-      booking_supplement_id3 TYPE /dmo/booking_supplement_id VALUE '33',
-      booking_supplement_id4 TYPE /dmo/booking_supplement_id VALUE '34',
-      c_currency             TYPE /dmo/currency_code         VALUE 'EUR'.
+      travel_id1             TYPE ZAI_DMOtravel_id             VALUE '11',
+      travel_id2             TYPE ZAI_DMOtravel_id             VALUE '12',
+      travel_id3             TYPE ZAI_DMOtravel_id             VALUE '13',
+      travel_id4             TYPE ZAI_DMOtravel_id             VALUE '14',
+      booking_id1            TYPE ZAI_DMObooking_id            VALUE '21',
+      booking_id2            TYPE ZAI_DMObooking_id            VALUE '22',
+      booking_id3            TYPE ZAI_DMObooking_id            VALUE '23',
+      booking_id4            TYPE ZAI_DMObooking_id            VALUE '24',
+      booking_supplement_id1 TYPE ZAI_DMObooking_supplement_id VALUE '31',
+      booking_supplement_id2 TYPE ZAI_DMObooking_supplement_id VALUE '32',
+      booking_supplement_id3 TYPE ZAI_DMObooking_supplement_id VALUE '33',
+      booking_supplement_id4 TYPE ZAI_DMObooking_supplement_id VALUE '34',
+      c_currency             TYPE ZAI_DMOcurrency_code         VALUE 'EUR'.
 
     CLASS-DATA:
       class_under_test     TYPE REF TO lhc_bookingsupplement,
@@ -64,9 +64,9 @@ CLASS ltcl_bookingsupplement IMPLEMENTATION.
     CREATE OBJECT class_under_test FOR TESTING.
     cds_test_environment = cl_cds_test_environment=>create_for_multiple_cds(
                                VALUE #(
-                                   ( i_for_entity = '/DMO/I_Travel_M'            )
-                                   ( i_for_entity = '/DMO/I_Booking_M'           )
-                                   ( i_for_entity = '/DMO/I_BookSuppl_M' )
+                                   ( i_for_entity = 'ZAI_DMOI_Travel_M'            )
+                                   ( i_for_entity = 'ZAI_DMOI_Booking_M'           )
+                                   ( i_for_entity = 'ZAI_DMOI_BookSuppl_M' )
                                  )
                              ).
     cds_test_environment->enable_double_redirection(  ).
@@ -82,8 +82,8 @@ CLASS ltcl_bookingsupplement IMPLEMENTATION.
     sql_test_environment->clear_doubles( ).
 
     DATA:
-      travel_mock_data  TYPE STANDARD TABLE OF /dmo/travel_m,
-      booking_mock_data TYPE STANDARD TABLE OF /dmo/booking_m.
+      travel_mock_data  TYPE STANDARD TABLE OF ZAI_DMOtravel_m,
+      booking_mock_data TYPE STANDARD TABLE OF ZAI_DMObooking_m.
 
     travel_mock_data = VALUE #(
         ( travel_id = travel_id1  currency_code = c_currency )
@@ -120,11 +120,11 @@ CLASS ltcl_bookingsupplement IMPLEMENTATION.
 
   METHOD calculatetotalprice.
     CONSTANTS:
-      c_supplement_price TYPE /dmo/supplement_price VALUE '10'.
+      c_supplement_price TYPE ZAI_DMOsupplement_price VALUE '10'.
 
     DATA:
-      booking_supplement_mock_data TYPE STANDARD TABLE OF /dmo/booksuppl_m,
-      reported                     TYPE RESPONSE FOR REPORTED LATE  /dmo/i_travel_m.
+      booking_supplement_mock_data TYPE STANDARD TABLE OF ZAI_DMObooksuppl_m,
+      reported                     TYPE RESPONSE FOR REPORTED LATE  ZAI_DMOi_travel_m.
 
     booking_supplement_mock_data = VALUE #(
         price         = c_supplement_price
@@ -148,7 +148,7 @@ CLASS ltcl_bookingsupplement IMPLEMENTATION.
     cl_abap_unit_assert=>assert_initial( reported ).
 
 
-    READ ENTITIES OF /dmo/i_travel_m
+    READ ENTITIES OF ZAI_DMOi_travel_m
       ENTITY travel
         FIELDS ( total_price ) WITH VALUE #( ( travel_id = travel_id1 ) )
         RESULT DATA(read_result).
@@ -156,17 +156,17 @@ CLASS ltcl_bookingsupplement IMPLEMENTATION.
     cl_abap_unit_assert=>assert_not_initial( read_result ).
 
     cl_abap_unit_assert=>assert_equals(
-        exp = CONV /dmo/total_price( c_supplement_price * lines( booking_supplement_mock_data ) )
+        exp = CONV ZAI_DMOtotal_price( c_supplement_price * lines( booking_supplement_mock_data ) )
         act = read_result[ 1 ]-total_price
       ).
   ENDMETHOD.
 
   METHOD validate_currency_success.
     DATA:
-      booking_supplement_mock_data TYPE STANDARD TABLE OF /dmo/booksuppl_m,
-      booking_supplements_to_test  TYPE TABLE FOR VALIDATION /dmo/i_travel_m\\booksuppl~validatecurrencycode,
-      failed                       TYPE RESPONSE FOR FAILED   LATE /dmo/i_travel_m,
-      reported                     TYPE RESPONSE FOR REPORTED LATE /dmo/i_travel_m.
+      booking_supplement_mock_data TYPE STANDARD TABLE OF ZAI_DMObooksuppl_m,
+      booking_supplements_to_test  TYPE TABLE FOR VALIDATION ZAI_DMOi_travel_m\\booksuppl~validatecurrencycode,
+      failed                       TYPE RESPONSE FOR FAILED   LATE ZAI_DMOi_travel_m,
+      reported                     TYPE RESPONSE FOR REPORTED LATE ZAI_DMOi_travel_m.
 
     booking_supplement_mock_data = VALUE #(
         travel_id  = travel_id1
@@ -192,19 +192,19 @@ CLASS ltcl_bookingsupplement IMPLEMENTATION.
 
   METHOD validate_currency_not_valid.
     TYPES: BEGIN OF t_check.
-             INCLUDE TYPE /dmo/booksuppl_m.
+             INCLUDE TYPE ZAI_DMObooksuppl_m.
     TYPES:   exp_amount_reported_entries TYPE i,
              exp_amount_failed_entries   TYPE i,
            END OF t_check,
            t_check_table TYPE STANDARD TABLE OF t_check WITH KEY travel_id.
 
     DATA:
-      booking_supplement_mock_data TYPE STANDARD TABLE OF /dmo/booksuppl_m,
+      booking_supplement_mock_data TYPE STANDARD TABLE OF ZAI_DMObooksuppl_m,
       booking_supplements_to_check TYPE t_check_table,
       booking_supplement_to_check  TYPE t_check,
-      booking_supplements_to_test  TYPE TABLE FOR VALIDATION /dmo/i_travel_m\\booksuppl~validatecurrencycode,
-      failed                       TYPE RESPONSE FOR FAILED   LATE /dmo/i_travel_m,
-      reported                     TYPE RESPONSE FOR REPORTED LATE /dmo/i_travel_m.
+      booking_supplements_to_test  TYPE TABLE FOR VALIDATION ZAI_DMOi_travel_m\\booksuppl~validatecurrencycode,
+      failed                       TYPE RESPONSE FOR FAILED   LATE ZAI_DMOi_travel_m,
+      reported                     TYPE RESPONSE FOR REPORTED LATE ZAI_DMOi_travel_m.
 
     booking_supplements_to_check = VALUE #(
         exp_amount_reported_entries = '1'

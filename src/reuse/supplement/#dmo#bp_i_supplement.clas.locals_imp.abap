@@ -22,7 +22,7 @@ ENDCLASS.
 CLASS lhc_supplement IMPLEMENTATION.
 
   METHOD validateprice.
-    READ ENTITIES OF /dmo/i_supplement IN LOCAL MODE
+    READ ENTITIES OF ZAI_DMOi_supplement IN LOCAL MODE
       ENTITY supplement
         FIELDS ( price currencycode )
         WITH CORRESPONDING #( keys )
@@ -52,8 +52,8 @@ CLASS lhc_supplement IMPLEMENTATION.
         APPEND VALUE #( %tky           = supplement-%tky ) TO failed-supplement.
         APPEND VALUE #( %tky           = supplement-%tky
                         %state_area    = 'VALIDATE_PRICE'
-                        %msg           = NEW /dmo/cx_supplement(
-                                             textid    = /dmo/cx_supplement=>price_required
+                        %msg           = NEW ZAI_DMOcx_supplement(
+                                             textid    = ZAI_DMOcx_supplement=>price_required
                                              severity  = if_abap_behv_message=>severity-error )
                         %element-price = if_abap_behv=>mk-on
                       ) TO reported-supplement.
@@ -64,8 +64,8 @@ CLASS lhc_supplement IMPLEMENTATION.
         APPEND VALUE #( %tky                 = supplement-%tky ) TO failed-supplement.
         APPEND VALUE #( %tky                 = supplement-%tky
                         %state_area          = 'VALIDATE_PRICE'
-                        %msg                 = NEW /dmo/cx_supplement(
-                                                      textid    = /dmo/cx_supplement=>currency_required
+                        %msg                 = NEW ZAI_DMOcx_supplement(
+                                                      textid    = ZAI_DMOcx_supplement=>currency_required
                                                       severity  = if_abap_behv_message=>severity-error )
                         %element-currencycode = if_abap_behv=>mk-on
                       ) TO reported-supplement.
@@ -74,8 +74,8 @@ CLASS lhc_supplement IMPLEMENTATION.
         APPEND VALUE #( %tky                 = supplement-%tky ) TO failed-supplement.
         APPEND VALUE #( %tky                 = supplement-%tky
                         %state_area          = 'VALIDATE_PRICE'
-                        %msg                 = NEW /dmo/cx_supplement(
-                                                      textid    = /dmo/cx_supplement=>currency_not_existing
+                        %msg                 = NEW ZAI_DMOcx_supplement(
+                                                      textid    = ZAI_DMOcx_supplement=>currency_not_existing
                                                       severity  = if_abap_behv_message=>severity-error )
                         %element-currencycode = if_abap_behv=>mk-on
                       ) TO reported-supplement.
@@ -84,9 +84,9 @@ CLASS lhc_supplement IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD earlynumbering_create.
-    DATA: entities_wo_supplementid     TYPE TABLE FOR CREATE /dmo/i_supplement,
-          entities_wo_supplid_filtered TYPE TABLE FOR CREATE /dmo/i_supplement,
-          entity                       TYPE STRUCTURE FOR CREATE /dmo/i_supplement.
+    DATA: entities_wo_supplementid     TYPE TABLE FOR CREATE ZAI_DMOi_supplement,
+          entities_wo_supplid_filtered TYPE TABLE FOR CREATE ZAI_DMOi_supplement,
+          entity                       TYPE STRUCTURE FOR CREATE ZAI_DMOi_supplement.
 
     " Ensure Supplement ID is not set yet
     LOOP AT entities INTO entity WHERE supplementid IS NOT INITIAL.
@@ -110,7 +110,7 @@ CLASS lhc_supplement IMPLEMENTATION.
             EXPORTING
               nr_range_nr       = '01'
               subobject         = CONV #( supplementcategory )
-              object            = '/DMO/SUPPL'
+              object            = 'ZAI_DMOSUPPL'
               quantity          = CONV #( lines( entities_wo_supplid_filtered ) )
             IMPORTING
               number            = DATA(number_range_key)
@@ -135,8 +135,8 @@ CLASS lhc_supplement IMPLEMENTATION.
       CASE number_range_return_code.
         WHEN '1'.
           " 1 - the returned number is in a critical range (specified under “percentage warning” in the object definition)
-          APPEND NEW /dmo/cx_supplement(
-                              textid          = /dmo/cx_supplement=>numbers_left
+          APPEND NEW ZAI_DMOcx_supplement(
+                              textid          = ZAI_DMOcx_supplement=>numbers_left
                               severity        = if_abap_behv_message=>severity-warning
                               supplement_category = supplementcategory
                               numbers_left    = CONV i( '9999' - CONV i( number_range_key+2 ) )
@@ -150,8 +150,8 @@ CLASS lhc_supplement IMPLEMENTATION.
                   %cid      = entity-%cid
                   %is_draft = entity-%is_draft
                   %key      = entity-%key
-                  %msg      = NEW /dmo/cx_supplement(
-                                    textid              = /dmo/cx_supplement=>numbers_last
+                  %msg      = NEW ZAI_DMOcx_supplement(
+                                    textid              = ZAI_DMOcx_supplement=>numbers_last
                                     severity            = if_abap_behv_message=>severity-error
                                     supplement_category = supplementcategory )
               ) TO reported-supplement.

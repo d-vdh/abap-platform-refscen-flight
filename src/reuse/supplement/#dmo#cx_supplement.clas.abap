@@ -1,4 +1,4 @@
-CLASS /dmo/cx_supplement DEFINITION
+CLASS ZAI_DMOcx_supplement DEFINITION
   PUBLIC
   INHERITING FROM cx_static_check
   FINAL
@@ -12,7 +12,7 @@ CLASS /dmo/cx_supplement DEFINITION
 
     CONSTANTS:
       BEGIN OF price_required,
-        msgid TYPE symsgid VALUE '/DMO/CM_SUPPLEMENT',
+        msgid TYPE symsgid VALUE 'ZAI_DMOCM_SUPPLEMENT',
         msgno TYPE symsgno VALUE '001',
         attr1 TYPE scx_attrname VALUE '',
         attr2 TYPE scx_attrname VALUE '',
@@ -21,7 +21,7 @@ CLASS /dmo/cx_supplement DEFINITION
       END OF price_required,
 
       BEGIN OF currency_required,
-        msgid TYPE symsgid VALUE '/DMO/CM_SUPPLEMENT',
+        msgid TYPE symsgid VALUE 'ZAI_DMOCM_SUPPLEMENT',
         msgno TYPE symsgno VALUE '002',
         attr1 TYPE scx_attrname VALUE '',
         attr2 TYPE scx_attrname VALUE '',
@@ -30,7 +30,7 @@ CLASS /dmo/cx_supplement DEFINITION
       END OF currency_required,
 
       BEGIN OF currency_not_existing,
-        msgid TYPE symsgid VALUE '/DMO/CM_SUPPLEMENT',
+        msgid TYPE symsgid VALUE 'ZAI_DMOCM_SUPPLEMENT',
         msgno TYPE symsgno VALUE '006',
         attr1 TYPE scx_attrname VALUE 'MV_CURRENCYCODE',
         attr2 TYPE scx_attrname VALUE '',
@@ -39,7 +39,7 @@ CLASS /dmo/cx_supplement DEFINITION
       END OF currency_not_existing,
 
       BEGIN OF description_required,
-        msgid TYPE symsgid VALUE '/DMO/CM_SUPPLEMENT',
+        msgid TYPE symsgid VALUE 'ZAI_DMOCM_SUPPLEMENT',
         msgno TYPE symsgno VALUE '003',
         attr1 TYPE scx_attrname VALUE '',
         attr2 TYPE scx_attrname VALUE '',
@@ -48,7 +48,7 @@ CLASS /dmo/cx_supplement DEFINITION
       END OF description_required,
 
       BEGIN OF numbers_left,
-        msgid TYPE symsgid VALUE '/DMO/CM_SUPPLEMENT',
+        msgid TYPE symsgid VALUE 'ZAI_DMOCM_SUPPLEMENT',
         msgno TYPE symsgno VALUE '004',
         attr1 TYPE scx_attrname VALUE 'MV_NUMBERS_LEFT',
         attr2 TYPE scx_attrname VALUE 'MV_SUPPLEMENT_CATEGORY',
@@ -57,7 +57,7 @@ CLASS /dmo/cx_supplement DEFINITION
       END OF numbers_left,
 
       BEGIN OF numbers_last,
-        msgid TYPE symsgid VALUE '/DMO/CM_SUPPLEMENT',
+        msgid TYPE symsgid VALUE 'ZAI_DMOCM_SUPPLEMENT',
         msgno TYPE symsgno VALUE '005',
         attr1 TYPE scx_attrname VALUE 'MV_SUPPLEMENT_CATEGORY',
         attr2 TYPE scx_attrname VALUE '',
@@ -67,8 +67,8 @@ CLASS /dmo/cx_supplement DEFINITION
 
 
     DATA:
-      mv_supplement_category TYPE /dmo/supplement_category,
-      mv_currencycode        TYPE /dmo/currency_code,
+      mv_supplement_category TYPE ZAI_DMOsupplement_category,
+      mv_currencycode        TYPE ZAI_DMOcurrency_code,
       mv_numbers_left        TYPE i.
 
 
@@ -78,8 +78,8 @@ CLASS /dmo/cx_supplement DEFINITION
           textid              LIKE if_t100_message=>t100key         OPTIONAL
           previous            LIKE previous                         OPTIONAL
           severity            TYPE if_abap_behv_message=>t_severity DEFAULT  if_abap_behv_message=>severity-error
-          supplement_category TYPE /dmo/supplement_category         OPTIONAL
-          currencycode        TYPE /dmo/currency_code               OPTIONAL
+          supplement_category TYPE ZAI_DMOsupplement_category         OPTIONAL
+          currencycode        TYPE ZAI_DMOcurrency_code               OPTIONAL
           numbers_left        TYPE i                                OPTIONAL
         .
 
@@ -89,7 +89,7 @@ ENDCLASS.
 
 
 
-CLASS /dmo/cx_supplement IMPLEMENTATION.
+CLASS ZAI_DMOcx_supplement IMPLEMENTATION.
 
   METHOD constructor ##ADT_SUPPRESS_GENERATION.
 

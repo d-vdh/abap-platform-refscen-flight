@@ -1,21 +1,21 @@
-extension using interface /dmo/i_agencytp
-implementation in class /dmo/zz_bp_x_review_r_agencytp unique;
+extension using interface ZAI_DMOi_agencytp
+implementation in class ZAI_DMOzz_bp_x_review_r_agencytp unique;
 
-extend behavior for /DMO/Agency
+extend behavior for ZAI_DMOAgency
 {
-  event /DMO/AgencyReviewCreated parameter /DMO/ZZ_D_AgencyReviewCreated;
+  event ZAI_DMOAgencyReviewCreated parameter ZAI_DMOZZ_D_AgencyReviewCreated;
 
   extend draft determine action Prepare
   {
-    validation /DMO/ZZ_Review~/DMO/ratingInRange;
+    validation ZAI_DMOZZ_Review~ZAI_DMOratingInRange;
   }
-  association /DMO/ZZ_ReviewZAG { create; with draft; }
+  association ZAI_DMOZZ_ReviewZAG { create; with draft; }
 }
 
-define behavior for /DMO/ZZ_R_Agency_ReviewTP alias /DMO/ZZ_Review using /DMO/ZZ_I_AGENCY_REVIEWTP
+define behavior for ZAI_DMOZZ_R_Agency_ReviewTP alias ZAI_DMOZZ_Review using ZAI_DMOZZ_I_AGENCY_REVIEWTP
 with additional save
-persistent table /dmo/zz_agn_reva
-draft table /dmo/zz_agn_revd
+persistent table ZAI_DMOzz_agn_reva
+draft table ZAI_DMOzz_agn_revd
 etag master LocalLastChangedAt
 lock dependent
 authorization dependent
@@ -26,13 +26,13 @@ late numbering
 
   field ( readonly ) ReviewID, AgencyID, HelpfulCount, HelpfulTotal, Reviewer;
 
-  action ( authorization : global ) /DMO/reviewWasHelpful    result [1] $self;
-  action ( authorization : global ) /DMO/reviewWasNotHelpful result [1] $self;
+  action ( authorization : global ) ZAI_DMOreviewWasHelpful    result [1] $self;
+  action ( authorization : global ) ZAI_DMOreviewWasNotHelpful result [1] $self;
 
-  validation /DMO/ratingInRange on save { create; field Rating; }
+  validation ZAI_DMOratingInRange on save { create; field Rating; }
 
   association _Agency { with draft; }
-  mapping for /dmo/zz_agn_reva
+  mapping for ZAI_DMOzz_agn_reva
     {
       AgencyId           = agency_id;
       ReviewId           = review_id;

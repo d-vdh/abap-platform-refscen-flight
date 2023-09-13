@@ -3,7 +3,7 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <DDLS>
-    <DDLNAME>/DMO/E_AGENCY</DDLNAME>
+    <DDLNAME>ZAI_DMOE_AGENCY</DDLNAME>
     <DDLANGUAGE>E</DDLANGUAGE>
     <DDTEXT>Extension Include View: Agency</DDTEXT>
     <SOURCE_TYPE>W</SOURCE_TYPE>

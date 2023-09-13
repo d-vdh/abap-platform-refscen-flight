@@ -3,7 +3,7 @@
 {
 "FROM":
 [
-"/DMO/R_AGENCYTP"
+"ZAI_DMOR_AGENCYTP"
 ],
 "ASSOCIATED":
 [],

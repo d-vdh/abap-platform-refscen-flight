@@ -1,4 +1,4 @@
-INTERFACE /dmo/if_data_generation_badi
+INTERFACE ZAI_DMOif_data_generation_badi
   PUBLIC .
 
   INTERFACES if_badi_interface .

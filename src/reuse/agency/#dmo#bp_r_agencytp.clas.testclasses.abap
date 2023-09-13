@@ -1,4 +1,4 @@
-"! @testing BDEF:/DMO/R_AgencyTP
+"! @testing BDEF:ZAI_DMOR_AgencyTP
 CLASS ltc_agency_handler DEFINITION FINAL FOR TESTING
   DURATION SHORT
   RISK LEVEL HARMLESS.
@@ -10,11 +10,11 @@ CLASS ltc_agency_handler DEFINITION FINAL FOR TESTING
     CLASS-METHODS class_setup.
     CLASS-METHODS class_teardown.
 
-    DATA mapped        TYPE RESPONSE FOR MAPPED EARLY /dmo/r_agencytp.
-    DATA failed        TYPE RESPONSE FOR FAILED EARLY /dmo/r_agencytp.
-    DATA reported      TYPE RESPONSE FOR REPORTED EARLY /dmo/r_agencytp.
-    DATA failed_late   TYPE RESPONSE FOR FAILED LATE /dmo/r_agencytp.
-    DATA reported_late TYPE RESPONSE FOR REPORTED LATE /dmo/r_agencytp.
+    DATA mapped        TYPE RESPONSE FOR MAPPED EARLY ZAI_DMOr_agencytp.
+    DATA failed        TYPE RESPONSE FOR FAILED EARLY ZAI_DMOr_agencytp.
+    DATA reported      TYPE RESPONSE FOR REPORTED EARLY ZAI_DMOr_agencytp.
+    DATA failed_late   TYPE RESPONSE FOR FAILED LATE ZAI_DMOr_agencytp.
+    DATA reported_late TYPE RESPONSE FOR REPORTED LATE ZAI_DMOr_agencytp.
 
     METHODS setup.
     METHODS teardown.
@@ -65,7 +65,7 @@ CLASS ltc_agency_handler IMPLEMENTATION.
 
   METHOD class_setup.
     CREATE OBJECT class_under_test FOR TESTING.
-    sql_test_environment = cl_osql_test_environment=>create( i_dependency_list = VALUE #( ( '/DMO/R_AgencyTP' ) ( 'I_COUNTRY' ) ) ).
+    sql_test_environment = cl_osql_test_environment=>create( i_dependency_list = VALUE #( ( 'ZAI_DMOR_AgencyTP' ) ( 'I_COUNTRY' ) ) ).
   ENDMETHOD.
 
 
@@ -91,10 +91,10 @@ CLASS ltc_agency_handler IMPLEMENTATION.
 
 
   METHOD validate_name_success.
-    DATA agency   TYPE /dmo/r_agencytp.
-    DATA agencies TYPE STANDARD TABLE OF /dmo/r_agencytp.
+    DATA agency   TYPE ZAI_DMOr_agencytp.
+    DATA agencies TYPE STANDARD TABLE OF ZAI_DMOr_agencytp.
 
-    agency = VALUE /dmo/r_agencytp( agencyid = '123'
+    agency = VALUE ZAI_DMOr_agencytp( agencyid = '123'
                                     name     = 'FlightBooker' ).
 
     agencies = VALUE #( ( agency ) ).
@@ -111,8 +111,8 @@ CLASS ltc_agency_handler IMPLEMENTATION.
     " One line is expected as this clears the state area.
     cl_abap_unit_assert=>assert_equals( msg = 'Reported has more than one messages'
                                         exp = 1
-                                        act = lines( reported_late-/dmo/agency ) ).
-    DATA(reported_agency) = reported_late-/dmo/agency[ 1 ].
+                                        act = lines( reported_late-ZAI_DMOagency ) ).
+    DATA(reported_agency) = reported_late-ZAI_DMOagency[ 1 ].
 
     " Check that only %tky and %state_area is filled
     cl_abap_unit_assert=>assert_equals( exp = if_abap_behv=>mk-off                        act = reported_agency-%is_draft    ).
@@ -125,12 +125,12 @@ CLASS ltc_agency_handler IMPLEMENTATION.
 
 
   METHOD validate_name_failed.
-    DATA agency                    TYPE /dmo/r_agencytp.
-    DATA agencies                  TYPE STANDARD TABLE OF /dmo/r_agencytp.
-    DATA reported_with_message     TYPE STRUCTURE FOR REPORTED LATE /dmo/r_agencytp.
-    DATA reported_clear_state_area TYPE STRUCTURE FOR REPORTED LATE /dmo/r_agencytp.
+    DATA agency                    TYPE ZAI_DMOr_agencytp.
+    DATA agencies                  TYPE STANDARD TABLE OF ZAI_DMOr_agencytp.
+    DATA reported_with_message     TYPE STRUCTURE FOR REPORTED LATE ZAI_DMOr_agencytp.
+    DATA reported_clear_state_area TYPE STRUCTURE FOR REPORTED LATE ZAI_DMOr_agencytp.
 
-    agency = VALUE /dmo/r_agencytp( agencyid = '123'
+    agency = VALUE ZAI_DMOr_agencytp( agencyid = '123'
                                     name     = '' ).
 
     agencies = VALUE #( ( agency ) ).
@@ -143,9 +143,9 @@ CLASS ltc_agency_handler IMPLEMENTATION.
 
     " check failed
     cl_abap_unit_assert=>assert_not_initial( failed_late ).
-    cl_abap_unit_assert=>assert_equals( exp = 1  act = lines( failed_late-/dmo/agency ) ).
+    cl_abap_unit_assert=>assert_equals( exp = 1  act = lines( failed_late-ZAI_DMOagency ) ).
 
-    LOOP AT failed-/dmo/agency INTO DATA(failed_line).
+    LOOP AT failed-ZAI_DMOagency INTO DATA(failed_line).
       cl_abap_unit_assert=>assert_not_initial( msg = 'Failed key was not provided'
                                                act = VALUE #( agencies[ agencyid = failed_line-agencyid ] OPTIONAL ) ).
     ENDLOOP.
@@ -156,9 +156,9 @@ CLASS ltc_agency_handler IMPLEMENTATION.
     " One line for clearing the state area plus actual error message each.
     cl_abap_unit_assert=>assert_equals( msg = 'Reported has not the correct amount of messages'
                                         exp = 2
-                                        act = lines( reported_late-/dmo/agency ) ).
+                                        act = lines( reported_late-ZAI_DMOagency ) ).
 
-    LOOP AT reported_late-/dmo/agency INTO DATA(reported_line).
+    LOOP AT reported_late-ZAI_DMOagency INTO DATA(reported_line).
       IF reported_line-%msg IS BOUND.
         reported_with_message     = reported_line.
       ELSE.
@@ -181,16 +181,16 @@ CLASS ltc_agency_handler IMPLEMENTATION.
     cl_abap_unit_assert=>assert_equals( exp = if_abap_behv=>mk-on
                                         act = reported_with_message-%element-name ).
     cl_abap_unit_assert=>assert_equals(
-        exp = CORRESPONDING symsg( /dmo/cx_agency=>name_required )
+        exp = CORRESPONDING symsg( ZAI_DMOcx_agency=>name_required )
         act = CORRESPONDING symsg( reported_with_message-%msg->if_t100_message~t100key ) ).
   ENDMETHOD.
 
 
   METHOD validate_email_success.
-    DATA agency   TYPE /dmo/r_agencytp.
-    DATA agencies TYPE STANDARD TABLE OF /dmo/r_agencytp.
+    DATA agency   TYPE ZAI_DMOr_agencytp.
+    DATA agencies TYPE STANDARD TABLE OF ZAI_DMOr_agencytp.
 
-    agency = VALUE /dmo/r_agencytp( agencyid     = '123'
+    agency = VALUE ZAI_DMOr_agencytp( agencyid     = '123'
                                     emailaddress = 'name@provider.toplevel' ).
 
     agencies = VALUE #( ( agency ) ).
@@ -207,8 +207,8 @@ CLASS ltc_agency_handler IMPLEMENTATION.
     " One line is expected as this clears the state area.
     cl_abap_unit_assert=>assert_equals( msg = 'Reported has more than one messages'
                                         exp = 1
-                                        act = lines( reported_late-/dmo/agency ) ).
-    DATA(reported_agency) = reported_late-/dmo/agency[ 1 ].
+                                        act = lines( reported_late-ZAI_DMOagency ) ).
+    DATA(reported_agency) = reported_late-ZAI_DMOagency[ 1 ].
 
     " Check that only %tky and %state_area is filled
     cl_abap_unit_assert=>assert_equals( exp = if_abap_behv=>mk-off                         act = reported_agency-%is_draft    ).
@@ -221,11 +221,11 @@ CLASS ltc_agency_handler IMPLEMENTATION.
 
 
   METHOD validate_email_failed.
-    CONSTANTS cv_found TYPE /dmo/r_agencytp-name VALUE 'found' ##NO_TEXT.
-    DATA agency                    TYPE /dmo/r_agencytp.
-    DATA agencies                  TYPE STANDARD TABLE OF /dmo/r_agencytp.
-    DATA reported_with_message     TYPE STRUCTURE FOR REPORTED LATE /dmo/r_agencytp.
-    DATA reported_clear_state_area TYPE STRUCTURE FOR REPORTED LATE /dmo/r_agencytp.
+    CONSTANTS cv_found TYPE ZAI_DMOr_agencytp-name VALUE 'found' ##NO_TEXT.
+    DATA agency                    TYPE ZAI_DMOr_agencytp.
+    DATA agencies                  TYPE STANDARD TABLE OF ZAI_DMOr_agencytp.
+    DATA reported_with_message     TYPE STRUCTURE FOR REPORTED LATE ZAI_DMOr_agencytp.
+    DATA reported_clear_state_area TYPE STRUCTURE FOR REPORTED LATE ZAI_DMOr_agencytp.
 
     agencies = VALUE #( ( agencyid = '1'  emailaddress = 'name@provider' )
                         ( agencyid = '2'  emailaddress = 'name@.toplevel' )
@@ -247,9 +247,9 @@ CLASS ltc_agency_handler IMPLEMENTATION.
     " check failed
     cl_abap_unit_assert=>assert_not_initial( failed_late ).
     cl_abap_unit_assert=>assert_equals( exp = lines( agencies )
-                                        act = lines( failed_late-/dmo/agency ) ).
+                                        act = lines( failed_late-ZAI_DMOagency ) ).
 
-    LOOP AT failed-/dmo/agency INTO DATA(failed_line).
+    LOOP AT failed-ZAI_DMOagency INTO DATA(failed_line).
       cl_abap_unit_assert=>assert_not_initial( msg = 'Failed key was not provided'
                                                act = VALUE #( agencies[ agencyid = failed_line-agencyid ] OPTIONAL ) ).
     ENDLOOP.
@@ -260,13 +260,13 @@ CLASS ltc_agency_handler IMPLEMENTATION.
     " One line for clearing the state area plus actual error message each.
     cl_abap_unit_assert=>assert_equals( msg = 'Reported has not the correct amount of messages'
                                         exp = 2 * lines( agencies )
-                                        act = lines( reported_late-/dmo/agency ) ).
+                                        act = lines( reported_late-ZAI_DMOagency ) ).
 
     LOOP AT agencies ASSIGNING FIELD-SYMBOL(<agency>).
       CLEAR reported_with_message.
       CLEAR reported_clear_state_area.
 
-      LOOP AT reported_late-/dmo/agency INTO DATA(reported_line) USING KEY entity WHERE agencyid = <agency>-agencyid.
+      LOOP AT reported_late-ZAI_DMOagency INTO DATA(reported_line) USING KEY entity WHERE agencyid = <agency>-agencyid.
         IF reported_line-%msg IS BOUND.
           reported_with_message     = reported_line.
         ELSE.
@@ -294,7 +294,7 @@ CLASS ltc_agency_handler IMPLEMENTATION.
       cl_abap_unit_assert=>assert_initial( elements ).
 
       cl_abap_unit_assert=>assert_equals(
-          exp = CORRESPONDING symsg( /dmo/cx_agency=>email_invalid_format )
+          exp = CORRESPONDING symsg( ZAI_DMOcx_agency=>email_invalid_format )
           act = CORRESPONDING symsg( reported_with_message-%msg->if_t100_message~t100key ) ).
     ENDLOOP.
 
@@ -306,8 +306,8 @@ CLASS ltc_agency_handler IMPLEMENTATION.
 
 
   METHOD validate_countrycode_success.
-    DATA agency    TYPE /dmo/r_agencytp.
-    DATA agencies  TYPE STANDARD TABLE OF /dmo/r_agencytp.
+    DATA agency    TYPE ZAI_DMOr_agencytp.
+    DATA agencies  TYPE STANDARD TABLE OF ZAI_DMOr_agencytp.
     DATA country   TYPE i_country.
     DATA countries TYPE STANDARD TABLE OF i_country.
 
@@ -315,7 +315,7 @@ CLASS ltc_agency_handler IMPLEMENTATION.
     countries = VALUE #( ( country ) ).
     sql_test_environment->insert_test_data( countries ).
 
-    agency = VALUE /dmo/r_agencytp( agencyid    = '123'
+    agency = VALUE ZAI_DMOr_agencytp( agencyid    = '123'
                                     countrycode = country-country ).
 
     agencies = VALUE #( ( agency ) ).
@@ -333,8 +333,8 @@ CLASS ltc_agency_handler IMPLEMENTATION.
     " One line is expected as this clears the state area.
     cl_abap_unit_assert=>assert_equals( msg = 'Reported has more than one messages'
                                         exp = 1
-                                        act = lines( reported_late-/dmo/agency ) ).
-    DATA(reported_agency) = reported_late-/dmo/agency[ 1 ].
+                                        act = lines( reported_late-ZAI_DMOagency ) ).
+    DATA(reported_agency) = reported_late-ZAI_DMOagency[ 1 ].
 
     " Check that only %tky and %state_area is filled
     cl_abap_unit_assert=>assert_equals( exp = if_abap_behv=>mk-off                           act = reported_agency-%is_draft    ).
@@ -347,13 +347,13 @@ CLASS ltc_agency_handler IMPLEMENTATION.
 
 
   METHOD validate_countrycode_failed.
-    CONSTANTS cv_found TYPE /dmo/r_agencytp-name VALUE 'found' ##NO_TEXT.
-    DATA agency                    TYPE /dmo/r_agencytp.
-    DATA agencies                  TYPE STANDARD TABLE OF /dmo/r_agencytp.
+    CONSTANTS cv_found TYPE ZAI_DMOr_agencytp-name VALUE 'found' ##NO_TEXT.
+    DATA agency                    TYPE ZAI_DMOr_agencytp.
+    DATA agencies                  TYPE STANDARD TABLE OF ZAI_DMOr_agencytp.
     DATA country                   TYPE i_country.
     DATA countries                 TYPE STANDARD TABLE OF i_country.
-    DATA reported_with_message     TYPE STRUCTURE FOR REPORTED LATE /dmo/r_agencytp.
-    DATA reported_clear_state_area TYPE STRUCTURE FOR REPORTED LATE /dmo/r_agencytp.
+    DATA reported_with_message     TYPE STRUCTURE FOR REPORTED LATE ZAI_DMOr_agencytp.
+    DATA reported_clear_state_area TYPE STRUCTURE FOR REPORTED LATE ZAI_DMOr_agencytp.
 
 
     country = VALUE i_country( country = 'DE' ).
@@ -373,9 +373,9 @@ CLASS ltc_agency_handler IMPLEMENTATION.
     " check failed
     cl_abap_unit_assert=>assert_not_initial( failed_late ).
     cl_abap_unit_assert=>assert_equals( exp = lines( agencies )
-                                        act = lines( failed_late-/dmo/agency ) ).
+                                        act = lines( failed_late-ZAI_DMOagency ) ).
 
-    LOOP AT failed-/dmo/agency INTO DATA(failed_line).
+    LOOP AT failed-ZAI_DMOagency INTO DATA(failed_line).
       cl_abap_unit_assert=>assert_not_initial( msg = 'Failed key was not provided'
                                                act = VALUE #( agencies[ agencyid = failed_line-agencyid ] OPTIONAL ) ).
     ENDLOOP.
@@ -386,13 +386,13 @@ CLASS ltc_agency_handler IMPLEMENTATION.
     " One line for clearing the state area plus actual error message each.
     cl_abap_unit_assert=>assert_equals( msg = 'Reported has not the correct amount of messages'
                                         exp = 2 * lines( agencies )
-                                        act = lines( reported_late-/dmo/agency ) ).
+                                        act = lines( reported_late-ZAI_DMOagency ) ).
 
     LOOP AT agencies ASSIGNING FIELD-SYMBOL(<agency>).
       CLEAR reported_with_message.
       CLEAR reported_clear_state_area.
 
-      LOOP AT reported_late-/dmo/agency INTO DATA(reported_line) USING KEY entity WHERE agencyid = <agency>-agencyid.
+      LOOP AT reported_late-ZAI_DMOagency INTO DATA(reported_line) USING KEY entity WHERE agencyid = <agency>-agencyid.
         IF reported_line-%msg IS BOUND.
           reported_with_message     = reported_line.
         ELSE.
@@ -420,7 +420,7 @@ CLASS ltc_agency_handler IMPLEMENTATION.
       cl_abap_unit_assert=>assert_initial( elements ).
 
       cl_abap_unit_assert=>assert_equals(
-          exp = CORRESPONDING symsg( /dmo/cx_agency=>country_code_invalid )
+          exp = CORRESPONDING symsg( ZAI_DMOcx_agency=>country_code_invalid )
           act = CORRESPONDING symsg( reported_with_message-%msg->if_t100_message~t100key ) ).
     ENDLOOP.
 
@@ -433,7 +433,7 @@ CLASS ltc_agency_handler IMPLEMENTATION.
 
   METHOD validate_lob_success.
 
-    DATA agencies TYPE STANDARD TABLE OF /dmo/r_agencytp.
+    DATA agencies TYPE STANDARD TABLE OF ZAI_DMOr_agencytp.
 
     agencies = VALUE #( ( agencyid   = '1'
                           attachment = '1234567'
@@ -462,8 +462,8 @@ CLASS ltc_agency_handler IMPLEMENTATION.
 
     " Three lines are expected as this clears the state area.
     cl_abap_unit_assert=>assert_equals( exp = 3
-                                        act = lines( reported_late-/dmo/agency ) ).
-    DATA(reported_agency) = reported_late-/dmo/agency.
+                                        act = lines( reported_late-ZAI_DMOagency ) ).
+    DATA(reported_agency) = reported_late-ZAI_DMOagency.
 
     " Check that only %tky and state_area is filled
     LOOP AT reported_agency ASSIGNING FIELD-SYMBOL(<reported_agency>).
@@ -480,10 +480,10 @@ CLASS ltc_agency_handler IMPLEMENTATION.
 
 
   METHOD validate_lob_failed.
-    CONSTANTS cv_found TYPE /dmo/r_agencytp-name VALUE 'found' ##NO_TEXT.
-    DATA agencies                  TYPE STANDARD TABLE OF /dmo/r_agencytp.
-    DATA reported_with_message     TYPE STRUCTURE FOR REPORTED LATE /dmo/r_agencytp.
-    DATA reported_clear_state_area TYPE STRUCTURE FOR REPORTED LATE /dmo/r_agencytp.
+    CONSTANTS cv_found TYPE ZAI_DMOr_agencytp-name VALUE 'found' ##NO_TEXT.
+    DATA agencies                  TYPE STANDARD TABLE OF ZAI_DMOr_agencytp.
+    DATA reported_with_message     TYPE STRUCTURE FOR REPORTED LATE ZAI_DMOr_agencytp.
+    DATA reported_clear_state_area TYPE STRUCTURE FOR REPORTED LATE ZAI_DMOr_agencytp.
 
     agencies = VALUE #( ( agencyid   = '1'
                           attachment = '1234567'
@@ -528,7 +528,7 @@ CLASS ltc_agency_handler IMPLEMENTATION.
     " check failed
     cl_abap_unit_assert=>assert_not_initial( failed_late ).
 
-    LOOP AT failed_late-/dmo/agency INTO DATA(failed_line).
+    LOOP AT failed_late-ZAI_DMOagency INTO DATA(failed_line).
       cl_abap_unit_assert=>assert_not_initial( msg = 'Failed key was not provided'
                                                act = VALUE #( agencies[ agencyid = failed_line-agencyid ] OPTIONAL ) ).
     ENDLOOP.
@@ -539,13 +539,13 @@ CLASS ltc_agency_handler IMPLEMENTATION.
 
     " One line for clearing the state area plus actual error message each.
     cl_abap_unit_assert=>assert_equals( exp = 2 * lines( agencies )
-                                        act = lines( reported_late-/dmo/agency ) ).
+                                        act = lines( reported_late-ZAI_DMOagency ) ).
 
     LOOP AT agencies ASSIGNING FIELD-SYMBOL(<agency>).
       CLEAR reported_with_message.
       CLEAR reported_clear_state_area.
 
-      LOOP AT reported_late-/dmo/agency INTO DATA(reported_line) USING KEY entity WHERE agencyid = <agency>-agencyid.
+      LOOP AT reported_late-ZAI_DMOagency INTO DATA(reported_line) USING KEY entity WHERE agencyid = <agency>-agencyid.
         IF reported_line-%msg IS BOUND.
           reported_with_message     = reported_line.
         ELSE.
@@ -576,69 +576,69 @@ CLASS ltc_agency_handler IMPLEMENTATION.
 
     " check messages
     cl_abap_unit_assert=>assert_equals( exp = if_abap_behv=>mk-on
-                                        act = reported_late-/dmo/agency[ 2 ]-%element-mimetype ).
+                                        act = reported_late-ZAI_DMOagency[ 2 ]-%element-mimetype ).
     cl_abap_unit_assert=>assert_equals(
-        exp = CORRESPONDING symsg( /dmo/cx_agency=>mimetype_missing )
-        act = CORRESPONDING symsg( reported_late-/dmo/agency[ 2 ]-%msg->if_t100_message~t100key ) ).
+        exp = CORRESPONDING symsg( ZAI_DMOcx_agency=>mimetype_missing )
+        act = CORRESPONDING symsg( reported_late-ZAI_DMOagency[ 2 ]-%msg->if_t100_message~t100key ) ).
 
 
     cl_abap_unit_assert=>assert_equals( exp = if_abap_behv=>mk-on
-                                        act = reported_late-/dmo/agency[ 4 ]-%element-attachment ).
+                                        act = reported_late-ZAI_DMOagency[ 4 ]-%element-attachment ).
     cl_abap_unit_assert=>assert_equals(
-        exp = CORRESPONDING symsg( /dmo/cx_agency=>attachment_empty_missing )
-        act = CORRESPONDING symsg( reported_late-/dmo/agency[ 4 ]-%msg->if_t100_message~t100key ) ).
+        exp = CORRESPONDING symsg( ZAI_DMOcx_agency=>attachment_empty_missing )
+        act = CORRESPONDING symsg( reported_late-ZAI_DMOagency[ 4 ]-%msg->if_t100_message~t100key ) ).
 
 
     cl_abap_unit_assert=>assert_equals( exp = if_abap_behv=>mk-on
-                                        act = reported_late-/dmo/agency[ 6 ]-%element-attachment ).
+                                        act = reported_late-ZAI_DMOagency[ 6 ]-%element-attachment ).
     cl_abap_unit_assert=>assert_equals( exp = if_abap_behv=>mk-on
-                                        act = reported_late-/dmo/agency[ 6 ]-%element-mimetype ).
+                                        act = reported_late-ZAI_DMOagency[ 6 ]-%element-mimetype ).
     cl_abap_unit_assert=>assert_equals(
-        exp = CORRESPONDING symsg( /dmo/cx_agency=>only_filename )
-        act = CORRESPONDING symsg( reported_late-/dmo/agency[ 6 ]-%msg->if_t100_message~t100key ) ).
-
-
-    cl_abap_unit_assert=>assert_equals( exp = if_abap_behv=>mk-on
-                                        act = reported_late-/dmo/agency[ 8 ]-%element-mimetype ).
-    cl_abap_unit_assert=>assert_equals(
-        exp = CORRESPONDING symsg( /dmo/cx_agency=>mimetype_missing )
-        act = CORRESPONDING symsg( reported_late-/dmo/agency[ 8 ]-%msg->if_t100_message~t100key ) ).
+        exp = CORRESPONDING symsg( ZAI_DMOcx_agency=>only_filename )
+        act = CORRESPONDING symsg( reported_late-ZAI_DMOagency[ 6 ]-%msg->if_t100_message~t100key ) ).
 
 
     cl_abap_unit_assert=>assert_equals( exp = if_abap_behv=>mk-on
-                                        act = reported_late-/dmo/agency[ 10 ]-%element-attachment ).
+                                        act = reported_late-ZAI_DMOagency[ 8 ]-%element-mimetype ).
     cl_abap_unit_assert=>assert_equals(
-        exp = CORRESPONDING symsg( /dmo/cx_agency=>attachment_empty_missing )
-        act = CORRESPONDING symsg( reported_late-/dmo/agency[ 10 ]-%msg->if_t100_message~t100key ) ).
+        exp = CORRESPONDING symsg( ZAI_DMOcx_agency=>mimetype_missing )
+        act = CORRESPONDING symsg( reported_late-ZAI_DMOagency[ 8 ]-%msg->if_t100_message~t100key ) ).
 
 
     cl_abap_unit_assert=>assert_equals( exp = if_abap_behv=>mk-on
-                                        act = reported_late-/dmo/agency[ 12 ]-%element-mimetype ).
+                                        act = reported_late-ZAI_DMOagency[ 10 ]-%element-attachment ).
     cl_abap_unit_assert=>assert_equals(
-        exp = CORRESPONDING symsg( /dmo/cx_agency=>mimetype_not_supported )
-        act = CORRESPONDING symsg( reported_late-/dmo/agency[ 12 ]-%msg->if_t100_message~t100key ) ).
+        exp = CORRESPONDING symsg( ZAI_DMOcx_agency=>attachment_empty_missing )
+        act = CORRESPONDING symsg( reported_late-ZAI_DMOagency[ 10 ]-%msg->if_t100_message~t100key ) ).
 
 
     cl_abap_unit_assert=>assert_equals( exp = if_abap_behv=>mk-on
-                                        act = reported_late-/dmo/agency[ 14 ]-%element-filename ).
+                                        act = reported_late-ZAI_DMOagency[ 12 ]-%element-mimetype ).
     cl_abap_unit_assert=>assert_equals(
-        exp = CORRESPONDING symsg( /dmo/cx_agency=>extension_mimetype_mismatch )
-        act = CORRESPONDING symsg( reported_late-/dmo/agency[ 14 ]-%msg->if_t100_message~t100key ) ).
+        exp = CORRESPONDING symsg( ZAI_DMOcx_agency=>mimetype_not_supported )
+        act = CORRESPONDING symsg( reported_late-ZAI_DMOagency[ 12 ]-%msg->if_t100_message~t100key ) ).
 
 
     cl_abap_unit_assert=>assert_equals( exp = if_abap_behv=>mk-on
-                                        act = reported_late-/dmo/agency[ 16 ]-%element-mimetype ).
+                                        act = reported_late-ZAI_DMOagency[ 14 ]-%element-filename ).
     cl_abap_unit_assert=>assert_equals(
-        exp = CORRESPONDING symsg( /dmo/cx_agency=>mimetype_not_supported )
-        act = CORRESPONDING symsg( reported_late-/dmo/agency[ 16 ]-%msg->if_t100_message~t100key ) ).
+        exp = CORRESPONDING symsg( ZAI_DMOcx_agency=>extension_mimetype_mismatch )
+        act = CORRESPONDING symsg( reported_late-ZAI_DMOagency[ 14 ]-%msg->if_t100_message~t100key ) ).
+
+
+    cl_abap_unit_assert=>assert_equals( exp = if_abap_behv=>mk-on
+                                        act = reported_late-ZAI_DMOagency[ 16 ]-%element-mimetype ).
+    cl_abap_unit_assert=>assert_equals(
+        exp = CORRESPONDING symsg( ZAI_DMOcx_agency=>mimetype_not_supported )
+        act = CORRESPONDING symsg( reported_late-ZAI_DMOagency[ 16 ]-%msg->if_t100_message~t100key ) ).
 
   ENDMETHOD.
 
 
   METHOD get_global_authorizations.
-    DATA requested_authorizations TYPE STRUCTURE FOR GLOBAL AUTHORIZATION REQUEST /dmo/r_agencytp\\/dmo/agency.
-    DATA result                   TYPE STRUCTURE FOR GLOBAL AUTHORIZATION RESULT /dmo/r_agencytp\\/dmo/agency.
-    DATA reported                 TYPE RESPONSE FOR REPORTED EARLY /dmo/r_agencytp.
+    DATA requested_authorizations TYPE STRUCTURE FOR GLOBAL AUTHORIZATION REQUEST ZAI_DMOr_agencytp\\ZAI_DMOagency.
+    DATA result                   TYPE STRUCTURE FOR GLOBAL AUTHORIZATION RESULT ZAI_DMOr_agencytp\\ZAI_DMOagency.
+    DATA reported                 TYPE RESPONSE FOR REPORTED EARLY ZAI_DMOr_agencytp.
 
     requested_authorizations-%create = if_abap_behv=>mk-on.
 
@@ -654,7 +654,7 @@ ENDCLASS.
 
 
 
-"! @testing BDEF:/DMO/R_AgencyTP
+"! @testing BDEF:ZAI_DMOR_AgencyTP
 CLASS ltc_agency_saver DEFINITION FINAL FOR TESTING
   DURATION SHORT
   RISK LEVEL HARMLESS.
@@ -665,8 +665,8 @@ CLASS ltc_agency_saver DEFINITION FINAL FOR TESTING
     CLASS-METHODS class_setup.
     CLASS-METHODS class_teardown.
 
-    DATA mapped   TYPE RESPONSE FOR MAPPED LATE /dmo/r_agencytp.
-    DATA reported TYPE RESPONSE FOR REPORTED LATE /dmo/r_agencytp.
+    DATA mapped   TYPE RESPONSE FOR MAPPED LATE ZAI_DMOr_agencytp.
+    DATA reported TYPE RESPONSE FOR REPORTED LATE ZAI_DMOr_agencytp.
 
     METHODS setup.
     METHODS teardown.
@@ -705,12 +705,12 @@ CLASS ltc_agency_saver IMPLEMENTATION.
 
 
   METHOD latenumbering_idempotency.
-    CONSTANTS cv_agencyid TYPE /dmo/r_agencytp-agencyid VALUE '123'.
+    CONSTANTS cv_agencyid TYPE ZAI_DMOr_agencytp-agencyid VALUE '123'.
 
-    DATA act_mapped_line LIKE LINE OF mapped-/dmo/agency.
-    DATA exp_mapped_line LIKE LINE OF mapped-/dmo/agency.
+    DATA act_mapped_line LIKE LINE OF mapped-ZAI_DMOagency.
+    DATA exp_mapped_line LIKE LINE OF mapped-ZAI_DMOagency.
 
-    mapped-/dmo/agency = VALUE #( ( agencyid = cv_agencyid ) ).
+    mapped-ZAI_DMOagency = VALUE #( ( agencyid = cv_agencyid ) ).
 
     class_under_test->adjust_numbers( CHANGING mapped   = mapped
                                                reported = reported ).
@@ -719,10 +719,10 @@ CLASS ltc_agency_saver IMPLEMENTATION.
     cl_abap_unit_assert=>assert_not_initial( mapped   ).
 
     cl_abap_unit_assert=>assert_equals( exp = 1
-                                        act = lines( mapped-/dmo/agency ) ).
+                                        act = lines( mapped-ZAI_DMOagency ) ).
 
     cl_abap_unit_assert=>assert_equals( exp = cv_agencyid
-                                        act = mapped-/dmo/agency[ 1 ]-agencyid ).
+                                        act = mapped-ZAI_DMOagency[ 1 ]-agencyid ).
   ENDMETHOD.
 
 
@@ -731,7 +731,7 @@ CLASS ltc_agency_saver IMPLEMENTATION.
 
     TRY.
         cl_numberrange_intervals=>read( EXPORTING nr_range_nr1 = '01'
-                                                  object       = '/DMO/AGNCY'
+                                                  object       = 'ZAI_DMOAGNCY'
                                         IMPORTING interval     = DATA(interval) ).
       CATCH cx_nr_object_not_found.
         cl_abap_unit_assert=>skip( 'Number Range Object is missing.  Please run the data generator!' ).
@@ -739,7 +739,7 @@ CLASS ltc_agency_saver IMPLEMENTATION.
         cl_abap_unit_assert=>skip( number_range_exception->get_text( ) ).
     ENDTRY.
 
-    mapped-/dmo/agency = VALUE #( ( %pid = cv_pid ) ).
+    mapped-ZAI_DMOagency = VALUE #( ( %pid = cv_pid ) ).
 
     class_under_test->adjust_numbers( CHANGING mapped   = mapped
                                                reported = reported ).
@@ -748,12 +748,12 @@ CLASS ltc_agency_saver IMPLEMENTATION.
     cl_abap_unit_assert=>assert_not_initial( mapped   ).
 
     cl_abap_unit_assert=>assert_equals( exp = 1
-                                        act = lines( mapped-/dmo/agency ) ).
+                                        act = lines( mapped-ZAI_DMOagency ) ).
 
     cl_abap_unit_assert=>assert_equals( exp = cv_pid
-                                        act = mapped-/dmo/agency[ 1 ]-%pid ).
+                                        act = mapped-ZAI_DMOagency[ 1 ]-%pid ).
 
-    cl_abap_unit_assert=>assert_not_initial( mapped-/dmo/agency[ 1 ]-agencyid ).
+    cl_abap_unit_assert=>assert_not_initial( mapped-ZAI_DMOagency[ 1 ]-agencyid ).
   ENDMETHOD.
 
 ENDCLASS.

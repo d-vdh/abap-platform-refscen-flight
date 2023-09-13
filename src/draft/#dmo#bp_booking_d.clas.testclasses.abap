@@ -1,4 +1,4 @@
-"! @testing BDEF:/DMO/R_Booking_D
+"! @testing BDEF:ZAI_DMOR_Booking_D
 CLASS ltc_booking DEFINITION FINAL FOR TESTING
   DURATION SHORT
   RISK LEVEL HARMLESS.
@@ -18,7 +18,7 @@ CLASS ltc_booking DEFINITION FINAL FOR TESTING
       uuid4        TYPE sysuuid_x16 VALUE 'BBBBBBBBB8E4645C17002DF03754A4',
       uuid5        TYPE sysuuid_x16 VALUE 'BBBBBBBBB8E4645C17002DF03754A5',
       uuid6        TYPE sysuuid_x16 VALUE 'BBBBBBBBB8E4645C17002DF03754A6',
-      c_currency   TYPE /dmo/currency_code VALUE 'EUR'.
+      c_currency   TYPE ZAI_DMOcurrency_code VALUE 'EUR'.
 
     CLASS-METHODS:
       "! Instantiate class under test and set up test double framework
@@ -99,17 +99,17 @@ CLASS ltc_booking IMPLEMENTATION.
     CREATE OBJECT class_under_test FOR TESTING.
     cds_test_environment = cl_cds_test_environment=>create_for_multiple_cds(
                                VALUE #(
-                                   ( i_for_entity = '/DMO/R_Travel_D'            )
-                                   ( i_for_entity = '/DMO/R_Booking_D'           )
-                                   ( i_for_entity = '/DMO/R_BookingSupplement_D' )
+                                   ( i_for_entity = 'ZAI_DMOR_Travel_D'            )
+                                   ( i_for_entity = 'ZAI_DMOR_Booking_D'           )
+                                   ( i_for_entity = 'ZAI_DMOR_BookingSupplement_D' )
                                  )
                              ).
     cds_test_environment->enable_double_redirection(  ).
     sql_test_environment = cl_osql_test_environment=>create(
                                VALUE #(
                                    ( 'I_CURRENCY'    )
-                                   ( '/DMO/CUSTOMER' )
-                                   ( '/DMO/FLIGHT'   )
+                                   ( 'ZAI_DMOCUSTOMER' )
+                                   ( 'ZAI_DMOFLIGHT'   )
                                  )
                                ).
   ENDMETHOD.
@@ -119,7 +119,7 @@ CLASS ltc_booking IMPLEMENTATION.
     sql_test_environment->clear_doubles( ).
 
     DATA:
-      travel_mock_data TYPE STANDARD TABLE OF /dmo/a_travel_d.
+      travel_mock_data TYPE STANDARD TABLE OF ZAI_DMOa_travel_d.
 
     travel_mock_data = VALUE #(
         ( travel_uuid = travel_uuid1  currency_code = c_currency )
@@ -147,10 +147,10 @@ CLASS ltc_booking IMPLEMENTATION.
 
   METHOD setbookingnumber_idempotence.
     DATA:
-      booking_mock_data TYPE STANDARD TABLE OF /dmo/a_booking_d,
-      bookings_to_test  TYPE STANDARD TABLE OF /dmo/r_booking_d WITH KEY bookinguuid,
-      exp_bookings      TYPE TABLE FOR READ RESULT /dmo/r_travel_d\\booking,
-      reported          TYPE RESPONSE FOR REPORTED LATE  /dmo/r_travel_d.
+      booking_mock_data TYPE STANDARD TABLE OF ZAI_DMOa_booking_d,
+      bookings_to_test  TYPE STANDARD TABLE OF ZAI_DMOr_booking_d WITH KEY bookinguuid,
+      exp_bookings      TYPE TABLE FOR READ RESULT ZAI_DMOr_travel_d\\booking,
+      reported          TYPE RESPONSE FOR REPORTED LATE  ZAI_DMOr_travel_d.
 
     booking_mock_data = VALUE #( ( booking_uuid = uuid1  parent_uuid = travel_uuid1  booking_id = '1' ) ).
     cds_test_environment->insert_test_data( booking_mock_data ).
@@ -168,7 +168,7 @@ CLASS ltc_booking IMPLEMENTATION.
     cl_abap_unit_assert=>assert_initial( reported ).
 
 
-    READ ENTITIES OF /dmo/r_travel_d
+    READ ENTITIES OF ZAI_DMOr_travel_d
       ENTITY booking
         FIELDS ( bookingid traveluuid ) WITH CORRESPONDING #( bookings_to_test )
         RESULT DATA(read_result).
@@ -183,10 +183,10 @@ CLASS ltc_booking IMPLEMENTATION.
 
   METHOD setbookingnumber_newbookingids.
     DATA:
-      booking_mock_data TYPE STANDARD TABLE OF /dmo/a_booking_d,
-      bookings_to_test  TYPE STANDARD TABLE OF /dmo/r_booking_d WITH KEY bookinguuid,
-      exp_bookings      TYPE TABLE FOR READ RESULT /dmo/r_travel_d\\booking,
-      reported          TYPE RESPONSE FOR REPORTED LATE  /dmo/r_travel_d.
+      booking_mock_data TYPE STANDARD TABLE OF ZAI_DMOa_booking_d,
+      bookings_to_test  TYPE STANDARD TABLE OF ZAI_DMOr_booking_d WITH KEY bookinguuid,
+      exp_bookings      TYPE TABLE FOR READ RESULT ZAI_DMOr_travel_d\\booking,
+      reported          TYPE RESPONSE FOR REPORTED LATE  ZAI_DMOr_travel_d.
 
     booking_mock_data = VALUE #(
          ( booking_uuid = uuid1  parent_uuid = travel_uuid1 )
@@ -208,7 +208,7 @@ CLASS ltc_booking IMPLEMENTATION.
     cl_abap_unit_assert=>assert_initial( reported ).
 
 
-    READ ENTITIES OF /dmo/r_travel_d
+    READ ENTITIES OF ZAI_DMOr_travel_d
       ENTITY booking
         FIELDS ( bookingid traveluuid ) WITH CORRESPONDING #( bookings_to_test )
         RESULT DATA(read_results).
@@ -241,10 +241,10 @@ CLASS ltc_booking IMPLEMENTATION.
 
   METHOD setbookingnumber_mixed.
     DATA:
-      booking_mock_data TYPE STANDARD TABLE OF /dmo/a_booking_d,
-      bookings_to_test  TYPE STANDARD TABLE OF /dmo/r_booking_d WITH KEY bookinguuid,
-      exp_bookings      TYPE TABLE FOR READ RESULT /dmo/r_travel_d\\booking,
-      reported          TYPE RESPONSE FOR REPORTED LATE  /dmo/r_travel_d.
+      booking_mock_data TYPE STANDARD TABLE OF ZAI_DMOa_booking_d,
+      bookings_to_test  TYPE STANDARD TABLE OF ZAI_DMOr_booking_d WITH KEY bookinguuid,
+      exp_bookings      TYPE TABLE FOR READ RESULT ZAI_DMOr_travel_d\\booking,
+      reported          TYPE RESPONSE FOR REPORTED LATE  ZAI_DMOr_travel_d.
 
     booking_mock_data = VALUE #(
         ( booking_uuid = uuid1  parent_uuid = travel_uuid1 )
@@ -278,7 +278,7 @@ CLASS ltc_booking IMPLEMENTATION.
     cl_abap_unit_assert=>assert_initial( reported ).
 
 
-    READ ENTITIES OF /dmo/r_travel_d
+    READ ENTITIES OF ZAI_DMOr_travel_d
       ENTITY booking
         FIELDS ( bookingid traveluuid ) WITH CORRESPONDING #( bookings_to_test )
         RESULT DATA(read_results).
@@ -310,10 +310,10 @@ CLASS ltc_booking IMPLEMENTATION.
 
   METHOD setbookingdate.
     DATA:
-      booking_mock_data TYPE STANDARD TABLE OF /dmo/a_booking_d,
-      bookings_to_test  TYPE STANDARD TABLE OF /dmo/r_booking_d WITH KEY bookinguuid,
-      exp_bookings      TYPE TABLE FOR READ RESULT /dmo/r_travel_d\\booking,
-      reported          TYPE RESPONSE FOR REPORTED LATE  /dmo/r_travel_d,
+      booking_mock_data TYPE STANDARD TABLE OF ZAI_DMOa_booking_d,
+      bookings_to_test  TYPE STANDARD TABLE OF ZAI_DMOr_booking_d WITH KEY bookinguuid,
+      exp_bookings      TYPE TABLE FOR READ RESULT ZAI_DMOr_travel_d\\booking,
+      reported          TYPE RESPONSE FOR REPORTED LATE  ZAI_DMOr_travel_d,
       today             TYPE cl_abap_context_info=>ty_system_date,
       a_week_ago        TYPE cl_abap_context_info=>ty_system_date.
 
@@ -348,7 +348,7 @@ CLASS ltc_booking IMPLEMENTATION.
     cl_abap_unit_assert=>assert_initial( reported ).
 
 
-    READ ENTITIES OF /dmo/r_travel_d
+    READ ENTITIES OF ZAI_DMOr_travel_d
       ENTITY booking
         FIELDS ( bookingdate traveluuid ) WITH CORRESPONDING #( bookings_to_test )
         RESULT DATA(read_result).
@@ -363,12 +363,12 @@ CLASS ltc_booking IMPLEMENTATION.
 
   METHOD calculatetotalprice.
     CONSTANTS:
-      c_flight_price TYPE /dmo/flight_price VALUE '10'.
+      c_flight_price TYPE ZAI_DMOflight_price VALUE '10'.
 
     DATA:
-      booking_mock_data TYPE STANDARD TABLE OF /dmo/a_booking_d,
-      bookings_to_test  TYPE STANDARD TABLE OF /dmo/r_booking_d WITH KEY bookinguuid,
-      reported          TYPE RESPONSE FOR REPORTED LATE  /dmo/r_travel_d.
+      booking_mock_data TYPE STANDARD TABLE OF ZAI_DMOa_booking_d,
+      bookings_to_test  TYPE STANDARD TABLE OF ZAI_DMOr_booking_d WITH KEY bookinguuid,
+      reported          TYPE RESPONSE FOR REPORTED LATE  ZAI_DMOr_travel_d.
 
     booking_mock_data = VALUE #(
         flight_price  = c_flight_price
@@ -391,7 +391,7 @@ CLASS ltc_booking IMPLEMENTATION.
     cl_abap_unit_assert=>assert_initial( reported ).
 
 
-    READ ENTITIES OF /dmo/r_travel_d
+    READ ENTITIES OF ZAI_DMOr_travel_d
       ENTITY travel
         FIELDS ( traveluuid totalprice ) WITH VALUE #( ( %is_draft = if_abap_behv=>mk-off  traveluuid = travel_uuid1 ) )
         RESULT DATA(read_result).
@@ -399,7 +399,7 @@ CLASS ltc_booking IMPLEMENTATION.
     cl_abap_unit_assert=>assert_not_initial( read_result ).
 
     cl_abap_unit_assert=>assert_equals(
-        exp = CONV /dmo/total_price( c_flight_price * lines( booking_mock_data ) )
+        exp = CONV ZAI_DMOtotal_price( c_flight_price * lines( booking_mock_data ) )
         act = read_result[ 1 ]-totalprice
       ).
 
@@ -407,14 +407,14 @@ CLASS ltc_booking IMPLEMENTATION.
 
   METHOD validatecustomer_success.
     CONSTANTS:
-      c_customer_id TYPE /dmo/customer_id VALUE '123'.
+      c_customer_id TYPE ZAI_DMOcustomer_id VALUE '123'.
 
     DATA:
-      customer_mock_data TYPE STANDARD TABLE OF /dmo/customer,
-      booking_mock_data  TYPE STANDARD TABLE OF /dmo/a_booking_d,
-      bookings_to_test   TYPE TABLE FOR VALIDATION /dmo/r_travel_d\\booking~validatecustomer,
-      failed             TYPE RESPONSE FOR FAILED LATE  /dmo/r_travel_d,
-      reported           TYPE RESPONSE FOR REPORTED LATE  /dmo/r_travel_d.
+      customer_mock_data TYPE STANDARD TABLE OF ZAI_DMOcustomer,
+      booking_mock_data  TYPE STANDARD TABLE OF ZAI_DMOa_booking_d,
+      bookings_to_test   TYPE TABLE FOR VALIDATION ZAI_DMOr_travel_d\\booking~validatecustomer,
+      failed             TYPE RESPONSE FOR FAILED LATE  ZAI_DMOr_travel_d,
+      reported           TYPE RESPONSE FOR REPORTED LATE  ZAI_DMOr_travel_d.
 
     customer_mock_data = VALUE #( ( customer_id = c_customer_id ) ).
     sql_test_environment->insert_test_data( customer_mock_data ).
@@ -445,15 +445,15 @@ CLASS ltc_booking IMPLEMENTATION.
 
   METHOD validatecustomer_initial.
     CONSTANTS:
-      c_customer_id            TYPE /dmo/customer_id VALUE '123',
-      c_customer_id_of_booking TYPE /dmo/customer_id VALUE '111'.
+      c_customer_id            TYPE ZAI_DMOcustomer_id VALUE '123',
+      c_customer_id_of_booking TYPE ZAI_DMOcustomer_id VALUE '111'.
 
     DATA:
-      customer_mock_data TYPE STANDARD TABLE OF /dmo/customer,
-      booking_mock_data  TYPE STANDARD TABLE OF /dmo/a_booking_d,
-      bookings_to_test   TYPE TABLE FOR VALIDATION /dmo/r_travel_d\\booking~validatecustomer,
-      failed             TYPE RESPONSE FOR FAILED LATE  /dmo/r_travel_d,
-      reported           TYPE RESPONSE FOR REPORTED LATE  /dmo/r_travel_d.
+      customer_mock_data TYPE STANDARD TABLE OF ZAI_DMOcustomer,
+      booking_mock_data  TYPE STANDARD TABLE OF ZAI_DMOa_booking_d,
+      bookings_to_test   TYPE TABLE FOR VALIDATION ZAI_DMOr_travel_d\\booking~validatecustomer,
+      failed             TYPE RESPONSE FOR FAILED LATE  ZAI_DMOr_travel_d,
+      reported           TYPE RESPONSE FOR REPORTED LATE  ZAI_DMOr_travel_d.
 
     customer_mock_data = VALUE #( ( customer_id = c_customer_id ) ).
     sql_test_environment->insert_test_data( customer_mock_data ).
@@ -488,15 +488,15 @@ CLASS ltc_booking IMPLEMENTATION.
 
   METHOD validatecustomer_not_exist.
     CONSTANTS:
-      c_customer_id            TYPE /dmo/customer_id VALUE '123',
-      c_customer_id_of_booking TYPE /dmo/customer_id VALUE IS INITIAL.
+      c_customer_id            TYPE ZAI_DMOcustomer_id VALUE '123',
+      c_customer_id_of_booking TYPE ZAI_DMOcustomer_id VALUE IS INITIAL.
 
     DATA:
-      customer_mock_data TYPE STANDARD TABLE OF /dmo/customer,
-      booking_mock_data  TYPE STANDARD TABLE OF /dmo/a_booking_d,
-      bookings_to_test   TYPE TABLE FOR VALIDATION /dmo/r_travel_d\\booking~validatecustomer,
-      failed             TYPE RESPONSE FOR FAILED LATE  /dmo/r_travel_d,
-      reported           TYPE RESPONSE FOR REPORTED LATE  /dmo/r_travel_d.
+      customer_mock_data TYPE STANDARD TABLE OF ZAI_DMOcustomer,
+      booking_mock_data  TYPE STANDARD TABLE OF ZAI_DMOa_booking_d,
+      bookings_to_test   TYPE TABLE FOR VALIDATION ZAI_DMOr_travel_d\\booking~validatecustomer,
+      failed             TYPE RESPONSE FOR FAILED LATE  ZAI_DMOr_travel_d,
+      reported           TYPE RESPONSE FOR REPORTED LATE  ZAI_DMOr_travel_d.
 
     customer_mock_data = VALUE #( ( customer_id = c_customer_id ) ).
     sql_test_environment->insert_test_data( customer_mock_data ).
@@ -532,16 +532,16 @@ CLASS ltc_booking IMPLEMENTATION.
 
   METHOD validateconnection_success.
     CONSTANTS:
-      c_airline     TYPE /dmo/carrier_id VALUE 'TS',
-      c_connection  TYPE /dmo/connection_id VALUE '123',
-      c_flight_date TYPE /dmo/flight_date VALUE '20200202'.
+      c_airline     TYPE ZAI_DMOcarrier_id VALUE 'TS',
+      c_connection  TYPE ZAI_DMOconnection_id VALUE '123',
+      c_flight_date TYPE ZAI_DMOflight_date VALUE '20200202'.
 
     DATA:
-      flight_mock_data  TYPE STANDARD TABLE OF /dmo/flight,
-      booking_mock_data TYPE STANDARD TABLE OF /dmo/a_booking_d,
-      bookings_to_test  TYPE TABLE FOR VALIDATION /dmo/r_travel_d\\booking~validateconnection,
-      failed            TYPE RESPONSE FOR FAILED LATE  /dmo/r_travel_d,
-      reported          TYPE RESPONSE FOR REPORTED LATE  /dmo/r_travel_d.
+      flight_mock_data  TYPE STANDARD TABLE OF ZAI_DMOflight,
+      booking_mock_data TYPE STANDARD TABLE OF ZAI_DMOa_booking_d,
+      bookings_to_test  TYPE TABLE FOR VALIDATION ZAI_DMOr_travel_d\\booking~validateconnection,
+      failed            TYPE RESPONSE FOR FAILED LATE  ZAI_DMOr_travel_d,
+      reported          TYPE RESPONSE FOR REPORTED LATE  ZAI_DMOr_travel_d.
 
     flight_mock_data = VALUE #( ( carrier_id = c_airline  connection_id = c_connection  flight_date = c_flight_date ) ).
     sql_test_environment->insert_test_data( flight_mock_data ).
@@ -578,16 +578,16 @@ CLASS ltc_booking IMPLEMENTATION.
 
   METHOD validateconnection_initial.
     CONSTANTS:
-      c_airline     TYPE /dmo/carrier_id VALUE 'TS',
-      c_connection  TYPE /dmo/connection_id VALUE '123',
-      c_flight_date TYPE /dmo/flight_date VALUE '20200202'.
+      c_airline     TYPE ZAI_DMOcarrier_id VALUE 'TS',
+      c_connection  TYPE ZAI_DMOconnection_id VALUE '123',
+      c_flight_date TYPE ZAI_DMOflight_date VALUE '20200202'.
 
     DATA:
-      flight_mock_data  TYPE STANDARD TABLE OF /dmo/flight,
-      booking_mock_data TYPE STANDARD TABLE OF /dmo/a_booking_d,
-      bookings_to_test  TYPE TABLE FOR VALIDATION /dmo/r_travel_d\\booking~validateconnection,
-      failed            TYPE RESPONSE FOR FAILED LATE  /dmo/r_travel_d,
-      reported          TYPE RESPONSE FOR REPORTED LATE  /dmo/r_travel_d.
+      flight_mock_data  TYPE STANDARD TABLE OF ZAI_DMOflight,
+      booking_mock_data TYPE STANDARD TABLE OF ZAI_DMOa_booking_d,
+      bookings_to_test  TYPE TABLE FOR VALIDATION ZAI_DMOr_travel_d\\booking~validateconnection,
+      failed            TYPE RESPONSE FOR FAILED LATE  ZAI_DMOr_travel_d,
+      reported          TYPE RESPONSE FOR REPORTED LATE  ZAI_DMOr_travel_d.
 
     flight_mock_data = VALUE #( ( carrier_id = c_airline  connection_id = c_connection  flight_date = c_flight_date ) ).
     sql_test_environment->insert_test_data( flight_mock_data ).
@@ -625,17 +625,17 @@ CLASS ltc_booking IMPLEMENTATION.
 
   METHOD validateconnection_not_exist.
     CONSTANTS:
-      c_airline              TYPE /dmo/carrier_id VALUE 'TS',
-      c_connection           TYPE /dmo/connection_id VALUE '123',
-      c_connection_not_exist TYPE /dmo/connection_id VALUE '321',
-      c_flight_date          TYPE /dmo/flight_date VALUE '20200202'.
+      c_airline              TYPE ZAI_DMOcarrier_id VALUE 'TS',
+      c_connection           TYPE ZAI_DMOconnection_id VALUE '123',
+      c_connection_not_exist TYPE ZAI_DMOconnection_id VALUE '321',
+      c_flight_date          TYPE ZAI_DMOflight_date VALUE '20200202'.
 
     DATA:
-      flight_mock_data  TYPE STANDARD TABLE OF /dmo/flight,
-      booking_mock_data TYPE STANDARD TABLE OF /dmo/a_booking_d,
-      bookings_to_test  TYPE TABLE FOR VALIDATION /dmo/r_travel_d\\booking~validateconnection,
-      failed            TYPE RESPONSE FOR FAILED LATE  /dmo/r_travel_d,
-      reported          TYPE RESPONSE FOR REPORTED LATE  /dmo/r_travel_d.
+      flight_mock_data  TYPE STANDARD TABLE OF ZAI_DMOflight,
+      booking_mock_data TYPE STANDARD TABLE OF ZAI_DMOa_booking_d,
+      bookings_to_test  TYPE TABLE FOR VALIDATION ZAI_DMOr_travel_d\\booking~validateconnection,
+      failed            TYPE RESPONSE FOR FAILED LATE  ZAI_DMOr_travel_d,
+      reported          TYPE RESPONSE FOR REPORTED LATE  ZAI_DMOr_travel_d.
 
     flight_mock_data = VALUE #( ( carrier_id = c_airline  connection_id = c_connection  flight_date = c_flight_date ) ).
     sql_test_environment->insert_test_data( flight_mock_data ).
@@ -676,10 +676,10 @@ CLASS ltc_booking IMPLEMENTATION.
 
   METHOD validate_currency_success.
     DATA:
-      booking_mock_data TYPE STANDARD TABLE OF /dmo/a_booking_d,
-      bookings_to_test  TYPE TABLE FOR VALIDATION /dmo/r_travel_d\\booking~validatecurrencycode,
-      failed            TYPE RESPONSE FOR FAILED   LATE /dmo/r_travel_d,
-      reported          TYPE RESPONSE FOR REPORTED LATE /dmo/r_travel_d.
+      booking_mock_data TYPE STANDARD TABLE OF ZAI_DMOa_booking_d,
+      bookings_to_test  TYPE TABLE FOR VALIDATION ZAI_DMOr_travel_d\\booking~validatecurrencycode,
+      failed            TYPE RESPONSE FOR FAILED   LATE ZAI_DMOr_travel_d,
+      reported          TYPE RESPONSE FOR REPORTED LATE ZAI_DMOr_travel_d.
 
     booking_mock_data = VALUE #(
         ( booking_uuid = uuid1  currency_code = 'EUR' )
@@ -708,19 +708,19 @@ CLASS ltc_booking IMPLEMENTATION.
 
   METHOD validate_currency_not_valid.
     TYPES: BEGIN OF t_check.
-             INCLUDE TYPE /dmo/a_booking_d.
+             INCLUDE TYPE ZAI_DMOa_booking_d.
     TYPES:   exp_amount_reported_entries TYPE i,
              exp_amount_failed_entries   TYPE i,
            END OF t_check,
            t_check_table TYPE STANDARD TABLE OF t_check WITH KEY booking_uuid.
 
     DATA:
-      booking_mock_data TYPE STANDARD TABLE OF /dmo/a_booking_d,
+      booking_mock_data TYPE STANDARD TABLE OF ZAI_DMOa_booking_d,
       bookings_to_check TYPE t_check_table,
       booking_to_check  TYPE t_check,
-      bookings_to_test  TYPE TABLE FOR VALIDATION /dmo/r_travel_d\\booking~validatecurrencycode,
-      failed            TYPE RESPONSE FOR FAILED   LATE /dmo/r_travel_d,
-      reported          TYPE RESPONSE FOR REPORTED LATE /dmo/r_travel_d.
+      bookings_to_test  TYPE TABLE FOR VALIDATION ZAI_DMOr_travel_d\\booking~validatecurrencycode,
+      failed            TYPE RESPONSE FOR FAILED   LATE ZAI_DMOr_travel_d,
+      reported          TYPE RESPONSE FOR REPORTED LATE ZAI_DMOr_travel_d.
 
     bookings_to_check = VALUE #(
         exp_amount_reported_entries = '2'

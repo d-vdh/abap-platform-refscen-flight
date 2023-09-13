@@ -1,8 +1,8 @@
-"!@testing SRVB:/DMO/UI_TRAVEL_PROC_M_O2
+"!@testing SRVB:ZAI_DMOUI_TRAVEL_PROC_M_O2
 "! End-to-end testing of a complete service
 "! Uses CDS and OSQL Test Environment to stub database dependencies
 "! Uses Local OData CLient Proxy to execute OData Calls against local service
-CLASS /dmo/tc_travel_proc_m_o2_odata DEFINITION
+CLASS ZAI_DMOtc_travel_proc_m_o2_odata DEFINITION
   FOR TESTING
   RISK LEVEL HARMLESS
   DURATION SHORT
@@ -16,13 +16,13 @@ CLASS /dmo/tc_travel_proc_m_o2_odata DEFINITION
     CLASS-DATA: mo_client_proxy      TYPE REF TO /iwbep/if_cp_client_proxy,
                 cds_test_environment TYPE REF TO if_cds_test_environment,
                 sql_test_environment TYPE REF TO if_osql_test_environment,
-                begin_date           TYPE /dmo/begin_date,
-                end_date             TYPE /dmo/end_date,
-                agency_mock_data     TYPE STANDARD TABLE OF /dmo/agency,
-                customer_mock_data   TYPE STANDARD TABLE OF /dmo/customer,
-                carrier_mock_data    TYPE STANDARD TABLE OF /dmo/carrier,
-                flight_mock_data     TYPE STANDARD TABLE OF /dmo/flight,
-                supplement_mock_data TYPE STANDARD TABLE OF /dmo/supplement.
+                begin_date           TYPE ZAI_DMObegin_date,
+                end_date             TYPE ZAI_DMOend_date,
+                agency_mock_data     TYPE STANDARD TABLE OF ZAI_DMOagency,
+                customer_mock_data   TYPE STANDARD TABLE OF ZAI_DMOcustomer,
+                carrier_mock_data    TYPE STANDARD TABLE OF ZAI_DMOcarrier,
+                flight_mock_data     TYPE STANDARD TABLE OF ZAI_DMOflight,
+                supplement_mock_data TYPE STANDARD TABLE OF ZAI_DMOsupplement.
 
     CLASS-METHODS :
       class_setup RAISING cx_static_check,
@@ -42,29 +42,29 @@ CLASS /dmo/tc_travel_proc_m_o2_odata DEFINITION
 
 ENDCLASS.
 
-CLASS /dmo/tc_travel_proc_m_o2_odata  IMPLEMENTATION.
+CLASS ZAI_DMOtc_travel_proc_m_o2_odata  IMPLEMENTATION.
 
   METHOD class_setup.
 
-    mo_client_proxy = create_local_client_proxy( VALUE #( service_id      = '/DMO/UI_TRAVEL_PROC_M_O2'
+    mo_client_proxy = create_local_client_proxy( VALUE #( service_id      = 'ZAI_DMOUI_TRAVEL_PROC_M_O2'
                                                           service_version = '0001' )  ).
 
     " Create the stubs/doubles for the underlying CDS entities
     cds_test_environment = cl_cds_test_environment=>create_for_multiple_cds(
                       i_for_entities = VALUE #(
-                        ( i_for_entity = '/DMO/C_TRAVEL_PROCESSOR_M'    i_select_base_dependencies = abap_true )
-                        ( i_for_entity = '/DMO/C_BOOKING_PROCESSOR_M'   i_select_base_dependencies = abap_true )
-                        ( i_for_entity = '/DMO/C_BOOKSUPPL_PROCESSOR_M' i_select_base_dependencies = abap_true ) ) ).
+                        ( i_for_entity = 'ZAI_DMOC_TRAVEL_PROCESSOR_M'    i_select_base_dependencies = abap_true )
+                        ( i_for_entity = 'ZAI_DMOC_BOOKING_PROCESSOR_M'   i_select_base_dependencies = abap_true )
+                        ( i_for_entity = 'ZAI_DMOC_BOOKSUPPL_PROCESSOR_M' i_select_base_dependencies = abap_true ) ) ).
 
     " Create the stubs/doubles for referenced and additional used tables.
     sql_test_environment = cl_osql_test_environment=>create( i_dependency_list = VALUE #(
-*        ( '/DMO/AGENCY' )      "already mocked by cds_test_environment above
-*        ( '/DMO/CUSTOMER' )    "already mocked by cds_test_environment above
-*        ( '/DMO/CARRIER' )     "already mocked by cds_test_environment above
-        ( '/DMO/FLIGHT' )
-        ( '/DMO/SUPPLEMENT' )
+*        ( 'ZAI_DMOAGENCY' )      "already mocked by cds_test_environment above
+*        ( 'ZAI_DMOCUSTOMER' )    "already mocked by cds_test_environment above
+*        ( 'ZAI_DMOCARRIER' )     "already mocked by cds_test_environment above
+        ( 'ZAI_DMOFLIGHT' )
+        ( 'ZAI_DMOSUPPLEMENT' )
 
-        ( '/DMO/LOG_TRAVEL' )
+        ( 'ZAI_DMOLOG_TRAVEL' )
     ) ).
 
 
@@ -104,7 +104,7 @@ CLASS /dmo/tc_travel_proc_m_o2_odata  IMPLEMENTATION.
     " call a simple create operation and check if the data is available via EML and in the database
 
     " Prepare business data i.e. the travel instance test data
-    DATA(ls_business_data) = VALUE /dmo/c_travel_processor_m(
+    DATA(ls_business_data) = VALUE ZAI_DMOc_travel_processor_m(
         agencyid = agency_mock_data[ 1 ]-agency_id
         customerid = customer_mock_data[  1 ]-customer_id
         begindate = begin_date
@@ -126,13 +126,13 @@ CLASS /dmo/tc_travel_proc_m_o2_odata  IMPLEMENTATION.
 
     cl_abap_unit_assert=>assert_not_initial( lo_response ).
 
-    DATA ls_response_data TYPE /dmo/c_travel_processor_m.
+    DATA ls_response_data TYPE ZAI_DMOc_travel_processor_m.
     lo_response->get_business_data( IMPORTING es_business_data = ls_response_data ).
 
     cl_abap_unit_assert=>assert_equals( msg = 'description' exp = ls_business_data-description act = ls_response_data-description ).
 
     " Read the created travel entity - the number is now calculated by a number range, so we can't predict it
-    READ ENTITIES OF /dmo/c_travel_processor_m
+    READ ENTITIES OF ZAI_DMOc_travel_processor_m
       ENTITY travelprocessor
         FIELDS ( description )
           WITH VALUE #( (  travelid = ls_response_data-travelid ) )
@@ -144,12 +144,12 @@ CLASS /dmo/tc_travel_proc_m_o2_odata  IMPLEMENTATION.
     cl_abap_unit_assert=>assert_equals( msg = 'description' exp = ls_business_data-description act = lt_read_travel[ 1 ]-description ).
 
     " check data also from Database
-    SELECT single @abap_true FROM /dmo/i_travel_m INTO @DATA(lv_travel). "#EC CI_NOWHERE
+    SELECT single @abap_true FROM ZAI_DMOi_travel_m INTO @DATA(lv_travel). "#EC CI_NOWHERE
     cl_abap_unit_assert=>assert_true( msg = 'travel from db' act = lv_travel ).
 
     " check also log written by "additional save" functionality
-    SELECT single @abap_true FROM /dmo/log_travel INTO @DATA(log_travel). "#EC CI_NOWHERE
-    cl_abap_unit_assert=>assert_true( msg = '/DMO/LOG_TRAVEL' act = log_travel ).
+    SELECT single @abap_true FROM ZAI_DMOlog_travel INTO @DATA(log_travel). "#EC CI_NOWHERE
+    cl_abap_unit_assert=>assert_true( msg = 'ZAI_DMOLOG_TRAVEL' act = log_travel ).
 
   ENDMETHOD.
 

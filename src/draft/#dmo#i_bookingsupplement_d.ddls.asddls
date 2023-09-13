@@ -1,7 +1,7 @@
 @EndUserText.label: 'BookSupplement Interface Projection View'
 @AccessControl.authorizationCheck: #NOT_REQUIRED
-define view entity /DMO/I_BookingSupplement_D
-  as projection on /DMO/R_BookingSupplement_D
+define view entity ZAI_DMOI_BookingSupplement_D
+  as projection on ZAI_DMOR_BookingSupplement_D
 {
   key BookSupplUUID,
       TravelUUID,
@@ -12,8 +12,8 @@ define view entity /DMO/I_BookingSupplement_D
       CurrencyCode,
       LocalLastChangedAt,
       /* Associations */
-      _Booking : redirected to parent /DMO/I_Booking_D,
+      _Booking : redirected to parent ZAI_DMOI_Booking_D,
       _Product,
       _SupplementText,
-      _Travel  : redirected to /DMO/I_Travel_D
+      _Travel  : redirected to ZAI_DMOI_Travel_D
 }

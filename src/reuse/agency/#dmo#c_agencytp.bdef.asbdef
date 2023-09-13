@@ -3,7 +3,7 @@ strict(2);
 use draft;
 extensible;
 
-define behavior for /DMO/C_AgencyTP alias /DMO/Agency
+define behavior for ZAI_DMOC_AgencyTP alias ZAI_DMOAgency
 extensible
 {
   use create;

@@ -3,9 +3,9 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <BDEF>
-    <NAME>/DMO/R_TRAVEL_D</NAME>
+    <NAME>ZAI_DMOR_TRAVEL_D</NAME>
     <TYPE>BDEF/BDO</TYPE>
-    <DESCRIPTION>Behavior for /DMO/R_Travel_D</DESCRIPTION>
+    <DESCRIPTION>Behavior for ZAI_DMOR_Travel_D</DESCRIPTION>
     <DESCRIPTION_TEXT_LIMIT>60</DESCRIPTION_TEXT_LIMIT>
     <LANGUAGE>EN</LANGUAGE>
     <LINKS>

@@ -1,4 +1,4 @@
-CLASS /dmo/zz_cx_agency_review DEFINITION
+CLASS ZAI_DMOzz_cx_agency_review DEFINITION
   PUBLIC
   INHERITING FROM cx_static_check
   FINAL
@@ -10,7 +10,7 @@ CLASS /dmo/zz_cx_agency_review DEFINITION
       if_abap_behv_message.
 
     CONSTANTS:
-      message_class TYPE symsgid VALUE '/DMO/ZZ_AGENCY_RVIEW',
+      message_class TYPE symsgid VALUE 'ZAI_DMOZZ_AGENCY_RVIEW',
       BEGIN OF rating_invalid,
         msgid TYPE symsgid VALUE message_class,
         msgno TYPE symsgno VALUE '001',
@@ -35,7 +35,7 @@ ENDCLASS.
 
 
 
-CLASS /dmo/zz_cx_agency_review IMPLEMENTATION.
+CLASS ZAI_DMOzz_cx_agency_review IMPLEMENTATION.
 
 
   METHOD constructor ##ADT_SUPPRESS_GENERATION.

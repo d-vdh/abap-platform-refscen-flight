@@ -14,18 +14,18 @@
 "! @parameter et_booking_mapping      | Table of final Travel-IDs/Booking-IDs
 "! @parameter et_bookingsuppl_mapping | Table of final Travel-IDs/Booking-IDs/BookingSupplement-IDs
 "!
-FUNCTION /dmo/flight_travel_adj_numbers.
+FUNCTION ZAI_DMOflight_travel_adj_numbers.
 *"----------------------------------------------------------------------
 *"*"Local Interface:
 *"  EXPORTING
 *"     REFERENCE(ET_TRAVEL_MAPPING) TYPE
-*"        /DMO/IF_FLIGHT_LEGACY=>TT_LN_TRAVEL_MAPPING
+*"        ZAI_DMOIF_FLIGHT_LEGACY=>TT_LN_TRAVEL_MAPPING
 *"     REFERENCE(ET_BOOKING_MAPPING) TYPE
-*"        /DMO/IF_FLIGHT_LEGACY=>TT_LN_BOOKING_MAPPING
+*"        ZAI_DMOIF_FLIGHT_LEGACY=>TT_LN_BOOKING_MAPPING
 *"     REFERENCE(ET_BOOKINGSUPPL_MAPPING) TYPE
-*"        /DMO/IF_FLIGHT_LEGACY=>TT_LN_BOOKINGSUPPL_MAPPING
+*"        ZAI_DMOIF_FLIGHT_LEGACY=>TT_LN_BOOKINGSUPPL_MAPPING
 *"----------------------------------------------------------------------
-  /dmo/cl_flight_legacy=>get_instance( )->adjust_numbers(
+  ZAI_DMOcl_flight_legacy=>get_instance( )->adjust_numbers(
     IMPORTING
       et_travel_mapping       = et_travel_mapping
       et_booking_mapping      = et_booking_mapping

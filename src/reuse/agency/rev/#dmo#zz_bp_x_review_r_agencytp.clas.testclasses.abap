@@ -1,10 +1,10 @@
-"! @testing BDEF:/DMO/ZZ_X_REVIEW_R_AGENCYTP
+"! @testing BDEF:ZAI_DMOZZ_X_REVIEW_R_AGENCYTP
 CLASS ltcl_review DEFINITION FINAL FOR TESTING
   DURATION SHORT
   RISK LEVEL HARMLESS.
 
   PRIVATE SECTION.
-    CLASS-DATA class_under_test     TYPE REF TO lhc_/dmo/zz_review.
+    CLASS-DATA class_under_test     TYPE REF TO lhc_ZAI_DMOzz_review.
     CLASS-DATA cds_test_environment TYPE REF TO if_cds_test_environment.
 
     "! Instantiate class under test and set up test double framework
@@ -19,11 +19,11 @@ CLASS ltcl_review DEFINITION FINAL FOR TESTING
     "! Reset transactional buffer
     METHODS teardown.
 
-    "! Calls { @link ..lhc_/DMO/ZZ_Review.METH:get_instance_features }
+    "! Calls { @link ..lhc_ZAI_DMOZZ_Review.METH:get_instance_features }
     "! with all possible in- and outcomes.
     METHODS get_instance_features     FOR TESTING.
 
-    "! Checks that { @link ..lhc_/DMO/ZZ_Review.METH:get_global_authorizations } returns initial values
+    "! Checks that { @link ..lhc_ZAI_DMOZZ_Review.METH:get_global_authorizations } returns initial values
     "! for <em>result</em> and <em>reported</em>.
     METHODS get_global_authorizations FOR TESTING RAISING cx_static_check.
 
@@ -51,8 +51,8 @@ CLASS ltcl_review IMPLEMENTATION.
   METHOD class_setup.
     CREATE OBJECT class_under_test FOR TESTING.
     cds_test_environment = cl_cds_test_environment=>create_for_multiple_cds(
-                               VALUE #( ( i_for_entity = '/DMO/I_AGENCYTP'            )
-                                        ( i_for_entity = '/DMO/ZZ_I_AGENCY_REVIEWTP'  ) ) ).
+                               VALUE #( ( i_for_entity = 'ZAI_DMOI_AGENCYTP'            )
+                                        ( i_for_entity = 'ZAI_DMOZZ_I_AGENCY_REVIEWTP'  ) ) ).
   ENDMETHOD.
 
 
@@ -72,21 +72,21 @@ CLASS ltcl_review IMPLEMENTATION.
 
 
   METHOD get_instance_features.
-    TYPES: t_instance_feature TYPE STRUCTURE FOR INSTANCE FEATURES RESULT /dmo/r_agencytp\\/dmo/zz_review,
+    TYPES: t_instance_feature TYPE STRUCTURE FOR INSTANCE FEATURES RESULT ZAI_DMOr_agencytp\\ZAI_DMOzz_review,
            BEGIN OF t_check.
     INCLUDE TYPE t_instance_feature.
-    TYPES: reviewer TYPE /dmo/zz_r_agency_reviewtp-reviewer,
+    TYPES: reviewer TYPE ZAI_DMOzz_r_agency_reviewtp-reviewer,
            END OF t_check,
            t_check_table TYPE STANDARD TABLE OF t_check WITH KEY agencyid reviewid.
 
     DATA check_table        TYPE t_check_table.
-    DATA review_mock_data   TYPE STANDARD TABLE OF /dmo/zz_r_agency_reviewtp.
-    DATA reviews_to_test    TYPE TABLE FOR INSTANCE FEATURES KEY /dmo/i_agencytp\\/dmo/zz_review.
-    DATA requested_features TYPE STRUCTURE FOR INSTANCE FEATURES REQUEST /dmo/i_agencytp\\/dmo/zz_review.
-    DATA act_result         TYPE TABLE FOR INSTANCE FEATURES RESULT /dmo/i_agencytp\\/dmo/zz_review.
-    DATA exp_result         TYPE TABLE FOR INSTANCE FEATURES RESULT /dmo/i_agencytp\\/dmo/zz_review.
-    DATA reported           TYPE RESPONSE FOR REPORTED EARLY /dmo/i_agencytp.
-    DATA failed             TYPE RESPONSE FOR FAILED EARLY /dmo/i_agencytp.
+    DATA review_mock_data   TYPE STANDARD TABLE OF ZAI_DMOzz_r_agency_reviewtp.
+    DATA reviews_to_test    TYPE TABLE FOR INSTANCE FEATURES KEY ZAI_DMOi_agencytp\\ZAI_DMOzz_review.
+    DATA requested_features TYPE STRUCTURE FOR INSTANCE FEATURES REQUEST ZAI_DMOi_agencytp\\ZAI_DMOzz_review.
+    DATA act_result         TYPE TABLE FOR INSTANCE FEATURES RESULT ZAI_DMOi_agencytp\\ZAI_DMOzz_review.
+    DATA exp_result         TYPE TABLE FOR INSTANCE FEATURES RESULT ZAI_DMOi_agencytp\\ZAI_DMOzz_review.
+    DATA reported           TYPE RESPONSE FOR REPORTED EARLY ZAI_DMOi_agencytp.
+    DATA failed             TYPE RESPONSE FOR FAILED EARLY ZAI_DMOi_agencytp.
 
     " In current implementation requested_features is not used.
     requested_features = VALUE #( ).
@@ -133,12 +133,12 @@ CLASS ltcl_review IMPLEMENTATION.
 
 
   METHOD get_global_authorizations.
-    DATA requested_authorizations TYPE STRUCTURE FOR GLOBAL AUTHORIZATION REQUEST /dmo/i_agencytp\\/dmo/zz_review.
-    DATA result                   TYPE STRUCTURE FOR GLOBAL AUTHORIZATION RESULT /dmo/i_agencytp\\/dmo/zz_review.
-    DATA reported                 TYPE RESPONSE FOR REPORTED EARLY /dmo/i_agencytp.
+    DATA requested_authorizations TYPE STRUCTURE FOR GLOBAL AUTHORIZATION REQUEST ZAI_DMOi_agencytp\\ZAI_DMOzz_review.
+    DATA result                   TYPE STRUCTURE FOR GLOBAL AUTHORIZATION RESULT ZAI_DMOi_agencytp\\ZAI_DMOzz_review.
+    DATA reported                 TYPE RESPONSE FOR REPORTED EARLY ZAI_DMOi_agencytp.
 
-    requested_authorizations-%action-/dmo/reviewwashelpful    = if_abap_behv=>mk-on.
-    requested_authorizations-%action-/dmo/reviewwasnothelpful = if_abap_behv=>mk-on.
+    requested_authorizations-%action-ZAI_DMOreviewwashelpful    = if_abap_behv=>mk-on.
+    requested_authorizations-%action-ZAI_DMOreviewwasnothelpful = if_abap_behv=>mk-on.
 
     class_under_test->get_global_authorizations( EXPORTING requested_authorizations = requested_authorizations
                                                  CHANGING  result                   = result
@@ -150,7 +150,7 @@ CLASS ltcl_review IMPLEMENTATION.
 
 
   METHOD ratinginrange_valid.
-    DATA review_mock_data TYPE STANDARD TABLE OF /dmo/zz_r_agency_reviewtp.
+    DATA review_mock_data TYPE STANDARD TABLE OF ZAI_DMOzz_r_agency_reviewtp.
 
     review_mock_data = VALUE #( agencyid = '1'
                                 ( reviewid = '1'  rating = '1' )
@@ -160,7 +160,7 @@ CLASS ltcl_review IMPLEMENTATION.
                                 ( reviewid = '5'  rating = '5' ) ).
     cds_test_environment->insert_test_data( review_mock_data ).
 
-    DATA reported TYPE RESPONSE FOR REPORTED LATE /dmo/i_agencytp.
+    DATA reported TYPE RESPONSE FOR REPORTED LATE ZAI_DMOi_agencytp.
 
     class_under_test->ratinginrange(
       EXPORTING keys     = CORRESPONDING #( review_mock_data MAPPING agencyid = agencyid  reviewid = reviewid EXCEPT * )
@@ -169,27 +169,27 @@ CLASS ltcl_review IMPLEMENTATION.
     cl_abap_unit_assert=>assert_not_initial( msg = 'reported' act = reported ).
     cl_abap_unit_assert=>assert_equals( msg = 'Reported has not the correct amount of messages'
                                         exp = lines( review_mock_data )
-                                        act = lines( reported-/dmo/zz_review ) ).
+                                        act = lines( reported-ZAI_DMOzz_review ) ).
   ENDMETHOD.
 
 
   METHOD ratinginrange_invalid.
     TYPES BEGIN OF ts_review_test_data.
-            INCLUDE TYPE /dmo/zz_r_agency_reviewtp.
+            INCLUDE TYPE ZAI_DMOzz_r_agency_reviewtp.
     TYPES   t100 LIKE if_t100_message=>t100key.
     TYPES END OF ts_review_test_data.
     TYPES tt_review_test_data TYPE STANDARD TABLE OF ts_review_test_data.
 
     DATA review_test_data          TYPE tt_review_test_data.
-    DATA review_mock_data          TYPE STANDARD TABLE OF /dmo/zz_r_agency_reviewtp.
-    DATA reported                  TYPE RESPONSE FOR REPORTED LATE /dmo/i_agencytp.
-    DATA reported_with_message     TYPE STRUCTURE FOR REPORTED LATE /dmo/i_agencytp\\/dmo/zz_review.
-    DATA reported_clear_state_area TYPE STRUCTURE FOR REPORTED LATE /dmo/i_agencytp\\/dmo/zz_review.
+    DATA review_mock_data          TYPE STANDARD TABLE OF ZAI_DMOzz_r_agency_reviewtp.
+    DATA reported                  TYPE RESPONSE FOR REPORTED LATE ZAI_DMOi_agencytp.
+    DATA reported_with_message     TYPE STRUCTURE FOR REPORTED LATE ZAI_DMOi_agencytp\\ZAI_DMOzz_review.
+    DATA reported_clear_state_area TYPE STRUCTURE FOR REPORTED LATE ZAI_DMOi_agencytp\\ZAI_DMOzz_review.
 
     review_test_data = VALUE #(
         agencyid = '1'
-        ( reviewid = '1'  rating = '0'  t100 = CORRESPONDING #( /dmo/zz_cx_agency_review=>rating_invalid ) )
-        ( reviewid = '2'  rating = '7'  t100 = CORRESPONDING #( /dmo/zz_cx_agency_review=>rating_invalid ) ) ).
+        ( reviewid = '1'  rating = '0'  t100 = CORRESPONDING #( ZAI_DMOzz_cx_agency_review=>rating_invalid ) )
+        ( reviewid = '2'  rating = '7'  t100 = CORRESPONDING #( ZAI_DMOzz_cx_agency_review=>rating_invalid ) ) ).
     review_mock_data = CORRESPONDING #( review_test_data ).
     cds_test_environment->insert_test_data( review_mock_data ).
 
@@ -201,14 +201,14 @@ CLASS ltcl_review IMPLEMENTATION.
     cl_abap_unit_assert=>assert_not_initial( act = reported ).
     cl_abap_unit_assert=>assert_equals( msg  = 'Reported has not the correct amount of messages'
                                         exp  = 2 * lines( review_test_data )
-                                        act  = lines( reported-/dmo/zz_review )
+                                        act  = lines( reported-ZAI_DMOzz_review )
                                         quit = if_abap_unit_constant=>quit-no ).
 
     LOOP AT review_test_data ASSIGNING FIELD-SYMBOL(<reviewy>).
       CLEAR reported_with_message.
       CLEAR reported_clear_state_area.
 
-      LOOP AT reported-/dmo/zz_review INTO DATA(reported_line) USING KEY entity
+      LOOP AT reported-ZAI_DMOzz_review INTO DATA(reported_line) USING KEY entity
            WHERE agencyid = <reviewy>-agencyid AND reviewid = <reviewy>-reviewid.
         IF reported_line-%msg IS BOUND.
           reported_with_message     = reported_line.
@@ -216,7 +216,7 @@ CLASS ltcl_review IMPLEMENTATION.
           reported_clear_state_area = reported_line.
         ENDIF.
 
-        cl_abap_unit_assert=>assert_equals( exp = lhc_/dmo/zz_review=>rating_in_range
+        cl_abap_unit_assert=>assert_equals( exp = lhc_ZAI_DMOzz_review=>rating_in_range
                                             act = reported_line-%state_area ).
         cl_abap_unit_assert=>assert_equals( exp = <reviewy>-agencyid
                                             act = reported_line-agencyid ).
@@ -255,9 +255,9 @@ CLASS ltcl_review IMPLEMENTATION.
 
 
   METHOD _reviewhelpful.
-    DATA review_mock_data TYPE STANDARD TABLE OF /dmo/zz_r_agency_reviewtp.
-    DATA act_reviews      TYPE TABLE FOR READ RESULT /dmo/i_agencytp\\/dmo/zz_review.
-    DATA exp_reviews      TYPE TABLE FOR READ RESULT /dmo/i_agencytp\\/dmo/zz_review.
+    DATA review_mock_data TYPE STANDARD TABLE OF ZAI_DMOzz_r_agency_reviewtp.
+    DATA act_reviews      TYPE TABLE FOR READ RESULT ZAI_DMOi_agencytp\\ZAI_DMOzz_review.
+    DATA exp_reviews      TYPE TABLE FOR READ RESULT ZAI_DMOi_agencytp\\ZAI_DMOzz_review.
 
     review_mock_data = VALUE #(
         agencyid = '1'
@@ -267,7 +267,7 @@ CLASS ltcl_review IMPLEMENTATION.
 
     exp_reviews = CORRESPONDING #( review_mock_data ).
 
-    DATA reported TYPE RESPONSE FOR REPORTED EARLY /dmo/i_agencytp.
+    DATA reported TYPE RESPONSE FOR REPORTED EARLY ZAI_DMOi_agencytp.
 
     IF iv_is_helpful = abap_true.
       class_under_test->reviewwashelpful(
@@ -292,8 +292,8 @@ CLASS ltcl_review IMPLEMENTATION.
       ENDIF.
     ENDLOOP.
 
-    READ ENTITIES OF /dmo/i_agencytp
-         ENTITY /dmo/zz_review
+    READ ENTITIES OF ZAI_DMOi_agencytp
+         ENTITY ZAI_DMOzz_review
          FIELDS ( helpfulcount helpfultotal reviewer )
          WITH CORRESPONDING #( review_mock_data )
          RESULT act_reviews.
@@ -306,14 +306,14 @@ ENDCLASS.
 
 
 
-"! @testing BDEF:/DMO/ZZ_X_REVIEW_R_AGENCYTP
+"! @testing BDEF:ZAI_DMOZZ_X_REVIEW_R_AGENCYTP
 CLASS ltcl_sc_r_agency DEFINITION FINAL FOR TESTING
   DURATION SHORT
   RISK LEVEL HARMLESS.
 
   PRIVATE SECTION.
-    CONSTANTS agency_event  TYPE c length 30 VALUE '/DMO/AGENCYREVIEWCREATED'.
-    CONSTANTS agency_entity TYPE abp_entity_name VALUE '/DMO/I_AGENCYTP'.
+    CONSTANTS agency_event  TYPE c length 30 VALUE 'ZAI_DMOAGENCYREVIEWCREATED'.
+    CONSTANTS agency_entity TYPE abp_entity_name VALUE 'ZAI_DMOI_AGENCYTP'.
     CLASS-DATA class_under_test       TYPE REF TO lsc_r_agency.
     CLASS-DATA sql_test_environment   TYPE REF TO if_osql_test_environment.
     CLASS-DATA cds_test_environment   TYPE REF TO if_cds_test_environment.
@@ -352,7 +352,7 @@ CLASS ltcl_sc_r_agency IMPLEMENTATION.
 
   METHOD class_setup.
     CREATE OBJECT class_under_test FOR TESTING.
-    sql_test_environment = cl_osql_test_environment=>create( i_dependency_list = VALUE #( ( '/DMO/ZZ_AGN_REVA' ) ) ).
+    sql_test_environment = cl_osql_test_environment=>create( i_dependency_list = VALUE #( ( 'ZAI_DMOZZ_AGN_REVA' ) ) ).
     cds_test_environment = cl_cds_test_environment=>create( i_for_entity               = agency_entity
                                                             i_select_base_dependencies = abap_true ).
     event_test_environment = cl_rap_event_test_environment=>create( VALUE #( ( entity_name = agency_entity event_name = agency_event ) ) ).
@@ -388,16 +388,16 @@ CLASS ltcl_sc_r_agency IMPLEMENTATION.
 
 
   METHOD adjust_numbers.
-    DATA act_mapped       TYPE RESPONSE FOR MAPPED LATE /dmo/i_agencytp.
-    DATA exp_mapped       TYPE RESPONSE FOR MAPPED LATE /dmo/i_agencytp.
-    DATA review_mock_data TYPE STANDARD TABLE OF /dmo/zz_agn_reva.
-    DATA reported         TYPE RESPONSE FOR REPORTED LATE /dmo/i_agencytp.
+    DATA act_mapped       TYPE RESPONSE FOR MAPPED LATE ZAI_DMOi_agencytp.
+    DATA exp_mapped       TYPE RESPONSE FOR MAPPED LATE ZAI_DMOi_agencytp.
+    DATA review_mock_data TYPE STANDARD TABLE OF ZAI_DMOzz_agn_reva.
+    DATA reported         TYPE RESPONSE FOR REPORTED LATE ZAI_DMOi_agencytp.
 
     review_mock_data = VALUE #( ( agency_id = '1'  review_id = '25' )
                                 ( agency_id = '2'  review_id = '10' ) ).
     sql_test_environment->insert_test_data( review_mock_data ).
 
-    exp_mapped-/dmo/zz_review = VALUE #(
+    exp_mapped-ZAI_DMOzz_review = VALUE #(
         " Existing DB Entry, one new instance
         ( %pid = '1'  %tmp-agencyid = '1'  %key = VALUE #( agencyid = '1'  reviewid = '26' ) )
         " Existing DB Entry, two new instances
@@ -411,7 +411,7 @@ CLASS ltcl_sc_r_agency IMPLEMENTATION.
         " No existing DB Entry, overwriting temporary ReviewID
         ( %pid = '7'  %tmp-agencyid = '7'  %key = VALUE #( agencyid = '7'  reviewid =  '1' )  %tmp-reviewid = '123' ) ).
 
-    act_mapped-/dmo/zz_review = CORRESPONDING #( exp_mapped-/dmo/zz_review MAPPING %pid = %pid  %tmp = %tmp EXCEPT * ).
+    act_mapped-ZAI_DMOzz_review = CORRESPONDING #( exp_mapped-ZAI_DMOzz_review MAPPING %pid = %pid  %tmp = %tmp EXCEPT * ).
     class_under_test->adjust_numbers( CHANGING mapped   = act_mapped
                                                reported = reported ).
 
@@ -424,7 +424,7 @@ CLASS ltcl_sc_r_agency IMPLEMENTATION.
   METHOD save_md_no_review_created.
 
     " Prepare
-    DATA reported TYPE RESPONSE FOR REPORTED LATE /dmo/i_agencytp.
+    DATA reported TYPE RESPONSE FOR REPORTED LATE ZAI_DMOi_agencytp.
 
     " Execute
     class_under_test->save_modified( EXPORTING create   = VALUE #( )
@@ -441,17 +441,17 @@ CLASS ltcl_sc_r_agency IMPLEMENTATION.
   METHOD save_md_one_review_created.
 
     " Prepare
-    DATA agency_mock_data TYPE STANDARD TABLE OF /dmo/agency.
+    DATA agency_mock_data TYPE STANDARD TABLE OF ZAI_DMOagency.
 
     agency_mock_data = VALUE #( ( agency_id = '1' email_address = 'test@test.example' ) ).
     cds_test_environment->insert_test_data( agency_mock_data ).
 
-    DATA create TYPE REQUEST FOR CHANGE /dmo/i_agencytp.
-    create-/dmo/zz_review = VALUE #( ( agencyid        = '1'
+    DATA create TYPE REQUEST FOR CHANGE ZAI_DMOi_agencytp.
+    create-ZAI_DMOzz_review = VALUE #( ( agencyid        = '1'
                                        reviewid        = '1'
                                        rating          = '1'
                                        freetextcomment = 'Bad' ) ).
-    DATA reported TYPE RESPONSE FOR REPORTED LATE /dmo/i_agencytp.
+    DATA reported TYPE RESPONSE FOR REPORTED LATE ZAI_DMOi_agencytp.
 
 
     " Execute
@@ -463,10 +463,10 @@ CLASS ltcl_sc_r_agency IMPLEMENTATION.
     " Verify
     event_test_environment->get_event( entity_name = agency_entity event_name = agency_event )->verify( )->is_raised_times( 1 ).
 
-    DATA event_payload_act TYPE TABLE FOR EVENT /dmo/i_agencytp~/dmo/agencyreviewcreated.
+    DATA event_payload_act TYPE TABLE FOR EVENT ZAI_DMOi_agencytp~ZAI_DMOagencyreviewcreated.
     event_payload_act = event_test_environment->get_event( entity_name  = agency_entity event_name = agency_event )->get_payload( )->*.
 
-    DATA event_payload_exp TYPE TABLE FOR EVENT /dmo/i_agencytp~/dmo/agencyreviewcreated.
+    DATA event_payload_exp TYPE TABLE FOR EVENT ZAI_DMOi_agencytp~ZAI_DMOagencyreviewcreated.
     event_payload_exp = VALUE #( ( agencyid        = '1'
                                    reviewid        = '1'
                                    rating          = '1'
@@ -480,14 +480,14 @@ CLASS ltcl_sc_r_agency IMPLEMENTATION.
   METHOD save_md_multi_reviews_created.
 
     " Prepare
-    DATA agency_mock_data TYPE STANDARD TABLE OF /dmo/agency.
+    DATA agency_mock_data TYPE STANDARD TABLE OF ZAI_DMOagency.
 
     agency_mock_data = VALUE #( ( agency_id = '1' email_address = 'test@test.example' )
                                 ( agency_id = '2' email_address = 'test2@test.example' ) ).
     cds_test_environment->insert_test_data( agency_mock_data ).
 
-    DATA create TYPE REQUEST FOR CHANGE /dmo/i_agencytp.
-    create-/dmo/zz_review = VALUE #( ( agencyid        = '1'
+    DATA create TYPE REQUEST FOR CHANGE ZAI_DMOi_agencytp.
+    create-ZAI_DMOzz_review = VALUE #( ( agencyid        = '1'
                                        reviewid        = '1'
                                        rating          = '1'
                                        freetextcomment = 'Bad' )
@@ -499,7 +499,7 @@ CLASS ltcl_sc_r_agency IMPLEMENTATION.
                                        reviewid        = '1'
                                        rating          = '2'
                                        freetextcomment = 'Medium' ) ).
-    DATA reported TYPE RESPONSE FOR REPORTED LATE /dmo/i_agencytp.
+    DATA reported TYPE RESPONSE FOR REPORTED LATE ZAI_DMOi_agencytp.
 
 
     " Execute
@@ -511,10 +511,10 @@ CLASS ltcl_sc_r_agency IMPLEMENTATION.
     " Verify
     event_test_environment->get_event( entity_name = agency_entity event_name = agency_event )->verify( )->is_raised_times( 1 ).
 
-    DATA event_payload_act TYPE TABLE FOR EVENT /dmo/i_agencytp~/dmo/agencyreviewcreated.
+    DATA event_payload_act TYPE TABLE FOR EVENT ZAI_DMOi_agencytp~ZAI_DMOagencyreviewcreated.
     event_payload_act = event_test_environment->get_event( entity_name  = agency_entity event_name = agency_event )->get_payload( )->*.
 
-    DATA event_payload_exp TYPE TABLE FOR EVENT /dmo/i_agencytp~/dmo/agencyreviewcreated.
+    DATA event_payload_exp TYPE TABLE FOR EVENT ZAI_DMOi_agencytp~ZAI_DMOagencyreviewcreated.
     event_payload_exp = VALUE #( ( agencyid        = '1'
                                    reviewid        = '1'
                                    rating          = '1'

@@ -3,7 +3,7 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <DDLS>
-    <DDLNAME>/DMO/R_AGENCYTP</DDLNAME>
+    <DDLNAME>ZAI_DMOR_AGENCYTP</DDLNAME>
     <DDLANGUAGE>E</DDLANGUAGE>
     <DDTEXT>Agency</DDTEXT>
     <SOURCE_TYPE>W</SOURCE_TYPE>

@@ -4,10 +4,10 @@
 @Metadata.allowExtensions: true
 
 @Search.searchable: true
-define view entity /DMO/C_Booking_U
-  as projection on /DMO/I_Booking_U
+define view entity ZAI_DMOC_Booking_U
+  as projection on ZAI_DMOI_Booking_U
 
-{      ///DMO/I_Booking_U
+{      //ZAI_DMOI_Booking_U
       @Search.defaultSearchElement: true
   key TravelID,
  
@@ -16,7 +16,7 @@ define view entity /DMO/C_Booking_U
 
       BookingDate,
 
-      @Consumption.valueHelpDefinition: [{entity: {name: '/DMO/I_Customer_StdVH', element: 'CustomerID' }, useForValidation: true}]
+      @Consumption.valueHelpDefinition: [{entity: {name: 'ZAI_DMOI_Customer_StdVH', element: 'CustomerID' }, useForValidation: true}]
       @Search.defaultSearchElement: true
       @ObjectModel.text.element: ['CustomerName']
       CustomerID,
@@ -24,7 +24,7 @@ define view entity /DMO/C_Booking_U
 
       @ObjectModel.text.element: ['CarrierName']
       @Consumption.valueHelpDefinition: [ 
-          { entity: {name: '/DMO/I_Flight_StdVH', element: 'AirlineID'},
+          { entity: {name: 'ZAI_DMOI_Flight_StdVH', element: 'AirlineID'},
             additionalBinding: [ { localElement: 'FlightDate',   element: 'FlightDate',   usage: #RESULT},
                                  { localElement: 'ConnectionID', element: 'ConnectionID', usage: #RESULT},
                                  { localElement: 'FlightPrice',  element: 'Price',        usage: #RESULT},
@@ -35,7 +35,7 @@ define view entity /DMO/C_Booking_U
       _Carrier.Name      as CarrierName,
 
       @Consumption.valueHelpDefinition: [ 
-          { entity: {name: '/DMO/I_Flight_StdVH', element: 'ConnectionID'},
+          { entity: {name: 'ZAI_DMOI_Flight_StdVH', element: 'ConnectionID'},
             additionalBinding: [ { localElement: 'FlightDate',   element: 'FlightDate',   usage: #RESULT},
                                  { localElement: 'AirlineID',    element: 'AirlineID',    usage: #FILTER_AND_RESULT},
                                  { localElement: 'FlightPrice',  element: 'Price',        usage: #RESULT},
@@ -46,7 +46,7 @@ define view entity /DMO/C_Booking_U
 
 
       @Consumption.valueHelpDefinition: [ 
-          { entity: {name: '/DMO/I_Flight_StdVH', element: 'FlightDate'},
+          { entity: {name: 'ZAI_DMOI_Flight_StdVH', element: 'FlightDate'},
             additionalBinding: [ { localElement: 'AirlineID',    element: 'AirlineID',    usage: #FILTER_AND_RESULT},
                                  { localElement: 'ConnectionID', element: 'ConnectionID', usage: #FILTER_AND_RESULT},
                                  { localElement: 'FlightPrice',  element: 'Price',        usage: #RESULT},
@@ -56,7 +56,7 @@ define view entity /DMO/C_Booking_U
       FlightDate,
 
       @Consumption.valueHelpDefinition: [ 
-          { entity: {name: '/DMO/I_Flight_StdVH', element: 'Price'},
+          { entity: {name: 'ZAI_DMOI_Flight_StdVH', element: 'Price'},
             additionalBinding: [ { localElement: 'FlightDate',   element: 'FlightDate',   usage: #FILTER_AND_RESULT},
                                  { localElement: 'AirlineID',    element: 'AirlineID',    usage: #FILTER_AND_RESULT},
                                  { localElement: 'ConnectionID', element: 'ConnectionID', usage: #FILTER_AND_RESULT},
@@ -70,9 +70,9 @@ define view entity /DMO/C_Booking_U
       
 //      LastChangedAt,
       /* Associations */
-      ///DMO/I_Booking_U
-      _Travel: redirected to parent /DMO/C_Travel_U,
-      _BookSupplement: redirected to composition child /DMO/C_BookingSupplement_U,
+      //ZAI_DMOI_Booking_U
+      _Travel: redirected to parent ZAI_DMOC_Travel_U,
+      _BookSupplement: redirected to composition child ZAI_DMOC_BookingSupplement_U,
       _Carrier,
       _Connection,
       _Customer

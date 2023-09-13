@@ -1,6 +1,6 @@
 extension for projection;
 
-extend behavior for /DMO/Agency
+extend behavior for ZAI_DMOAgency
 {
-  use action /DMO/createFromTemplate;
+  use action ZAI_DMOcreateFromTemplate;
 }

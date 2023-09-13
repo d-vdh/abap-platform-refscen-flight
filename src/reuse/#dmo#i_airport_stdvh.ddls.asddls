@@ -3,8 +3,8 @@
 
 @Search.searchable: true
 
-define view entity /DMO/I_Airport_StdVH
-  as select from /DMO/I_Airport as Airport
+define view entity ZAI_DMOI_Airport_StdVH
+  as select from ZAI_DMOI_Airport as Airport
 {
       @Search.defaultSearchElement: true
       @ObjectModel.text.element: ['Name']

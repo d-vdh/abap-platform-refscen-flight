@@ -8,16 +8,16 @@ PUBLIC SECTION.
   METHODS insert_test_data_in_doubles
             CHANGING co_environment TYPE REF TO if_cds_test_environment.
   METHODS get_agency_data
-            RETURNING VALUE(rs_agency) TYPE /dmo/agency.
+            RETURNING VALUE(rs_agency) TYPE ZAI_DMOagency.
   METHODS get_customer_data
-            RETURNING VALUE(rs_customer) TYPE /dmo/customer.
+            RETURNING VALUE(rs_customer) TYPE ZAI_DMOcustomer.
   METHODS get_carrier_data
-            RETURNING VALUE(rs_carrier) TYPE /dmo/carrier.
+            RETURNING VALUE(rs_carrier) TYPE ZAI_DMOcarrier.
 
 PRIVATE SECTION.
-   class-data gt_agency TYPE STANDARD TABLE OF /dmo/agency.
-   class-data gt_customer TYPE STANDARD TABLE OF /dmo/customer.
-   class-data gt_carrier TYPE STANDARD TABLE OF /dmo/carrier.
+   class-data gt_agency TYPE STANDARD TABLE OF ZAI_DMOagency.
+   class-data gt_customer TYPE STANDARD TABLE OF ZAI_DMOcustomer.
+   class-data gt_carrier TYPE STANDARD TABLE OF ZAI_DMOcarrier.
 
 ENDCLASS.
 

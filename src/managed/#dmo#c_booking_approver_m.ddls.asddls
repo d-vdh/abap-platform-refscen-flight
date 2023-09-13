@@ -10,8 +10,8 @@
 
 @Search.searchable: true
 
-define view entity /DMO/C_Booking_Approver_M
-  as projection on /DMO/I_Booking_M
+define view entity ZAI_DMOC_Booking_Approver_M
+  as projection on ZAI_DMOI_Booking_M
 {
       @UI.facet: [ { id:            'Booking',
                      purpose:       #STANDARD,
@@ -65,7 +65,7 @@ define view entity /DMO/C_Booking_Approver_M
       @UI: { lineItem:       [ { position: 90, importance: #HIGH, label: 'Status' } ],
              identification: [ { position: 90, label: 'Status' } ],
              textArrangement: #TEXT_ONLY }
-      @Consumption.valueHelpDefinition: [{ entity: { name: '/DMO/I_Booking_Status_VH', element: 'BookingStatus' }}]
+      @Consumption.valueHelpDefinition: [{ entity: { name: 'ZAI_DMOI_Booking_Status_VH', element: 'BookingStatus' }}]
       @ObjectModel.text.element: ['BookingStatusText']
       booking_status     as BookingStatus,
       
@@ -78,7 +78,7 @@ define view entity /DMO/C_Booking_Approver_M
 
 
       /* Associations */
-      _Travel : redirected to parent /DMO/C_Travel_Approver_M,
+      _Travel : redirected to parent ZAI_DMOC_Travel_Approver_M,
       _Customer,
       _Carrier,
       _BookingStatus

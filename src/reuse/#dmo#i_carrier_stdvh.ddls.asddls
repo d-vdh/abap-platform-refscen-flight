@@ -2,8 +2,8 @@
 @EndUserText.label: 'Carrier ValueHelp'
 @Search.searchable: true
 
-define view entity /DMO/I_Carrier_StdVH
-  as select from /DMO/I_Carrier
+define view entity ZAI_DMOI_Carrier_StdVH
+  as select from ZAI_DMOI_Carrier
 {
 
       @Search.defaultSearchElement: true

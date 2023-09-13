@@ -1,5 +1,5 @@
-"! @testing BDEF:/DMO/R_Travel_D
-CLASS /dmo/tc_travel_d_ktd_examples DEFINITION
+"! @testing BDEF:ZAI_DMOR_Travel_D
+CLASS ZAI_DMOtc_travel_d_ktd_examples DEFINITION
   PUBLIC
   FINAL
   FOR TESTING
@@ -9,13 +9,13 @@ CLASS /dmo/tc_travel_d_ktd_examples DEFINITION
 
     CONSTANTS:
       cid                         TYPE abp_behv_cid                 VALUE 'Test1',
-      existing_customerid         TYPE /dmo/i_travel_d-customerid   VALUE '123',
-      another_existing_customerid TYPE /dmo/i_travel_d-customerid   VALUE '321',
-      existing_agencyid           TYPE /dmo/i_travel_d-agencyid     VALUE '42',
-      another_existing_agencyid   TYPE /dmo/i_travel_d-agencyid     VALUE '24',
-      valid_date                  TYPE /dmo/i_travel_d-begindate    VALUE '20230101',
-      valid_date_after_being_date TYPE /dmo/i_travel_d-enddate      VALUE '20230204',
-      valid_currency_code         TYPE /dmo/i_travel_d-currencycode VALUE 'EUR',
+      existing_customerid         TYPE ZAI_DMOi_travel_d-customerid   VALUE '123',
+      another_existing_customerid TYPE ZAI_DMOi_travel_d-customerid   VALUE '321',
+      existing_agencyid           TYPE ZAI_DMOi_travel_d-agencyid     VALUE '42',
+      another_existing_agencyid   TYPE ZAI_DMOi_travel_d-agencyid     VALUE '24',
+      valid_date                  TYPE ZAI_DMOi_travel_d-begindate    VALUE '20230101',
+      valid_date_after_being_date TYPE ZAI_DMOi_travel_d-enddate      VALUE '20230204',
+      valid_currency_code         TYPE ZAI_DMOi_travel_d-currencycode VALUE 'EUR',
       existing_travel             TYPE sysuuid_x16 VALUE '66657221A8E4645C17002DF03754A1'.
 
     CLASS-DATA:
@@ -30,10 +30,10 @@ CLASS /dmo/tc_travel_d_ktd_examples DEFINITION
       class_teardown.
 
     DATA:
-      mapped      TYPE RESPONSE FOR MAPPED   EARLY /dmo/i_travel_d,
-      failed      TYPE RESPONSE FOR FAILED   EARLY /dmo/i_travel_d,
-      reported    TYPE RESPONSE FOR REPORTED EARLY /dmo/i_travel_d,
-      read_result TYPE TABLE FOR READ RESULT /dmo/i_travel_d\\travel.
+      mapped      TYPE RESPONSE FOR MAPPED   EARLY ZAI_DMOi_travel_d,
+      failed      TYPE RESPONSE FOR FAILED   EARLY ZAI_DMOi_travel_d,
+      reported    TYPE RESPONSE FOR REPORTED EARLY ZAI_DMOi_travel_d,
+      read_result TYPE TABLE FOR READ RESULT ZAI_DMOi_travel_d\\travel.
 
     METHODS:
       "! Read an instance using EML.
@@ -76,22 +76,22 @@ CLASS /dmo/tc_travel_d_ktd_examples DEFINITION
 ENDCLASS.
 
 
-CLASS /dmo/tc_travel_d_ktd_examples IMPLEMENTATION.
+CLASS ZAI_DMOtc_travel_d_ktd_examples IMPLEMENTATION.
 
   METHOD class_setup.
     cds_test_environment = cl_cds_test_environment=>create_for_multiple_cds(
                                VALUE #(
-                                   ( i_for_entity = '/DMO/R_Travel_D'            )
-                                   ( i_for_entity = '/DMO/R_Booking_D'           )
-                                   ( i_for_entity = '/DMO/R_BookingSupplement_D' )
+                                   ( i_for_entity = 'ZAI_DMOR_Travel_D'            )
+                                   ( i_for_entity = 'ZAI_DMOR_Booking_D'           )
+                                   ( i_for_entity = 'ZAI_DMOR_BookingSupplement_D' )
                                  )
                              ).
     cds_test_environment->enable_double_redirection(  ).
     sql_test_environment = cl_osql_test_environment=>create(
                                VALUE #(
                                    ( 'I_CURRENCY'    )
-                                   ( '/DMO/CUSTOMER' )
-                                   ( '/DMO/AGENCY'   )
+                                   ( 'ZAI_DMOCUSTOMER' )
+                                   ( 'ZAI_DMOAGENCY'   )
                                  )
                                ).
   ENDMETHOD.
@@ -99,7 +99,7 @@ CLASS /dmo/tc_travel_d_ktd_examples IMPLEMENTATION.
   METHOD setup.
     DATA:
       currencies       TYPE STANDARD TABLE OF i_currency,
-      travel_mock_data TYPE STANDARD TABLE OF /dmo/a_travel_d.
+      travel_mock_data TYPE STANDARD TABLE OF ZAI_DMOa_travel_d.
 
     cds_test_environment->clear_doubles( ).
     sql_test_environment->clear_doubles( ).
@@ -155,7 +155,7 @@ CLASS /dmo/tc_travel_d_ktd_examples IMPLEMENTATION.
 
 
   METHOD create_via_eml.
-    MODIFY ENTITIES OF /dmo/i_travel_d
+    MODIFY ENTITIES OF ZAI_DMOi_travel_d
       ENTITY travel
         CREATE
           FIELDS ( customerid agencyid begindate enddate currencycode )
@@ -175,7 +175,7 @@ CLASS /dmo/tc_travel_d_ktd_examples IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD action_accept_travel_via_eml.
-    MODIFY ENTITIES OF /dmo/i_travel_d
+    MODIFY ENTITIES OF ZAI_DMOi_travel_d
       ENTITY travel
         EXECUTE accepttravel FROM VALUE #(
             (
@@ -189,7 +189,7 @@ CLASS /dmo/tc_travel_d_ktd_examples IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD delete_via_eml.
-    MODIFY ENTITIES OF /dmo/i_travel_d
+    MODIFY ENTITIES OF ZAI_DMOi_travel_d
       ENTITY travel
         DELETE FROM VALUE #(
             (
@@ -202,7 +202,7 @@ CLASS /dmo/tc_travel_d_ktd_examples IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD read_via_eml.
-    READ ENTITIES OF /dmo/i_travel_d
+    READ ENTITIES OF ZAI_DMOi_travel_d
       ENTITY travel
           FIELDS ( customerid agencyid begindate enddate overallstatus )
           WITH VALUE #(
@@ -302,7 +302,7 @@ CLASS /dmo/tc_travel_d_ktd_examples IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD updating_customer_via_eml.
-    MODIFY ENTITIES OF /dmo/i_travel_d
+    MODIFY ENTITIES OF ZAI_DMOi_travel_d
       ENTITY travel
         UPDATE
           FIELDS ( customerid )
@@ -339,7 +339,7 @@ CLASS /dmo/tc_travel_d_ktd_examples IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD updating_agency_via_eml.
-    MODIFY ENTITIES OF /dmo/i_travel_d
+    MODIFY ENTITIES OF ZAI_DMOi_travel_d
       ENTITY travel
         UPDATE
           FIELDS ( agencyid )

@@ -2,8 +2,8 @@
 @EndUserText.label: 'Customer ValueHelp'
 @Search.searchable: true
 
-define view entity /DMO/I_Customer_StdVH
-  as select from /DMO/I_Customer
+define view entity ZAI_DMOI_Customer_StdVH
+  as select from ZAI_DMOI_Customer
 {
 
       @UI.lineItem: [{ position: 10, importance: #HIGH }]

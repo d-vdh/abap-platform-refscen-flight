@@ -6,9 +6,9 @@
 
 @Search.searchable: true
 
-define root view entity /DMO/C_Travel_Approver_M
+define root view entity ZAI_DMOC_Travel_Approver_M
   provider contract transactional_query
-  as projection on /DMO/I_Travel_M
+  as projection on ZAI_DMOI_Travel_M
 {
       @UI.facet: [ { id:              'Travel',
                      purpose:         #STANDARD,
@@ -32,7 +32,7 @@ define root view entity /DMO/C_Travel_Approver_M
           lineItem:       [ { position: 20, importance: #HIGH } ],
           identification: [ { position: 20 } ],
           selectionField: [ { position: 20 } ] }
-      @Consumption.valueHelpDefinition: [{ entity : {name: '/DMO/I_Agency_StdVH', element: 'AgencyID'  }, useForValidation: true }]
+      @Consumption.valueHelpDefinition: [{ entity : {name: 'ZAI_DMOI_Agency_StdVH', element: 'AgencyID'  }, useForValidation: true }]
       @ObjectModel.text.element: ['AgencyName']
       @Search.defaultSearchElement: true
       agency_id          as AgencyID,
@@ -42,7 +42,7 @@ define root view entity /DMO/C_Travel_Approver_M
           lineItem:       [ { position: 30, importance: #HIGH } ],
           identification: [ { position: 30 } ],
           selectionField: [ { position: 30 } ] }
-      @Consumption.valueHelpDefinition: [{entity: {name: '/DMO/I_Customer_StdVH', element: 'CustomerID' }, useForValidation: true}]
+      @Consumption.valueHelpDefinition: [{entity: {name: 'ZAI_DMOI_Customer_StdVH', element: 'CustomerID' }, useForValidation: true}]
       @ObjectModel.text.element: ['CustomerName']
       @Search.defaultSearchElement: true
       customer_id        as CustomerID,
@@ -81,7 +81,7 @@ define root view entity /DMO/C_Travel_Approver_M
           textArrangement: #TEXT_ONLY,
           selectionField: [ { position: 40 } ] }
       @EndUserText.label: 'Overall Status'
-      @Consumption.valueHelpDefinition: [{ entity: { name: '/DMO/I_Overall_Status_VH', element: 'OverallStatus' }}]
+      @Consumption.valueHelpDefinition: [{ entity: { name: 'ZAI_DMOI_Overall_Status_VH', element: 'OverallStatus' }}]
       @ObjectModel.text.element: ['OverallStatusText'] 
       overall_status     as OverallStatus,
       
@@ -99,7 +99,7 @@ define root view entity /DMO/C_Travel_Approver_M
 
 
       /* Associations */
-      _Booking : redirected to composition child /DMO/C_Booking_Approver_M,
+      _Booking : redirected to composition child ZAI_DMOC_Booking_Approver_M,
       _Agency,
       _Customer,
       _OverallStatus

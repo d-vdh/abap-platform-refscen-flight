@@ -12,18 +12,18 @@ ENDCLASS.
 CLASS lhc_bookingsupplement IMPLEMENTATION.
 
   METHOD calculateTotalPrice.
-    DATA: travel_ids TYPE STANDARD TABLE OF /dmo/i_travel_m WITH UNIQUE HASHED KEY key COMPONENTS travel_id.
+    DATA: travel_ids TYPE STANDARD TABLE OF ZAI_DMOi_travel_m WITH UNIQUE HASHED KEY key COMPONENTS travel_id.
 
     travel_ids = CORRESPONDING #( keys DISCARDING DUPLICATES MAPPING travel_id = travel_id ).
 
-    MODIFY ENTITIES OF /DMO/I_Travel_M IN LOCAL MODE
+    MODIFY ENTITIES OF ZAI_DMOI_Travel_M IN LOCAL MODE
       ENTITY Travel
         EXECUTE ReCalcTotalPrice
         FROM CORRESPONDING #( travel_ids ).
   ENDMETHOD.
 
   METHOD validate_currencycode.
-    READ ENTITIES OF /DMO/I_Travel_M IN LOCAL MODE
+    READ ENTITIES OF ZAI_DMOI_Travel_M IN LOCAL MODE
       ENTITY booksuppl
         FIELDS ( currency_code )
         WITH CORRESPONDING #( keys )
@@ -47,8 +47,8 @@ CLASS lhc_bookingsupplement IMPLEMENTATION.
         " Raise message for empty Currency
         APPEND VALUE #( %tky                   = booking_supplement-%tky ) TO failed-booksuppl.
         APPEND VALUE #( %tky                   = booking_supplement-%tky
-                        %msg                   = NEW /dmo/cm_flight_messages(
-                                                        textid    = /dmo/cm_flight_messages=>currency_required
+                        %msg                   = NEW ZAI_DMOcm_flight_messages(
+                                                        textid    = ZAI_DMOcm_flight_messages=>currency_required
                                                         severity  = if_abap_behv_message=>severity-error )
                         %element-currency_code = if_abap_behv=>mk-on
                         %path                  = VALUE #( travel-travel_id    = booking_supplement-travel_id
@@ -58,8 +58,8 @@ CLASS lhc_bookingsupplement IMPLEMENTATION.
         " Raise message for not existing Currency
         APPEND VALUE #( %tky                   = booking_supplement-%tky ) TO failed-booksuppl.
         APPEND VALUE #( %tky                   = booking_supplement-%tky
-                        %msg                   = NEW /dmo/cm_flight_messages(
-                                                        textid        = /dmo/cm_flight_messages=>currency_not_existing
+                        %msg                   = NEW ZAI_DMOcm_flight_messages(
+                                                        textid        = ZAI_DMOcm_flight_messages=>currency_not_existing
                                                         severity      = if_abap_behv_message=>severity-error
                                                         currency_code = booking_supplement-currency_code )
                         %element-currency_code = if_abap_behv=>mk-on

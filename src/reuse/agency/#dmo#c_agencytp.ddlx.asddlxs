@@ -13,7 +13,7 @@
          }]
      }
 
-annotate view /DMO/C_AgencyTP with
+annotate view ZAI_DMOC_AgencyTP with
 {
   @UI.facet: [
       { 

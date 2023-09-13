@@ -1,4 +1,4 @@
-managed implementation in class /dmo/bp_r_agencytp unique;
+managed implementation in class ZAI_DMObp_r_agencytp unique;
 strict ( 2 );
 with draft;
 extensible
@@ -8,9 +8,9 @@ extensible
   with validations on save;
   with additional save; }
 
-define behavior for /DMO/R_AgencyTP alias /DMO/Agency
-persistent table /dmo/agency
-draft table /dmo/agency_d query /DMO/R_AgencyDraft
+define behavior for ZAI_DMOR_AgencyTP alias ZAI_DMOAgency
+persistent table ZAI_DMOagency
+draft table ZAI_DMOagency_d query ZAI_DMOR_AgencyDraft
 lock master
 total etag LastChangedAt
 authorization master ( global )
@@ -31,21 +31,21 @@ extensible
   draft action Discard;
 
   // Validations for mandatory fields
-  validation /DMO/validateEMailAddress on save { create; field EMailAddress; }
-  validation /DMO/validateCountryCode on save { create; field CountryCode; }
-  validation /DMO/validateName on save { create; field Name; }
+  validation ZAI_DMOvalidateEMailAddress on save { create; field EMailAddress; }
+  validation ZAI_DMOvalidateCountryCode on save { create; field CountryCode; }
+  validation ZAI_DMOvalidateName on save { create; field Name; }
 
-  validation /DMO/validateLargeObject on save { create; field Attachment; field MimeType; field Filename; }
+  validation ZAI_DMOvalidateLargeObject on save { create; field Attachment; field MimeType; field Filename; }
 
   draft determine action Prepare extensible
   {
-    validation /DMO/validateEMailAddress;
-    validation /DMO/validateCountryCode;
-    validation /DMO/validateName;
-    validation /DMO/validateLargeObject;
+    validation ZAI_DMOvalidateEMailAddress;
+    validation ZAI_DMOvalidateCountryCode;
+    validation ZAI_DMOvalidateName;
+    validation ZAI_DMOvalidateLargeObject;
   }
 
-  mapping for /dmo/agency
+  mapping for ZAI_DMOagency
     {
       AgencyId           = agency_id;
       Name               = name;

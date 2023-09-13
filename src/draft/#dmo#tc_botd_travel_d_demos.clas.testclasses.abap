@@ -6,12 +6,12 @@
 "! <ul>
 "! <li>Operation names in test method names, signify EML operations in CUT (Code Under Test).</li>
 "! <li>Involved instances are mostly draft instances i.e. with %is_draft field marked with if_abap_behv=>mk-on.</li>
-"! <li>The dependent BO is /dmo/r_travel_d and the code under test is its consumer {@link /dmo/tc_travel_d_bo_consumer}</li>
+"! <li>The dependent BO is ZAI_DMOr_travel_d and the code under test is its consumer {@link ZAI_DMOtc_travel_d_bo_consumer}</li>
 "! <li>The expected input and output should be configured on double via {@link if_botd_mockemlapi_test_double.Meth:configure_call} API.</li>
 "! <li>The expected input structure of EML should be built using {@link cl_botd_mockemlapi_bldrfactory}~{@link cl_botd_mockemlapi_bldrfactory.Meth:get_input_config_builder}.</li>
 "! <li>The expected output structure of EML should be built using {@link cl_botd_mockemlapi_bldrfactory}~{@link cl_botd_mockemlapi_bldrfactory.Meth:get_output_config_builder}.</li>
 "! </ul>
-"! For examples with isolating EML dependencies on active instances, refer to the class {@link /dmo/tc_botd_travel_m_demos}.
+"! For examples with isolating EML dependencies on active instances, refer to the class {@link ZAI_DMOtc_botd_travel_m_demos}.
 "! Cases with specific examples requiring draft instances of a draft enabled BO will be demonstrated here."
 class ltcl_using_mockemlapi_variant definition final for testing
   duration short
@@ -40,17 +40,17 @@ class ltcl_using_mockemlapi_variant definition final for testing
     class-methods class_teardown.
     class-data double type ref to if_botd_mockemlapi_test_double.
     class-data environment type ref to if_botd_mockemlapi_bo_test_env.
-    class-data cut type ref to /dmo/tc_travel_d_bo_consumer.
+    class-data cut type ref to ZAI_DMOtc_travel_d_bo_consumer.
 
 endclass.
 
 class ltcl_using_mockemlapi_variant implementation.
 
   method class_setup.
-  "Create doubles for BO '/DMO/R_TRAVEL_D'.
+  "Create doubles for BO 'ZAI_DMOR_TRAVEL_D'.
   "a. Prepare environment configuration with bdef dependencies for which doubles are to be created
-  data(env_config) = cl_botd_mockemlapi_bo_test_env=>prepare_environment_config(  )->set_bdef_dependencies( bdef_dependencies = value #( ( '/DMO/R_TRAVEL_D' ) )
-                                                                                  )->handle_draft( bdef_dependencies = value #( ( '/DMO/R_TRAVEL_D' ) ) ).
+  data(env_config) = cl_botd_mockemlapi_bo_test_env=>prepare_environment_config(  )->set_bdef_dependencies( bdef_dependencies = value #( ( 'ZAI_DMOR_TRAVEL_D' ) )
+                                                                                  )->handle_draft( bdef_dependencies = value #( ( 'ZAI_DMOR_TRAVEL_D' ) ) ).
 
   "b. Create the test doubles for bdefs from the environment configuration and get the environment instance
   environment = cl_botd_mockemlapi_bo_test_env=>create( environment_config = env_config ).
@@ -79,7 +79,7 @@ class ltcl_using_mockemlapi_variant implementation.
 
   "Step 1: Setup test data instances for all operations on all entities in Modify EML.
   "For Create on Travel entity
-   data create_travel_instances type table for create /DMO/R_TRAVEL_D.
+   data create_travel_instances type table for create ZAI_DMOR_TRAVEL_D.
    create_travel_instances = value #( ( %cid = 'Travel_987' %is_draft = if_abap_behv=>mk-on AgencyID = '000111' CustomerID = '000006' description = 'Travel_987' %control-AgencyID = if_abap_behv=>mk-on
                                                                                                                      %control-CustomerID = if_abap_behv=>mk-on
                                                                                                                      %control-description = if_abap_behv=>mk-on )
@@ -89,8 +89,8 @@ class ltcl_using_mockemlapi_variant implementation.
                                       "%control structure is ignored in MOCKEMLAPI variant, while matching the EML input with configured input.
 
   "Step 2: Define and set up the response structures to be returned for Modify EML in CUT
-    data mapped type response for mapped early /DMO/R_TRAVEL_D.
-    data failed type response for failed early /DMO/R_TRAVEL_D.
+    data mapped type response for mapped early ZAI_DMOR_TRAVEL_D.
+    data failed type response for failed early ZAI_DMOR_TRAVEL_D.
 
     "Setup mapped and failed according to the response to be returned
     mapped-travel = value #( ( TravelUUID = '987'  %cid = 'Travel_987' %is_draft = if_abap_behv=>mk-on ) ). "Implies that a travel with travelUUid 987 was created for 1st instance
@@ -103,7 +103,7 @@ class ltcl_using_mockemlapi_variant implementation.
 
     "Create input for all entity parts and set instances for all operations on that entity
     "For travel entity
-    data(eml_travel_input) = input_config_builder_4_modify->build_entity_part( '/DMO/R_TRAVEL_D'
+    data(eml_travel_input) = input_config_builder_4_modify->build_entity_part( 'ZAI_DMOR_TRAVEL_D'
                                    )->set_instances_for_create( create_travel_instances ).
 
     "Input configuration for EML
@@ -114,7 +114,7 @@ class ltcl_using_mockemlapi_variant implementation.
     data(output) = output_config_builder_4_modify->build_output_for_eml( )->set_mapped( mapped )->set_failed( failed ).
 
   "Step 4: Configure the Modify EML in CUT via configure_call API on the double.
-    double =  environment->get_test_double( '/DMO/R_TRAVEL_D' ).
+    double =  environment->get_test_double( 'ZAI_DMOR_TRAVEL_D' ).
     double->configure_call(  )->for_modify(  )->when_input( input )->then_set_output( output ).
 
   """""""""""""""""""""""""""CODE UNDER TEST"""""""""""""""""""""""""""""""""""""""
@@ -155,7 +155,7 @@ class ltcl_using_mockemlapi_variant implementation.
   "Step 4: Configure the Modify EML via configure_call API on the double.
 
   "Step 1: Setup test data instances for all operations on all entities in Modify EML (Here only create_ba ).
-   data cba_booking_instances type table for create /DMO/R_TRAVEL_D\_Booking.
+   data cba_booking_instances type table for create ZAI_DMOR_TRAVEL_D\_Booking.
    cba_booking_instances = value #( ( TravelUUID = '987' %is_draft = if_abap_behv=>mk-on
                                       %target = value #( ( %is_draft = if_abap_behv=>mk-on %cid = 'Travel_987_Booking_001' AirlineID = '000111' CustomerID = '000006' FlightDate = cl_abap_context_info=>get_system_date( ) + 10 )
                                                          ( %is_draft = if_abap_behv=>mk-on %cid = 'Travel_987_Booking_002' AirlineID = '000112' CustomerID = '000007' FlightDate = cl_abap_context_info=>get_system_date( ) + 10 ) )  )
@@ -165,8 +165,8 @@ class ltcl_using_mockemlapi_variant implementation.
                                      ) ). "Creation of booking for TravelUUID 988 should fail, assuming TravelUUID 988 did not exist
 
   "Step 2: Define and set up the response structures to be returned for Modify EML in CUT
-    data mapped type response for mapped early /DMO/R_TRAVEL_D.
-    data failed type response for failed early /DMO/R_TRAVEL_D.
+    data mapped type response for mapped early ZAI_DMOR_TRAVEL_D.
+    data failed type response for failed early ZAI_DMOR_TRAVEL_D.
 
     "Setup mapped and failed according to the response to be returned
     mapped-booking = value #( ( %cid = 'Travel_987_Booking_001' BookingUUID = '001' %is_draft = if_abap_behv=>mk-on ) ( %cid = 'Travel_987_Booking_002' BookingUUID = '002' %is_draft = if_abap_behv=>mk-on ) ).
@@ -181,7 +181,7 @@ class ltcl_using_mockemlapi_variant implementation.
 
     "Create input for all entity parts
     "For travel entity
-    data(eml_travel_input) = input_config_builder_4_modify->build_entity_part( '/DMO/R_TRAVEL_D'   "can accept the entity name or alias name
+    data(eml_travel_input) = input_config_builder_4_modify->build_entity_part( 'ZAI_DMOR_TRAVEL_D'   "can accept the entity name or alias name
                                    )->set_instances_for_create_ba( cba_booking_instances ).
 
     "Input configuration for EML
@@ -192,7 +192,7 @@ class ltcl_using_mockemlapi_variant implementation.
     data(output) = output_config_builder_4_modify->build_output_for_eml( )->set_mapped( mapped )->set_failed( failed ).
 
   "Step 4: Configure the Modify EML via configure_call API on the double.
-    double =  environment->get_test_double( '/DMO/R_TRAVEL_D' ).
+    double =  environment->get_test_double( 'ZAI_DMOR_TRAVEL_D' ).
     double->configure_call(  )->for_modify(  )->when_input( input )->then_set_output( output ).
 
   """""""""""""""""""""""""""CODE UNDER TEST"""""""""""""""""""""""""""""""""""""""
@@ -241,12 +241,12 @@ class ltcl_using_mockemlapi_variant implementation.
   "*************Configure first EML in Code under test*************
   "Step 1: Setup test data instances for all operations on all entities in Modify EML.
   "For Create on Travel entity
-   data create_travel_instances type table for create /DMO/R_TRAVEL_D.
+   data create_travel_instances type table for create ZAI_DMOR_TRAVEL_D.
    create_travel_instances = value #( ( %cid = 'Travel_987' CustomerID = '000006' description = 'Travel_987'  %control-CustomerID = if_abap_behv=>mk-on %control-description = if_abap_behv=>mk-on %is_draft = if_abap_behv=>mk-on )
                                       ( %cid = 'Travel_988' CustomerID = '000007' description = 'Travel_988' %is_draft = if_abap_behv=>mk-on ) ).
 
   "For Creating Booking by Association on Travel entity
-   data cba_booking_instances type table for create /DMO/R_TRAVEL_D\_Booking.
+   data cba_booking_instances type table for create ZAI_DMOR_TRAVEL_D\_Booking.
    cba_booking_instances = value #( ( %cid_ref = 'Travel_987' TravelUUID = '987' %is_draft = if_abap_behv=>mk-on
                                       %target = value #( (  %cid = 'Travel_987_Booking_001' %is_draft = if_abap_behv=>mk-on
                                                             connectionid = 'C1' %control-connectionid = if_abap_behv=>mk-on
@@ -262,14 +262,14 @@ class ltcl_using_mockemlapi_variant implementation.
                                                                                                       "Creation of bookings for TravelUUID 987 should pass
                                      ).
   "For Update on Booking entity
-   data update_booking_instances type table for update /DMO/R_TRAVEL_D\\booking.
+   data update_booking_instances type table for update ZAI_DMOR_TRAVEL_D\\booking.
    update_booking_instances = value #( ( TravelUUID = '987' BookingUUID = '001' flightprice = 100 %control-flightprice = if_abap_behv=>mk-on %is_draft = if_abap_behv=>mk-on )
                                        ( TravelUUID = '988' BookingUUID = '003' flightprice = 200 %control-flightprice = if_abap_behv=>mk-on %is_draft = if_abap_behv=>mk-on ) ).
 
 
   "Step 2: Define and set up the response structures to be returned for Modify EML in CUT
-    data mapped type response for mapped early /DMO/R_TRAVEL_D.
-    data failed type response for failed early /DMO/R_TRAVEL_D.
+    data mapped type response for mapped early ZAI_DMOR_TRAVEL_D.
+    data failed type response for failed early ZAI_DMOR_TRAVEL_D.
 
     "Setup mapped and failed according to the response to be returned
     "For create travel instances
@@ -289,7 +289,7 @@ class ltcl_using_mockemlapi_variant implementation.
 
     "Create input for all entity parts
     "For travel entity
-    data(eml_travel_input) = input_config_builder_4_modify->build_entity_part( '/DMO/R_TRAVEL_D'   "can accept the entity name
+    data(eml_travel_input) = input_config_builder_4_modify->build_entity_part( 'ZAI_DMOR_TRAVEL_D'   "can accept the entity name
                                    )->set_instances_for_create( create_travel_instances
                                    )->set_instances_for_create_ba( cba_booking_instances ).
 
@@ -305,17 +305,17 @@ class ltcl_using_mockemlapi_variant implementation.
     data(output) = output_config_builder_4_modify->build_output_for_eml( )->set_mapped( mapped )->set_failed( failed ).
 
   "Step 4: Configure the Modify EML via configure_call API on the double.
-    double =  environment->get_test_double( '/DMO/R_TRAVEL_D' ).
+    double =  environment->get_test_double( 'ZAI_DMOR_TRAVEL_D' ).
     double->configure_call(  )->for_modify(  )->when_input( input )->then_set_output( output ).
 
 
   "*************Configure second EML in Code under test*************
     "create travel instances for 2nd EML
-    data create_travel_instances2 type table for create /DMO/R_TRAVEL_D.
+    data create_travel_instances2 type table for create ZAI_DMOR_TRAVEL_D.
     create_travel_instances2 = value #( ( %cid = 'Travel_987' CustomerID = '000006' description = 'Travel_987' %is_draft = if_abap_behv=>mk-on ) ).
 
     "travel input part for 2nd EML
-    data(eml_travel_input2) = input_config_builder_4_modify->build_entity_part( '/DMO/R_TRAVEL_D'   "can accept the entity name
+    data(eml_travel_input2) = input_config_builder_4_modify->build_entity_part( 'ZAI_DMOR_TRAVEL_D'   "can accept the entity name
                                    )->set_instances_for_create( create_travel_instances2
                                    )->set_instances_for_create_ba( cba_booking_instances ).
 
@@ -423,7 +423,7 @@ class ltcl_using_mockemlapi_variant implementation.
   "Input configuration for verification
   data(verification_input) = input_config_builder_4_modify->build_input_for_eml(
                                                                 )->add_entity_part(
-                                                                     input_config_builder_4_modify->build_entity_part( '/DMO/R_TRAVEL_D'
+                                                                     input_config_builder_4_modify->build_entity_part( 'ZAI_DMOR_TRAVEL_D'
                                                                             )->set_instances_for_create( create_travel_instances2 ) ).
 
 "  double->verify( )->modify( verification_input )->is_called_times( times = 2 ).
@@ -448,13 +448,13 @@ class ltcl_using_mockemlapi_variant implementation.
 
   "Step 1: Setup test data instances for all operations on all entities in Modify EML.
   "For Create on Travel entity
-   data create_travel_instances type table for create /DMO/R_TRAVEL_D.
+   data create_travel_instances type table for create ZAI_DMOR_TRAVEL_D.
    create_travel_instances = value #( (  %cid = 'Travel_987' AgencyID = '000111' CustomerID = '000006' description = 'Travel_987' %is_draft = if_abap_behv=>mk-on  ) ).
 
 
   "Step 2: Define and set up the response structures to be returned for Modify EML in CUT
-    data mapped type response for mapped early /DMO/R_TRAVEL_D.
-    data failed type response for failed early /DMO/R_TRAVEL_D.
+    data mapped type response for mapped early ZAI_DMOR_TRAVEL_D.
+    data failed type response for failed early ZAI_DMOR_TRAVEL_D.
 
   "Fill the expected response in the response structure.
     failed-travel = value #( ( %cid = 'Travel_987' %fail-cause = if_abap_behv=>cause-unauthorized %is_draft = if_abap_behv=>mk-on ) ).
@@ -466,7 +466,7 @@ class ltcl_using_mockemlapi_variant implementation.
 
     "Create input for all entity parts and set instances for all operations on that entity
     "For travel entity
-   data(travel_part) = input_config_builder_4_modify->build_entity_part( '/DMO/R_TRAVEL_D'   "can accept the entity name
+   data(travel_part) = input_config_builder_4_modify->build_entity_part( 'ZAI_DMOR_TRAVEL_D'   "can accept the entity name
                                    )->set_instances_for_create( create_travel_instances ).
 
     "Input configuration for EML
@@ -477,7 +477,7 @@ class ltcl_using_mockemlapi_variant implementation.
     data(output_2) = output_config_builder_4_modify->build_output_for_eml( )->set_failed( failed ).
 
   "Step 4: Configure the Modify EML via configure_call API on the double.
-    double =  environment->get_test_double( '/DMO/R_TRAVEL_D' ).
+    double =  environment->get_test_double( 'ZAI_DMOR_TRAVEL_D' ).
     double->configure_call(  )->for_modify(  )->when_input( input )->then_set_output( output_1 )->then_set_output( output_2 ).
 
 
@@ -544,13 +544,13 @@ class ltcl_using_mockemlapi_variant implementation.
 
   "Step 1: Setup test data instances for all operations on all entities in Modify EML (Here only update ).
   "For Update on Travel entity
-   data update_travel_instances type table for update /DMO/R_TRAVEL_D.
+   data update_travel_instances type table for update ZAI_DMOR_TRAVEL_D.
    update_travel_instances = value #( ( TravelUUID = '987'  description = 'Travel_987_updated' %control-description = if_abap_behv=>mk-on
                                         %is_draft = if_abap_behv=>mk-on  ) )."Should pass
 
   "Step 2: Define and set up the response structures to be returned for Modify EML in CUT
-    data mapped type response for mapped early /DMO/R_TRAVEL_D.
-    data failed type response for failed early /DMO/R_TRAVEL_D.
+    data mapped type response for mapped early ZAI_DMOR_TRAVEL_D.
+    data failed type response for failed early ZAI_DMOR_TRAVEL_D.
 
     "Setup mapped and failed according to the response to be returned
     mapped-travel = value #( ( TravelUUID = '987'  %is_draft = if_abap_behv=>mk-on  ) ). "Implies that TravelUUID 987 was updated
@@ -563,7 +563,7 @@ class ltcl_using_mockemlapi_variant implementation.
 
     "Create input for all entity parts and set instances for all operations on that entity
     "For travel entity
-    data(eml_travel_input) = input_config_builder_4_modify->build_entity_part( '/DMO/R_TRAVEL_D'
+    data(eml_travel_input) = input_config_builder_4_modify->build_entity_part( 'ZAI_DMOR_TRAVEL_D'
                                    )->set_instances_for_update( update_travel_instances ).
 
     "Input configuration for EML
@@ -575,7 +575,7 @@ class ltcl_using_mockemlapi_variant implementation.
     data(update_output_2) = output_config_builder_4_modify->build_output_for_eml( )->set_mapped( mapped ).
 
   "Step 4: Configure the Modify EML in CUT via configure_call API on the double.
-    double =  environment->get_test_double( '/DMO/R_TRAVEL_D' ).
+    double =  environment->get_test_double( 'ZAI_DMOR_TRAVEL_D' ).
     double->configure_call(
          )->for_modify(
          )->when_input( update_input
@@ -688,8 +688,8 @@ class ltcl_using_mockemlapi_variant implementation.
   "Step 3: Configure the Modify EML via configure_call and "ignore_input" API on the double.
 
   "Step 1: Define and set up the response structures to be returned for Modify EML in CUT
-    data mapped type response for mapped early /DMO/R_TRAVEL_D.
-    data failed type response for failed early /DMO/R_TRAVEL_D.
+    data mapped type response for mapped early ZAI_DMOR_TRAVEL_D.
+    data failed type response for failed early ZAI_DMOR_TRAVEL_D.
 
     "Setup mapped and failed according to the response to be returned
     mapped-travel = value #( ( TravelUUID = '987' %is_draft = if_abap_behv=>mk-on ) ).
@@ -703,15 +703,15 @@ class ltcl_using_mockemlapi_variant implementation.
     data(output) = output_config_builder_4_modify->build_output_for_eml( )->set_mapped( mapped )->set_failed( failed ).
 
   "Step 3: Configure the Modify EML via configure_call and "ignore_input" API on the double.
-    double =  environment->get_test_double( '/DMO/R_TRAVEL_D' ).
+    double =  environment->get_test_double( 'ZAI_DMOR_TRAVEL_D' ).
     double->configure_call(  )->for_modify(  )->ignore_input(  )->then_set_output( output ).
 
   """""""""""""""""""""""""""CODE UNDER TEST"""""""""""""""""""""""""""""""""""""""
-   data create_travel_instances type table for create /DMO/R_TRAVEL_D.
+   data create_travel_instances type table for create ZAI_DMOR_TRAVEL_D.
    create_travel_instances = value #( ( %cid = 'Travel_987' CustomerID = '000006' description = 'Travel_987' %is_draft = if_abap_behv=>mk-on ) ).
 
   "For Creating Booking by Association on Travel entity
-   data cba_booking_instances type table for create /DMO/R_TRAVEL_D\_Booking.
+   data cba_booking_instances type table for create ZAI_DMOR_TRAVEL_D\_Booking.
    cba_booking_instances = value #( ( %cid_ref = 'Travel_987' TravelUUID = '987' %is_draft = if_abap_behv=>mk-on
                                       %target = value #( (  %cid = 'Travel_987_Booking_001' %is_draft = if_abap_behv=>mk-on
                                                             connectionid = 'C1' %control-connectionid = if_abap_behv=>mk-on
@@ -722,7 +722,7 @@ class ltcl_using_mockemlapi_variant implementation.
                                                                                                       "Creation of bookings for TravelUUID 987 should pass
                                     ) ).
   "For Update on Booking entity
-   data update_booking_instances type table for update /DMO/R_TRAVEL_D\\booking.
+   data update_booking_instances type table for update ZAI_DMOR_TRAVEL_D\\booking.
    update_booking_instances = value #( ( TravelUUID = '988' BookingUUID = '003' flightprice = 200 %control-flightprice = if_abap_behv=>mk-on %is_draft = if_abap_behv=>mk-on ) ).
 
     cut->mod_eml_w_mult_ents_nd_ops(
@@ -765,21 +765,21 @@ class ltcl_using_mockemlapi_variant implementation.
 
   "Step 1: Setup test data instances for all operations on all entities in Modify EML.
   "For accept travel action on Travel entity
-   data accept_travel_act_insts type table for action import /DMO/R_TRAVEL_D~acceptTravel.
+   data accept_travel_act_insts type table for action import ZAI_DMOR_TRAVEL_D~acceptTravel.
    accept_travel_act_insts = value #( ( TravelUUID = '987' %is_draft = if_abap_behv=>mk-on ) "Should pass
                                       ( TravelUUID = '988' %is_draft = if_abap_behv=>mk-on ) ).
                                                                                 "Should fail, assuming Travel 988 does not exist
 
   "For deduct discount action on Travel entity
-   data deduct_discount_act_insts type table for action import /DMO/R_TRAVEL_D~deductDiscount.
+   data deduct_discount_act_insts type table for action import ZAI_DMOR_TRAVEL_D~deductDiscount.
    deduct_discount_act_insts = value #( ( TravelUUID = '987' %param-discount_percent = 10 %is_draft = if_abap_behv=>mk-on ) )."Should pass
 
   "Step 2: Define and set up the response structures to be returned for Modify EML in CUT
-    data mapped_accept_travel type response for mapped early /DMO/R_TRAVEL_D.
-    data mapped_deductDiscount type response for mapped early /DMO/R_TRAVEL_D.
-    data failed type response for failed early /DMO/R_TRAVEL_D.
-    data result_accept_travel type table for action result /DMO/R_TRAVEL_D~acceptTravel.
-    data result_deductDiscount type table for action result /DMO/R_TRAVEL_D~deductDiscount.
+    data mapped_accept_travel type response for mapped early ZAI_DMOR_TRAVEL_D.
+    data mapped_deductDiscount type response for mapped early ZAI_DMOR_TRAVEL_D.
+    data failed type response for failed early ZAI_DMOR_TRAVEL_D.
+    data result_accept_travel type table for action result ZAI_DMOR_TRAVEL_D~acceptTravel.
+    data result_deductDiscount type table for action result ZAI_DMOR_TRAVEL_D~deductDiscount.
 
     "Setup mapped and failed according to the response to be returned
     mapped_accept_travel-travel = value #( ( TravelUUID = '987'  %is_draft = if_abap_behv=>mk-on ) ). "Implies that action accept_travel on travelUUid 987 was successful
@@ -797,7 +797,7 @@ class ltcl_using_mockemlapi_variant implementation.
 
     "Create input for all entity parts and set instances for all operations on that entity
     "For travel entity
-    data(eml_travel_input) = input_config_builder_4_modify->build_entity_part( '/DMO/R_TRAVEL_D'
+    data(eml_travel_input) = input_config_builder_4_modify->build_entity_part( 'ZAI_DMOR_TRAVEL_D'
                                    )->set_instances_for_action( instances = accept_travel_act_insts ).
 
     "Input configuration for EML
@@ -808,11 +808,11 @@ class ltcl_using_mockemlapi_variant implementation.
     data(output) = output_config_builder_4_modify->build_output_for_eml( )->set_mapped( mapped_accept_travel )->set_failed( failed )->set_result_for_action( result = result_accept_travel ).
 
   "Step 4: Configure the Modify EML in CUT via configure_call API on the double for Action accept Travel.
-    double =  environment->get_test_double( '/DMO/R_TRAVEL_D' ).
+    double =  environment->get_test_double( 'ZAI_DMOR_TRAVEL_D' ).
     double->configure_call(  )->for_modify(  )->when_input( input )->then_set_output( output ).
 
     "For deduct discount action on travelUUID 987
-    data(eml_travel_input_deduct_discnt) = input_config_builder_4_modify->build_entity_part( '/DMO/R_TRAVEL_D'
+    data(eml_travel_input_deduct_discnt) = input_config_builder_4_modify->build_entity_part( 'ZAI_DMOR_TRAVEL_D'
                                    )->set_instances_for_action( instances = deduct_discount_act_insts ).
 
     "Input configuration for EML
@@ -896,24 +896,24 @@ class ltcl_using_mockemlapi_variant implementation.
 
   "Step 1: Setup test data instances for all operations on all entities in Modify EML.
   "For Create on Travel entity
-   data create_travel_instances type table for create /DMO/R_TRAVEL_D.
+   data create_travel_instances type table for create ZAI_DMOR_TRAVEL_D.
    create_travel_instances = value #( ( %cid = 'CID_100' %is_draft = if_abap_behv=>mk-on %data-customerid  = '9876' AgencyID = '70006' begindate = '20180101' enddate = '20180101' ) ).
 
   "For Creating Booking by Association on Travel entity
-   data cba_booking_instances type table for create /DMO/R_TRAVEL_D\_Booking.
+   data cba_booking_instances type table for create ZAI_DMOR_TRAVEL_D\_Booking.
    cba_booking_instances = value #( ( %cid_ref = 'CID_100' %is_draft = if_abap_behv=>mk-on
                                       %target = value #( (  %cid = 'CID_200' customerid = '9876' flightprice = 100
                                                             %is_draft = if_abap_behv=>mk-on  ) )  )  ).
 
   "For Creating booking_supplement by association on Booking entity
-   data cba_booking_suppl_instances type table for create /DMO/R_TRAVEL_D\\booking\_BookingSupplement.
+   data cba_booking_suppl_instances type table for create ZAI_DMOR_TRAVEL_D\\booking\_BookingSupplement.
    cba_booking_suppl_instances = value #( (  %cid_ref = 'CID_200' %is_draft = if_abap_behv=>mk-on
                                              %target  = value #( ( %cid = 'CID_300' %data-supplementid  = '007'  BookSupplPrice  = 100
                                                                    %is_draft = if_abap_behv=>mk-on ) ) ) ).
 
 
   "Step 2: Define and set up the response structures to be returned for Modify EML in CUT
-    data mapped type response for mapped early /DMO/R_TRAVEL_D.
+    data mapped type response for mapped early ZAI_DMOR_TRAVEL_D.
 
     "Setup mapped and failed according to the response to be returned
     "For create travel instances
@@ -932,7 +932,7 @@ class ltcl_using_mockemlapi_variant implementation.
 
     "Create input for all entity parts
     "For travel entity
-    data(eml_travel_input) = input_config_builder_4_modify->build_entity_part( '/DMO/R_TRAVEL_D'   "can accept the entity name
+    data(eml_travel_input) = input_config_builder_4_modify->build_entity_part( 'ZAI_DMOR_TRAVEL_D'   "can accept the entity name
                                    )->set_instances_for_create( create_travel_instances
                                    )->set_instances_for_create_ba( cba_booking_instances ).
 
@@ -948,7 +948,7 @@ class ltcl_using_mockemlapi_variant implementation.
     data(output) = output_config_builder_4_modify->build_output_for_eml( )->set_mapped( mapped ).
 
   "Step 4: Configure the Modify EML via configure_call API on the double.
-    double =  environment->get_test_double( '/DMO/R_TRAVEL_D' ).
+    double =  environment->get_test_double( 'ZAI_DMOR_TRAVEL_D' ).
     double->configure_call(  )->for_modify(  )->when_input( input )->then_set_output( output ).
 
   """""""""""""""""""""""""""CODE UNDER TEST"""""""""""""""""""""""""""""""""""""""
@@ -991,14 +991,14 @@ class ltcl_using_mockemlapi_variant implementation.
 
   "Step 1: Setup test data instances for all operations on all entities in Modify EML.
   "For delete on Travel entity
-   data delete_travel_instances type table for delete /DMO/R_TRAVEL_D.
+   data delete_travel_instances type table for delete ZAI_DMOR_TRAVEL_D.
    delete_travel_instances = value #( ( TravelUUID = '987' %is_draft = if_abap_behv=>mk-on ) "Should pass
                                       ( TravelUUID = '988' %is_draft = if_abap_behv=>mk-on ) ).
                                                                                 "Should fail, assuming Travel 988 does not exist
 
   "Step 2: Define and set up the response structures to be returned for Modify EML in CUT
-    data mapped type response for mapped early /DMO/R_TRAVEL_D.
-    data failed type response for failed early /DMO/R_TRAVEL_D.
+    data mapped type response for mapped early ZAI_DMOR_TRAVEL_D.
+    data failed type response for failed early ZAI_DMOR_TRAVEL_D.
 
     "Setup mapped and failed according to the response to be returned
     mapped-travel = value #( ( TravelUUID = '987'  %is_draft = if_abap_behv=>mk-on ) ). "Implies that travelUUid 987 was deleted
@@ -1011,7 +1011,7 @@ class ltcl_using_mockemlapi_variant implementation.
 
     "Create input for all entity parts and set instances for all operations on that entity
     "For travel entity
-    data(eml_travel_input) = input_config_builder_4_modify->build_entity_part( '/DMO/R_TRAVEL_D'
+    data(eml_travel_input) = input_config_builder_4_modify->build_entity_part( 'ZAI_DMOR_TRAVEL_D'
                                    )->set_instances_for_delete( delete_travel_instances ).
 
     "Input configuration for EML
@@ -1022,7 +1022,7 @@ class ltcl_using_mockemlapi_variant implementation.
     data(output) = output_config_builder_4_modify->build_output_for_eml( )->set_mapped( mapped )->set_failed( failed ).
 
   "Step 4: Configure the Modify EML in CUT via configure_call API on the double.
-    double =  environment->get_test_double( '/DMO/R_TRAVEL_D' ).
+    double =  environment->get_test_double( 'ZAI_DMOR_TRAVEL_D' ).
     double->configure_call(  )->for_modify(  )->when_input( input )->then_set_output( output ).
 
   """""""""""""""""""""""""""CODE UNDER TEST"""""""""""""""""""""""""""""""""""""""
@@ -1064,14 +1064,14 @@ class ltcl_using_mockemlapi_variant implementation.
 
   "Step 1: Setup test data instances for read operation in READ EML.
   "For read on travel
-   data read_travel_instances type table for read import /DMO/R_TRAVEL_D.
+   data read_travel_instances type table for read import ZAI_DMOR_TRAVEL_D.
    read_travel_instances = value #( ( %is_draft = if_abap_behv=>mk-on TravelUUID = '987' ) "travel returned
                                     ( %is_draft = if_abap_behv=>mk-on TravelUUID = '988' ) ). "read should fail for 988 assuming the instance does not exist
 
   "Step 2: Define and set up the response structures to be returned for Read EML in CUT
-    data result type table for read result /DMO/R_TRAVEL_D.
+    data result type table for read result ZAI_DMOR_TRAVEL_D.
     result = value #( ( %is_draft = if_abap_behv=>mk-on TravelUUID = '987' %data-BookingFee = 10 TotalPrice = 100 OverallStatus = 'A' ) ).
-    data failed type response for failed early /DMO/R_TRAVEL_D.
+    data failed type response for failed early ZAI_DMOR_TRAVEL_D.
     failed-travel = value #( ( %is_draft = if_abap_behv=>mk-on TravelUUID = '988' ) ).
 
   "Step 3: Create input and output configurations for Read EML.
@@ -1080,7 +1080,7 @@ class ltcl_using_mockemlapi_variant implementation.
 
     "Create input for all entity parts
     "For travel entity
-    data(eml_travel_input) = input_config_builder_4_read->build_entity_part( '/DMO/R_TRAVEL_D'   "can accept the entity name
+    data(eml_travel_input) = input_config_builder_4_read->build_entity_part( 'ZAI_DMOR_TRAVEL_D'   "can accept the entity name
                                    )->set_instances_for_read( read_travel_instances ).
 
     "input and output configuration
@@ -1088,7 +1088,7 @@ class ltcl_using_mockemlapi_variant implementation.
     data(output) = output_config_builder_4_read->build_output_for_eml( )->set_failed( failed )->set_result_for_read( result ).
 
   "Step 4: Configure the Read EML via configure_call API on the double.
-    double =  environment->get_test_double( '/DMO/R_TRAVEL_D' ).
+    double =  environment->get_test_double( 'ZAI_DMOR_TRAVEL_D' ).
     double->configure_call(  )->for_read(  )->when_input( input )->then_set_output( output ).
 
   """""""""""""""""""""""""""CODE UNDER TEST"""""""""""""""""""""""""""""""""""""""
@@ -1131,15 +1131,15 @@ class ltcl_using_mockemlapi_variant implementation.
 
   "Step 1: Setup test data instances for read_ba operation in READ EML.
   "For read booking by association on travel
-   data rba_booking_instances type table for read import /DMO/R_TRAVEL_D\_Booking.
+   data rba_booking_instances type table for read import ZAI_DMOR_TRAVEL_D\_Booking.
    rba_booking_instances = value #( ( %is_draft = if_abap_behv=>mk-on TravelUUID = '987' ) "Bookings returned
                                     ( %is_draft = if_abap_behv=>mk-on TravelUUID = '988' ) ). "read_ba should fail for 988 assuming the instance does not exist
 
   "Step 2: Define and set up the response structures to be returned for Read EML in CUT
-    data result type table for read result /DMO/R_TRAVEL_D\_Booking.
+    data result type table for read result ZAI_DMOR_TRAVEL_D\_Booking.
     result = value #( ( %is_draft = if_abap_behv=>mk-on TravelUUID = '987' BookingUUID = '001' %data-FlightPrice = 10  )
                       ( %is_draft = if_abap_behv=>mk-on TravelUUID = '987' BookingUUID = '002' %data-FlightPrice = 20  ) ).
-    data failed type response for failed early /DMO/R_TRAVEL_D.
+    data failed type response for failed early ZAI_DMOR_TRAVEL_D.
     failed-travel = value #( ( %is_draft = if_abap_behv=>mk-on TravelUUID = '988' ) ).
 
   "Step 3: Create input and output configurations for Read EML.
@@ -1156,7 +1156,7 @@ class ltcl_using_mockemlapi_variant implementation.
     data(output) = output_config_builder_4_read->build_output_for_eml( )->set_failed( failed )->set_result_for_read_ba( result = result  assoc_name = '_Booking' source_entity_name = 'TRAVEL' ).
 
   "Step 4: Configure the Read EML via configure_call API on the double.
-    double =  environment->get_test_double( '/DMO/R_TRAVEL_D' ).
+    double =  environment->get_test_double( 'ZAI_DMOR_TRAVEL_D' ).
     double->configure_call(  )->for_read(  )->when_input( input )->then_set_output( output ).
 
   """""""""""""""""""""""""""CODE UNDER TEST"""""""""""""""""""""""""""""""""""""""
@@ -1202,14 +1202,14 @@ class ltcl_using_mockemlapi_variant implementation.
 
   "Step 1: Setup test data instances for all operations on all entities in Modify EML.
   "For Update on Travel entity
-   data update_travel_instances type table for update /DMO/R_TRAVEL_D.
+   data update_travel_instances type table for update ZAI_DMOR_TRAVEL_D.
    update_travel_instances = value #( ( TravelUUID = '987' %is_draft = if_abap_behv=>mk-on description = 'Travel_987_updated' %control-description = if_abap_behv=>mk-on ) "Should pass
                                       ( TravelUUID = '988' %is_draft = if_abap_behv=>mk-on description = 'Travel_988_updated' %control-description = if_abap_behv=>mk-on ) ).
                                                                                 "Should fail, assuming Travel 988 does not exist
 
   "Step 2: Define and set up the response structures to be returned for Modify EML in CUT
-    data mapped type response for mapped early /DMO/R_TRAVEL_D.
-    data failed type response for failed early /DMO/R_TRAVEL_D.
+    data mapped type response for mapped early ZAI_DMOR_TRAVEL_D.
+    data failed type response for failed early ZAI_DMOR_TRAVEL_D.
 
     "Setup mapped and failed according to the response to be returned
     mapped-travel = value #( ( TravelUUID = '987'  %is_draft = if_abap_behv=>mk-on ) ). "Implies that travelUUid 987 was updated
@@ -1222,7 +1222,7 @@ class ltcl_using_mockemlapi_variant implementation.
 
     "Create input for all entity parts and set instances for all operations on that entity
     "For travel entity
-    data(eml_travel_input) = input_config_builder_4_modify->build_entity_part( '/DMO/R_TRAVEL_D'
+    data(eml_travel_input) = input_config_builder_4_modify->build_entity_part( 'ZAI_DMOR_TRAVEL_D'
                                    )->set_instances_for_update( update_travel_instances ).
 
     "Input configuration for EML
@@ -1233,7 +1233,7 @@ class ltcl_using_mockemlapi_variant implementation.
     data(output) = output_config_builder_4_modify->build_output_for_eml( )->set_mapped( mapped )->set_failed( failed ).
 
   "Step 4: Configure the Modify EML in CUT via configure_call API on the double.
-    double =  environment->get_test_double( '/DMO/R_TRAVEL_D' ).
+    double =  environment->get_test_double( 'ZAI_DMOR_TRAVEL_D' ).
     double->configure_call(  )->for_modify(  )->when_input( input )->then_set_output( output ).
 
   """""""""""""""""""""""""""CODE UNDER TEST"""""""""""""""""""""""""""""""""""""""
@@ -1279,11 +1279,11 @@ class ltcl_using_mockemlapi_variant implementation.
 
   "Step 1: Setup test data instances for CREATE on TRAVEL in Modify EML.
   "For Create on Travel entity
-   data create_travel_instances type table for create /DMO/R_TRAVEL_D.
+   data create_travel_instances type table for create ZAI_DMOR_TRAVEL_D.
    create_travel_instances = value #( ( %cid = 'CID_100' %data-CustomerID = '9876' AgencyID = '70006' begindate = '20180101' enddate  = '20180101' %is_draft = if_abap_behv=>mk-on ) ).
 
   "Step 2: Define and set up the response structures to be returned for Modify EML in CUT
-    data mapped type response for mapped early /DMO/R_TRAVEL_D.
+    data mapped type response for mapped early ZAI_DMOR_TRAVEL_D.
 
     "Setup mapped according to the response to be returned
     mapped-travel = value #( ( %cid = 'CID_100' TravelUUID = '987' %is_draft = if_abap_behv=>mk-on ) ). "Create on 987 passed
@@ -1294,7 +1294,7 @@ class ltcl_using_mockemlapi_variant implementation.
 
     "Create input for all entity parts
     "For travel entity
-    data(eml_travel_input) = input_config_builder_4_modify->build_entity_part( '/DMO/R_TRAVEL_D'
+    data(eml_travel_input) = input_config_builder_4_modify->build_entity_part( 'ZAI_DMOR_TRAVEL_D'
                                    )->set_instances_for_create( create_travel_instances ).
 
     "Input configuration for EML
@@ -1304,7 +1304,7 @@ class ltcl_using_mockemlapi_variant implementation.
     data(output) = output_config_builder_4_modify->build_output_for_eml( )->set_mapped( mapped ).
 
   "Step 4: Configure the Modify EML via configure_call and "when_input_partial_input" API on the double.
-    double =  environment->get_test_double( '/DMO/R_TRAVEL_D' ).
+    double =  environment->get_test_double( 'ZAI_DMOR_TRAVEL_D' ).
     double->configure_call(  )->for_modify(  )->when_partial_input( input )->then_set_output( output ).
 
   """""""""""""""""""""""""""CODE UNDER TEST"""""""""""""""""""""""""""""""""""""""
@@ -1337,7 +1337,7 @@ endclass.
 "! <ul>
 "! <li>Operation names in test method names, signify EML operations in CUT (Code Under Test).</li>
 "! <li>Involved instances are mostly draft instances i.e. with %is_draft field marked with if_abap_behv=>mk-on.</li>
-"! <li>The dependent BO is /dmo/r_travel_d and the code under test is its consumer {@link /dmo/tc_travel_d_bo_consumer}</li>
+"! <li>The dependent BO is ZAI_DMOr_travel_d and the code under test is its consumer {@link ZAI_DMOtc_travel_d_bo_consumer}</li>
 "! <li>The test data should be recorded via Create EML (if required), such that the EML operations in CUT are evaluated
 "! as required.</li>
 "! <li>The framework takes care of providing the filled response structures (mapped, reported, failed, result)</li>
@@ -1391,17 +1391,17 @@ class ltcl_using_txbufdbl_variant definition final for testing
     class-methods class_setup.
     class-methods class_teardown.
     class-data environment type ref to if_botd_txbufdbl_bo_test_env.
-    class-data cut type ref to /dmo/tc_travel_d_bo_consumer.
+    class-data cut type ref to ZAI_DMOtc_travel_d_bo_consumer.
 
 endclass.
 
 class ltcl_using_txbufdbl_variant implementation.
 
   method class_setup.
-  "Create doubles for BO '/DMO/R_TRAVEL_D'.
+  "Create doubles for BO 'ZAI_DMOR_TRAVEL_D'.
   "a. Prepare environment configuration with bdef dependencies for which doubles are to be created
-    data(env_config) = cl_botd_txbufdbl_bo_test_env=>prepare_environment_config( )->set_bdef_dependencies( bdef_dependencies = value #( ( '/DMO/R_TRAVEL_D' ) )
-                                                                                  )->handle_draft( bdef_dependencies = value #( ( '/DMO/R_TRAVEL_D' ) ) ).
+    data(env_config) = cl_botd_txbufdbl_bo_test_env=>prepare_environment_config( )->set_bdef_dependencies( bdef_dependencies = value #( ( 'ZAI_DMOR_TRAVEL_D' ) )
+                                                                                  )->handle_draft( bdef_dependencies = value #( ( 'ZAI_DMOR_TRAVEL_D' ) ) ).
 
   "b. Create the test doubles for bdefs from the environment configuration and get the environment instance
   environment = cl_botd_txbufdbl_bo_test_env=>create( environment_config = env_config ).
@@ -1427,10 +1427,10 @@ class ltcl_using_txbufdbl_variant implementation.
 
   "Step 1: Insert test data in transactional buffer double using a CREATE EML which will have the same key as the instance in code under test.
   "Set numbering support on double (if required).
-    data(double) =  environment->get_test_double( '/dmo/r_travel_d' ).
+    data(double) =  environment->get_test_double( 'ZAI_DMOr_travel_d' ).
     double->configure_additional_behavior(  )->set_fields_handler( fields_handler = new ltd_fields_handler( ) ). "Keys start from 1 for create in test method.
 
-    modify entities of /dmo/r_travel_d
+    modify entities of ZAI_DMOr_travel_d
      entity travel
        create fields ( CustomerID description )
         with value #( ( %CID = 'Configured_Travel_1' %is_draft = if_abap_behv=>mk-on CustomerID = '000006' description = 'Configured Travel 1'  ) ) "Since only one instance is inserted, this instance will have key 1.
@@ -1445,7 +1445,7 @@ class ltcl_using_txbufdbl_variant implementation.
 
   """""""""""""""""""""""""""CODE UNDER TEST"""""""""""""""""""""""""""""""""""""""
   "For Create on Travel entity
-   data create_travel_instances type table for create /dmo/r_travel_d.
+   data create_travel_instances type table for create ZAI_DMOr_travel_d.
    create_travel_instances = value #( ( %CID = 'CUT_Travel_1' %is_draft = if_abap_behv=>mk-on AgencyID = '000111' CustomerID = '000006' description = 'Travel 1 in code under test'
                                         %control-AgencyID = if_abap_behv=>mk-on %control-CustomerID = if_abap_behv=>mk-on %control-description = if_abap_behv=>mk-on ) ).
 
@@ -1486,12 +1486,12 @@ class ltcl_using_txbufdbl_variant implementation.
 
   "Step 2: Set numbering support on double (if required).
   "Since early numbering is enabled for BO and the key fields are read-only, setting a numbering support is required to assign keys to instances for create or create_ba operations
-    data(double) =  environment->get_test_double( '/dmo/r_travel_d' ).
+    data(double) =  environment->get_test_double( 'ZAI_DMOr_travel_d' ).
     double->configure_additional_behavior(  )->set_fields_handler( fields_handler = new ltd_fields_handler( ) ).
 
   """""""""""""""""""""""""""CODE UNDER TEST"""""""""""""""""""""""""""""""""""""""
   "For Create on Travel entity
-   data create_travel_instances type table for create /dmo/r_travel_d.
+   data create_travel_instances type table for create ZAI_DMOr_travel_d.
    create_travel_instances = value #( ( %CID = 'Travel_1' %is_draft = if_abap_behv=>mk-on AgencyID = '000111' CustomerID = '000006' description = 'Travel 1'
                                         %control-AgencyID = if_abap_behv=>mk-on %control-CustomerID = if_abap_behv=>mk-on %control-description = if_abap_behv=>mk-on ) ).
 
@@ -1519,7 +1519,7 @@ class ltcl_using_txbufdbl_variant implementation.
     cl_abap_unit_assert=>assert_equals( act = mapped_cut-travel[ 1 ]-%is_draft exp = if_abap_behv=>mk-on ).
 
     "Read the data to assert create
-    read entity /dmo/r_travel_d
+    read entity ZAI_DMOr_travel_d
      from value #( ( traveluuid = mapped_cut-travel[ 1 ]-traveluuid %is_draft = if_abap_behv=>mk-on %control-CustomerID = if_abap_behv=>mk-on %control-description = if_abap_behv=>mk-on ) )
      result   data(result_read)
      reported data(reported_read)
@@ -1550,14 +1550,14 @@ class ltcl_using_txbufdbl_variant implementation.
    "The create in CUT will perform the create operation on the buffer directly.
 
   "Step 2: Setup test data instance for create EML in code under test.
-   data create_travel_instances type table for create /dmo/r_travel_d.
+   data create_travel_instances type table for create ZAI_DMOr_travel_d.
    create_travel_instances = value #( ( %cid = 'Travel_987' %is_draft = if_abap_behv=>mk-on AgencyID = '000111' CustomerID = '000006' description = 'Travel_987' )
                                       ( %cid = 'Travel_988' %is_draft = if_abap_behv=>mk-on AgencyID = '000111' CustomerID = '000006' description = 'Travel_988' ) ).
                                       "Configured Input instance should match exactly with the instance in code under test, (%control structure matching is ignored)
 
   "Step 3: Define and set up the mapped response structure to be returned for Create EML on test data instance in CUT
-    data mapped_987 type response for mapped early /dmo/r_travel_d.
-    data mapped_988 type response for mapped early /dmo/r_travel_d.
+    data mapped_987 type response for mapped early ZAI_DMOr_travel_d.
+    data mapped_988 type response for mapped early ZAI_DMOr_travel_d.
 
     mapped_987-travel = value #( ( %cid = 'Travel_987' %is_draft = if_abap_behv=>mk-on traveluuid = '987' ) ).  "Create a draft travel with traveluuid 987
     mapped_988-travel = value #( ( %cid = 'Travel_988' %is_draft = if_abap_behv=>mk-on traveluuid = '988' ) ).  "Create a draft travel with traveluuid 988
@@ -1565,7 +1565,7 @@ class ltcl_using_txbufdbl_variant implementation.
 
   "Step 4: set_mapped using configure_addtional_behavior API on double to configure CREATE EML on an instance in code under test to pass.
 
-    data(double) =  environment->get_test_double( '/dmo/r_travel_d' ).
+    data(double) =  environment->get_test_double( 'ZAI_DMOr_travel_d' ).
 
     "For travel 987
     data(input) = double->create_modify_input_config(  )->set_instance( create_travel_instances[ 1 ] ).
@@ -1580,7 +1580,7 @@ class ltcl_using_txbufdbl_variant implementation.
 
   """""""""""""""""""""""""""CODE UNDER TEST"""""""""""""""""""""""""""""""""""""""
   "For Create on Travel entity
-   data create_travel_instances_cut type table for create /dmo/r_travel_d.
+   data create_travel_instances_cut type table for create ZAI_DMOr_travel_d.
    create_travel_instances_cut = value #( ( %CID = 'Travel_987' %is_draft = if_abap_behv=>mk-on AgencyID = '000111' CustomerID = '000006' description = 'Travel_987'   "AgencyID should not be filled as it is not marked in %control
                                              %control-CustomerID = if_abap_behv=>mk-on %control-description = if_abap_behv=>mk-on )
                                           ( %CID = 'Travel_988' %is_draft = if_abap_behv=>mk-on AgencyID = '000111' CustomerID = '000006' description = 'Travel_988'
@@ -1610,7 +1610,7 @@ class ltcl_using_txbufdbl_variant implementation.
 
     "The TXBUFDBL variant, creates the instance with key fields provided via the set_mapped API and inserts into the transactional buffer double
     "Read the data to assert create
-    read entity /dmo/r_travel_d
+    read entity ZAI_DMOr_travel_d
      from value #( ( traveluuid = mapped_cut-travel[ 1 ]-traveluuid %is_draft = if_abap_behv=>mk-on %control-AgencyID = if_abap_behv=>mk-on %control-description = if_abap_behv=>mk-on )
                    ( traveluuid = mapped_cut-travel[ 2 ]-traveluuid %is_draft = if_abap_behv=>mk-on %control-AgencyID = if_abap_behv=>mk-on %control-description = if_abap_behv=>mk-on ) )
      result   data(result_read)
@@ -1642,17 +1642,17 @@ class ltcl_using_txbufdbl_variant implementation.
    "The create in CUT will perform the create operation on the buffer directly.
 
   "Step 2: Setup test data instance for create EML in code under test.
-   data create_travel_instances type table for create /dmo/r_travel_d.
+   data create_travel_instances type table for create ZAI_DMOr_travel_d.
    create_travel_instances = value #( ( %cid = 'Travel_987' %is_draft = if_abap_behv=>mk-on AgencyID = '000111' CustomerID = '000006' description = 'Travel_987' ) ).
                                       "Configured Input instance should match exactly with the instance in code under test, (%control structure matching is ignored)
 
   "Step 3: Define and set up the failed response structure to be returned for Create EML on test data instance in CUT
-    data failed type response for failed early /dmo/r_travel_d.
+    data failed type response for failed early ZAI_DMOr_travel_d.
     failed-travel = value #( ( %cid = 'Travel_987' %is_draft = if_abap_behv=>mk-on ) ).  "Create travel_987 fails, assuming CustomerID does not exists
 
   "Step 4: set_failed using configure_addtional_behavior API on double to configure CREATE EML on an instance in code under test to fail.
 
-    data(double) =  environment->get_test_double( '/dmo/r_travel_d' ).
+    data(double) =  environment->get_test_double( 'ZAI_DMOr_travel_d' ).
 
     data(input) = double->create_modify_input_config(  )->set_instance( create_travel_instances[ 1 ] ).
                               "(Unlike the other variant i.e. MOCKEMLAPI variant of RAP BO TDF, the input configuration here only consists of an input instance on which operation is performed)
@@ -1661,7 +1661,7 @@ class ltcl_using_txbufdbl_variant implementation.
 
   """""""""""""""""""""""""""CODE UNDER TEST"""""""""""""""""""""""""""""""""""""""
   "For Create on Travel entity
-   data create_travel_instances_cut type table for create /dmo/r_travel_d.
+   data create_travel_instances_cut type table for create ZAI_DMOr_travel_d.
    create_travel_instances_cut = value #( ( %CID = 'Travel_987' %is_draft = if_abap_behv=>mk-on AgencyID = '000111' CustomerID = '000006' description = 'Travel_987'
                                              %control-CustomerID = if_abap_behv=>mk-on %control-description = if_abap_behv=>mk-on ) ) .
 
@@ -1695,13 +1695,13 @@ class ltcl_using_txbufdbl_variant implementation.
 
   "Step 1: Set numbering support on double (if required).
   "Since early numbering is enabled for BO and the key fields are read-only, setting a numbering support is required to assign keys to instances for create or create_ba operations
-    data(double) =  environment->get_test_double( '/dmo/r_travel_d' ).
+    data(double) =  environment->get_test_double( 'ZAI_DMOr_travel_d' ).
     double->configure_additional_behavior(  )->set_fields_handler( fields_handler = new ltd_fields_handler( ) ).
 
 
   "Step 2: Insert test data in transactional buffer double using a CREATE EML (if required).
    "Record a travel instance which is to be updated. ( Will be recorded in Framework's Buffer and an ID will be returned by the framework according to fields_handler )
-    modify entities of /dmo/r_travel_d
+    modify entities of ZAI_DMOr_travel_d
      entity travel
        create from value #( ( %cid = 'Travel_1' %is_draft = if_abap_behv=>mk-on
                               AgencyID = '000111' CustomerID = '000006' description = 'Travel 1'
@@ -1737,7 +1737,7 @@ class ltcl_using_txbufdbl_variant implementation.
     cl_abap_unit_assert=>assert_initial( reported_update ).
 
     "Check if the instance was updated.
-    read entity /dmo/r_travel_d
+    read entity ZAI_DMOr_travel_d
      from value #( ( traveluuid = mapped-travel[ 1 ]-traveluuid %is_draft = if_abap_behv=>mk-on
                      %control-description = if_abap_behv=>mk-on ) )
      result   data(result_read)
@@ -1759,12 +1759,12 @@ class ltcl_using_txbufdbl_variant implementation.
 
   "Step 1: Set numbering support on double (if required).
   "Since early numbering is enabled for BO and the key fields are read-only, setting a numbering support is required to assign keys to instances for create or create_ba operations
-    data(double) =  environment->get_test_double( '/dmo/r_travel_d' ).
+    data(double) =  environment->get_test_double( 'ZAI_DMOr_travel_d' ).
     double->configure_additional_behavior(  )->set_fields_handler( fields_handler = new ltd_fields_handler( ) ).
 
   "Step 2: Insert test data in transactional buffer double using a CREATE EML (if required).
    "Record a travel instance for which booking is to be created. ( Will be recorded in Framework's Buffer and an ID will be returned by the framework according to fields_handler )
-    modify entities of /dmo/r_travel_d
+    modify entities of ZAI_DMOr_travel_d
      entity travel
        create from value #( ( %cid = 'Travel_1' %is_draft = if_abap_behv=>mk-on
                               AgencyID = '000111' CustomerID = '000006' description = 'Travel 1'
@@ -1781,7 +1781,7 @@ class ltcl_using_txbufdbl_variant implementation.
 
 
   """""""""""""""""""""""""""CODE UNDER TEST""""""""""""""""""""""""""""""""""""""
-   data cba_booking_instances type table for create /dmo/r_travel_d\_Booking.
+   data cba_booking_instances type table for create ZAI_DMOr_travel_d\_Booking.
    cba_booking_instances = value #( ( traveluuid = 1 %is_draft = if_abap_behv=>mk-on
                                       %target = value #( (  %cid = 'Travel_1_Booking_1' %is_draft = if_abap_behv=>mk-on
                                                             connectionid = 'C1' %control-connectionid = if_abap_behv=>mk-on
@@ -1845,7 +1845,7 @@ class ltcl_using_txbufdbl_variant implementation.
     cl_abap_unit_assert=>assert_equals( act = failed_cut-booking[ 1 ]-%is_draft exp = if_abap_behv=>mk-on ).
 
     "Read the data to assert create by association
-    read entity /dmo/r_travel_d
+    read entity ZAI_DMOr_travel_d
       by \_Booking
      from value #( ( traveluuid = mapped-travel[ 1 ]-traveluuid %is_draft = if_abap_behv=>mk-on %control-bookingstatus = if_abap_behv=>mk-on ) )
      result   data(result_read)
@@ -1870,7 +1870,7 @@ class ltcl_using_txbufdbl_variant implementation.
    "Assume update EML in CUT (Code Under Test) which we want to isolate.
 
 *   "Step 1: Record instance. Assume create is internal. Thus CREATE EML statement can't be used to insert test data in transactional buffer double
-*   data travel_instances type table for create /dmo/r_travel_d.
+*   data travel_instances type table for create ZAI_DMOr_travel_d.
 *   travel_instances = value #( ( traveluuid = 987 %is_draft = if_abap_behv=>mk-on
 *                              begindate = '20180101' enddate = '20180101'
 *                              totalprice = 100
@@ -1880,7 +1880,7 @@ class ltcl_using_txbufdbl_variant implementation.
 *                          ).
 *
 *  "Using insert_test_data API to insert test data assuming create is internal.
-*    data(double) = environment->get_test_double( root_name = '/dmo/r_travel_d' ).
+*    data(double) = environment->get_test_double( root_name = 'ZAI_DMOr_travel_d' ).
 *    double->insert_test_data( instances  = travel_instances ). "Insert the instance with travelid 987
 *
 *  """""""""""""""""""""""""""CODE UNDER TEST""""""""""""""""""""""""""""""""""""""
@@ -1902,7 +1902,7 @@ class ltcl_using_txbufdbl_variant implementation.
 *    cl_abap_unit_assert=>assert_initial( reported_cut ).
 *
 *    "Check if the instance was updated.
-*    read entity /dmo/r_travel_d
+*    read entity ZAI_DMOr_travel_d
 *     from value #( ( traveluuid = mapped_cut-travel[ 1 ]-traveluuid %is_draft = if_abap_behv=>mk-on
 *                     %control-totalprice = if_abap_behv=>mk-on ) )
 *     result   data(result_read)
@@ -1950,14 +1950,14 @@ class ltcl_using_txbufdbl_variant implementation.
 
   "Step 1: Set numbering support on double (if required).
   "Since early numbering is enabled for BO and the key fields are read-only, setting a numbering support is required to assign keys to instances for create or create_ba operations
-    data(double) =  environment->get_test_double( '/dmo/r_travel_d' ).
+    data(double) =  environment->get_test_double( 'ZAI_DMOr_travel_d' ).
     double->configure_additional_behavior(  )->set_fields_handler( fields_handler = new ltd_fields_handler( ) ).
 
 
   "Step 2: Insert test data in transactional buffer double using a CREATE EML (if required).
    "Record a travel instance which is to be deleted. ( Will be recorded in Framework's Buffer and an ID will be returned by the framework according to fields_handler )
    "Use Deep Create to insert a travel and 2 bookings for that travel.
-    modify entities of /dmo/r_travel_d
+    modify entities of ZAI_DMOr_travel_d
      entity travel
              create fields ( CustomerID begindate enddate description ) with
                          value #( ( %cid        = 'Travel_1'    " Preliminary ID for new travel instance
@@ -1992,7 +1992,7 @@ class ltcl_using_txbufdbl_variant implementation.
         cl_abap_unit_assert=>assert_equals( act = mapped_test_data-booking[ 1 ]-%is_draft exp = if_abap_behv=>mk-on ).
         cl_abap_unit_assert=>assert_equals( act = mapped_test_data-booking[ 2 ]-%is_draft exp = if_abap_behv=>mk-on ).
 
-     read entity /dmo/r_travel_d
+     read entity ZAI_DMOr_travel_d
        from value #( ( traveluuid = mapped_test_data-travel[ 1 ]-traveluuid  %is_draft = if_abap_behv=>mk-on %control-description = if_abap_behv=>mk-on ) )
          result   data(result_read_travel)
        by \_Booking from value #( ( traveluuid = mapped_test_data-travel[ 1 ]-traveluuid %is_draft = if_abap_behv=>mk-on %control-connectionid = if_abap_behv=>mk-on ) )
@@ -2033,7 +2033,7 @@ class ltcl_using_txbufdbl_variant implementation.
     cl_abap_unit_assert=>assert_initial( reported_delete ).
 
     "Check if the instance was deleted.
-     read entity /dmo/r_travel_d
+     read entity ZAI_DMOr_travel_d
        from value #( ( traveluuid = mapped_test_data-travel[ 1 ]-traveluuid %is_draft = if_abap_behv=>mk-on %control-description = if_abap_behv=>mk-on ) )
          result   data(result_read_travel_deleted)
        by \_Booking from value #( ( traveluuid = mapped_test_data-travel[ 1 ]-traveluuid %is_draft = if_abap_behv=>mk-on %control-connectionid = if_abap_behv=>mk-on ) )
@@ -2075,7 +2075,7 @@ class ltcl_using_txbufdbl_variant implementation.
     cl_abap_unit_assert=>assert_equals( act = failed_update-travel[ 1 ]-%is_draft exp = if_abap_behv=>mk-on ).
 
     "Check if the instance was not updated.
-    read entity /dmo/r_travel_d
+    read entity ZAI_DMOr_travel_d
      from value #( ( traveluuid = failed_update-travel[ 1 ]-traveluuid %is_draft = if_abap_behv=>mk-on
                      %control-totalprice = if_abap_behv=>mk-on ) )
      result   data(result_read)
@@ -2100,7 +2100,7 @@ class ltcl_using_txbufdbl_variant implementation.
    "The create by association in CUT will return failed, configured via set_failed.
 
   "Step 2: Setup test data instance for Create by association EML in code under test.
-   data cba_booking_instances type table for create /dmo/r_travel_d\_Booking.
+   data cba_booking_instances type table for create ZAI_DMOr_travel_d\_Booking.
    cba_booking_instances = value #( ( traveluuid = 987  %is_draft = if_abap_behv=>mk-on
                                       %target = value #( (  %cid = 'Travel_987_Booking_001'  %is_draft = if_abap_behv=>mk-on
                                                             connectionid = 'C1' %control-connectionid = if_abap_behv=>mk-on
@@ -2110,14 +2110,14 @@ class ltcl_using_txbufdbl_variant implementation.
 
 
   "Step 3: Define and set up the failed response structure to be returned for Create by association EML on test data instance in CUT.
-    data failed type response for failed early /dmo/r_travel_d.
+    data failed type response for failed early ZAI_DMOr_travel_d.
     failed-travel = value #( ( traveluuid = '987'  %is_draft = if_abap_behv=>mk-on  %fail-cause = if_abap_behv=>cause-not_found ) ).
     failed-booking = value #( ( %cid = 'Travel_987_Booking_001'  %is_draft = if_abap_behv=>mk-on  %fail-cause = if_abap_behv=>cause-dependency ) ).
 
 
   "Step 4: set_failed using configure_addtional_behavior API on double to configure Create by association EML on an instance in code under test to fail.
 
-    data(double) =  environment->get_test_double( '/dmo/r_travel_d' ).
+    data(double) =  environment->get_test_double( 'ZAI_DMOr_travel_d' ).
 
     data(input) = double->create_modify_input_config(  )->set_instance( cba_booking_instances[ 1 ] ).
                                                                                 "Note that the input instance should contain only one instance for %target
@@ -2170,21 +2170,21 @@ class ltcl_using_txbufdbl_variant implementation.
   "Step 1: Insert test data in transactional buffer double using a CREATE EML (if required).
    "Insert a travel with traveluuid 987
    "The create in test method will perform the create operation on the buffer double.
-   data create_travel_instances type table for create /dmo/r_travel_d.
+   data create_travel_instances type table for create ZAI_DMOr_travel_d.
    create_travel_instances = value #( ( %cid = 'Travel_987' %is_draft = if_abap_behv=>mk-on AgencyID = '000111' CustomerID = '000006' description = 'Travel_987' ) ).
 
    "using set mapped API, set the key for the travel as 987
-   data mapped_travel_987 type response for mapped early /dmo/r_travel_d.
+   data mapped_travel_987 type response for mapped early ZAI_DMOr_travel_d.
    mapped_travel_987-travel = value #( ( %cid = 'Travel_987' %is_draft = if_abap_behv=>mk-on traveluuid = 987 ) ).  "Create a travel with traveluuid 987
 
    "configure the double for create in test method"
-   data(double) =  environment->get_test_double( '/dmo/r_travel_d' ).
+   data(double) =  environment->get_test_double( 'ZAI_DMOr_travel_d' ).
    data(input) = double->create_modify_input_config(  )->set_instance( create_travel_instances[ 1 ] ).
    data(output) = double->create_modify_output_config( )->set_mapped( mapped = mapped_travel_987 ).
    double->configure_additional_behavior(  )->for_modify_create(  )->when_input( input )->then_set_output( output ).
 
    "Insert the travel with Create EML
-    modify entities of /dmo/r_travel_d
+    modify entities of ZAI_DMOr_travel_d
      entity travel
        create fields ( AgencyID CustomerID description )
         with value #( ( %cid = 'Travel_987' %is_draft = if_abap_behv=>mk-on AgencyID = '000111' CustomerID = '000006' description = 'Travel_987'  ) ) "Since set_mapped is used for the instance,
@@ -2198,7 +2198,7 @@ class ltcl_using_txbufdbl_variant implementation.
 
 
   "Step 2: Setup test data instance for Create by association EML in code under test.
-   data cba_booking_instances type table for create /dmo/r_travel_d\_Booking.
+   data cba_booking_instances type table for create ZAI_DMOr_travel_d\_Booking.
    cba_booking_instances = value #( ( traveluuid = 987 %is_draft = if_abap_behv=>mk-on
                                       %target = value #( (  %cid = 'Travel_987_Booking_001' %is_draft = if_abap_behv=>mk-on
                                                             connectionid = 'C1' %control-connectionid = if_abap_behv=>mk-on
@@ -2208,7 +2208,7 @@ class ltcl_using_txbufdbl_variant implementation.
 
 
   "Step 3: Define and set up the mapped response structure to be returned for Create by association EML on test data instance in CUT, with the key to be assigned for the instance.
-    data mapped_booking_001 type response for mapped early /dmo/r_travel_d.
+    data mapped_booking_001 type response for mapped early ZAI_DMOr_travel_d.
     mapped_booking_001-booking = value #( ( %cid = 'Travel_987_Booking_001' %is_draft = if_abap_behv=>mk-on BookingUUID =  001 ) ).  "Create a booking for traveluuid 987 with BookingUUID 001
 
 
@@ -2246,7 +2246,7 @@ class ltcl_using_txbufdbl_variant implementation.
 
     "The TXBUFDBL variant, creates the instance with key fields provided via the set_mapped API and inserts into the transactional buffer double
     "Read the data to assert create by association
-    read entity /dmo/r_travel_d
+    read entity ZAI_DMOr_travel_d
       by \_Booking
      from value #( ( traveluuid = mapped-travel[ 1 ]-traveluuid %is_draft = if_abap_behv=>mk-on %control-bookingstatus = if_abap_behv=>mk-on ) )
      result   data(result_read)
@@ -2274,7 +2274,7 @@ class ltcl_using_txbufdbl_variant implementation.
    "The Update operation on instance in CUT will return failed, configured via set_failed.
 
   "Step 2: Setup test data instance for Update EML statement in code under test.
-   data update_travel_instances type table for update /dmo/r_travel_d.
+   data update_travel_instances type table for update ZAI_DMOr_travel_d.
    update_travel_instances = value #( ( traveluuid = 987 %is_draft = if_abap_behv=>mk-on
                               description = 'Travel Updated'
                               %control-description = if_abap_behv=>mk-on )
@@ -2282,13 +2282,13 @@ class ltcl_using_txbufdbl_variant implementation.
 
 
   "Step 3: Define and set up the failed response structure to be returned for update EML on test data instance in CUT.
-    data failed type response for failed early /dmo/r_travel_d.
+    data failed type response for failed early ZAI_DMOr_travel_d.
     failed-travel = value #( ( traveluuid = 987 %is_draft = if_abap_behv=>mk-on %fail-cause = if_abap_behv=>cause-not_found %update = if_abap_behv=>mk-on ) ).
 
 
   "Step 4: set_failed using configure_addtional_behavior API on double to configure update EML on an instance in code under test to fail.
 
-    data(double) =  environment->get_test_double( '/dmo/r_travel_d' ).
+    data(double) =  environment->get_test_double( 'ZAI_DMOr_travel_d' ).
     data(input) = double->create_modify_input_config(  )->set_instance( update_travel_instances[ 1 ] ).
                                                                                 "Note that the input instance should contain only one instance
     data(output) = double->create_modify_output_config( )->set_failed( failed ).
@@ -2332,16 +2332,16 @@ class ltcl_using_txbufdbl_variant implementation.
    "The delete operation on instance in CUT will return failed, configured via set_failed.
 
   "Step 2: Setup test data instance for delete EML statement in code under test.
-   data delete_travel_instances type table for delete /dmo/r_travel_d.
+   data delete_travel_instances type table for delete ZAI_DMOr_travel_d.
    delete_travel_instances = value #( ( traveluuid = 987 %is_draft = if_abap_behv=>mk-on ) ).
 
   "Step 3: Define and set up the failed response structure to be returned for update EML on test data instance in CUT.
-    data failed type response for failed early /dmo/r_travel_d.
+    data failed type response for failed early ZAI_DMOr_travel_d.
     failed-travel = value #( ( traveluuid = 987 %is_draft = if_abap_behv=>mk-on %fail-cause = if_abap_behv=>cause-not_found %delete = if_abap_behv=>mk-on ) ).
 
   "Step 4: set_failed using configure_addtional_behavior API on double to configure delete EML on an instance in code under test to fail.
 
-    data(double) =  environment->get_test_double( '/dmo/r_travel_d' ).
+    data(double) =  environment->get_test_double( 'ZAI_DMOr_travel_d' ).
     data(input) = double->create_modify_input_config(  )->set_instance( delete_travel_instances[ 1 ] ).
                                                                                 "Note that the input instance should contain only one instance
     data(output) = double->create_modify_output_config( )->set_failed( failed ).
@@ -2386,21 +2386,21 @@ class ltcl_using_txbufdbl_variant implementation.
   "Step 1: Insert test data in transactional buffer double using a CREATE EML (if required).
    "Insert a travel with traveluuid 987
    "The create in test method will perform the create operation on the buffer using the key set using set_mapped. (alternatively "set_fields_handler" can be used to set numbering support)
-   data create_travel_instances type table for create /dmo/r_travel_d.
+   data create_travel_instances type table for create ZAI_DMOr_travel_d.
    create_travel_instances = value #( ( %cid = 'Travel_987' %is_draft = if_abap_behv=>mk-on AgencyID = '000111' CustomerID = '000006' description = 'Travel_987' ) ).
 
    "using set mapped API, set the key for the travel as 987
-   data mapped_travel_987 type response for mapped early /dmo/r_travel_d.
+   data mapped_travel_987 type response for mapped early ZAI_DMOr_travel_d.
    mapped_travel_987-travel = value #( ( %cid = 'Travel_987' %is_draft = if_abap_behv=>mk-on traveluuid = 987 ) ).  "Create a travel with traveluuid 987
 
    "configure the double for create in test method (below)"
-   data(double) =  environment->get_test_double( '/dmo/r_travel_d' ).
+   data(double) =  environment->get_test_double( 'ZAI_DMOr_travel_d' ).
    data(input) = double->create_modify_input_config(  )->set_instance( create_travel_instances[ 1 ] ).
    data(output) = double->create_modify_output_config( )->set_mapped( mapped = mapped_travel_987 ).
    double->configure_additional_behavior(  )->for_modify_create(  )->when_input( input )->then_set_output( output ).
 
    "Insert the travel with Create EML
-    modify entities of /dmo/r_travel_d
+    modify entities of ZAI_DMOr_travel_d
      entity travel
        create fields ( AgencyID CustomerID description )
         with value #( ( %cid = 'Travel_987' %is_draft = if_abap_behv=>mk-on AgencyID = '000111' CustomerID = '000006' description = 'Travel_987'  ) ) "Since set_mapped is used for the instance,
@@ -2414,7 +2414,7 @@ class ltcl_using_txbufdbl_variant implementation.
 
 
   "Step 2: Setup test data instance for Update EML in code under test.
-   data update_travel_instances type table for update /dmo/r_travel_d.
+   data update_travel_instances type table for update ZAI_DMOr_travel_d.
    update_travel_instances = value #( ( traveluuid = 987 %is_draft = if_abap_behv=>mk-on
                               description = 'Travel Updated'
                               %control-description = if_abap_behv=>mk-on )
@@ -2422,7 +2422,7 @@ class ltcl_using_txbufdbl_variant implementation.
 
 
   "Step 3: Define and set up the mapped response structure to be returned for update EML on test data instance in CUT.
-    data mapped_update type response for mapped early /dmo/r_travel_d.
+    data mapped_update type response for mapped early ZAI_DMOr_travel_d.
     mapped_update-travel = value #( ( traveluuid = 987 %is_draft = if_abap_behv=>mk-on ) ).  "Update traveluuid 987 created and inserted in the buffer double above.
 
 
@@ -2459,7 +2459,7 @@ class ltcl_using_txbufdbl_variant implementation.
     cl_abap_unit_assert=>assert_equals( act = mapped_cut-travel[ 1 ]-%is_draft exp = if_abap_behv=>mk-on ).
 
     "Check if the instance was updated.
-    read entity /dmo/r_travel_d
+    read entity ZAI_DMOr_travel_d
      from value #( ( traveluuid = mapped_cut-travel[ 1 ]-traveluuid %is_draft = if_abap_behv=>mk-on
                      %control-description = if_abap_behv=>mk-on ) )
      result   data(result_read)
@@ -2480,12 +2480,12 @@ class ltcl_using_txbufdbl_variant implementation.
 
   "Step 1: Set numbering support on double (if required).
   "Since early numbering is enabled for BO and the key fields are read-only, setting a numbering support is required to assign keys to instances for create or create_ba operations
-    data(double) =  environment->get_test_double( '/dmo/r_travel_d' ).
+    data(double) =  environment->get_test_double( 'ZAI_DMOr_travel_d' ).
     double->configure_additional_behavior(  )->set_fields_handler( fields_handler = new ltd_fields_handler( ) ).
 
   "Step 2: Insert test data in transactional buffer double using a CREATE EML (if required).
    "Record a travel instance which is to be read in code under test. ( Will be recorded in Framework's Buffer and an ID will be returned by the framework according to fields_handler )
-    modify entities of /dmo/r_travel_d
+    modify entities of ZAI_DMOr_travel_d
      entity travel
        create from value #( ( %cid = 'Travel_1' %is_draft = if_abap_behv=>mk-on
                               AgencyID = '000111' CustomerID = '000006' description = 'Travel 1'
@@ -2541,13 +2541,13 @@ class ltcl_using_txbufdbl_variant implementation.
 
   "Step 1: Set numbering support on double (if required).
   "Since early numbering is enabled for BO and the key fields are read-only, setting a numbering support is required to assign keys to instances for create or create_ba operations
-    data(double) =  environment->get_test_double( '/dmo/r_travel_d' ).
+    data(double) =  environment->get_test_double( 'ZAI_DMOr_travel_d' ).
     double->configure_additional_behavior(  )->set_fields_handler( fields_handler = new ltd_fields_handler( ) ).
 
   "Step 2: Insert test data in transactional buffer double using a CREATE EML (if required).
    "Record a travel instance and bookings for it  which will be read in code under test by association. ( Will be recorded in Framework's Buffer and an ID will be returned by the framework according to fields_handler )
    "Use Deep Create to insert a travel and 2 bookings for that travel.
-    modify entities of /dmo/r_travel_d
+    modify entities of ZAI_DMOr_travel_d
      entity travel
              create fields ( CustomerID begindate enddate description ) with
                          value #( ( %cid        = 'Travel_1'    " Preliminary ID for new travel instance
@@ -2638,18 +2638,18 @@ class ltcl_using_txbufdbl_variant implementation.
    "The read operation on instance in CUT will return failed, configured via set_failed.
 
   "Step 2: Setup test data instance for read EML statement in code under test.
-   data read_travel_instances type table for read import /dmo/r_travel_d.
+   data read_travel_instances type table for read import ZAI_DMOr_travel_d.
    read_travel_instances = value #( ( traveluuid = 987 %is_draft = if_abap_behv=>mk-on ) ).
 
 
   "Step 3: Define and set up the failed response structure to be returned for read EML on test data instance in CUT.
-    data failed type response for failed early /dmo/r_travel_d.
+    data failed type response for failed early ZAI_DMOr_travel_d.
     failed-travel = value #( ( traveluuid = 987 %is_draft = if_abap_behv=>mk-on %fail-cause = if_abap_behv=>cause-not_found ) ).
 
 
   "Step 4: set_failed using configure_addtional_behavior API on double to configure read EML on an instance in code under test to fail.
 
-    data(double) =  environment->get_test_double( '/dmo/r_travel_d' ).
+    data(double) =  environment->get_test_double( 'ZAI_DMOr_travel_d' ).
     data(input) = double->create_read_input_config(  )->set_instance( read_travel_instances[ 1 ] ).
                                                                                 "Note that the input instance should contain only one instance
     data(output) = double->create_read_output_config( )->set_failed( failed ).
@@ -2694,18 +2694,18 @@ class ltcl_using_txbufdbl_variant implementation.
    "The read by association operation on instance in CUT will return failed, configured via set_failed.
 
   "Step 2: Setup test data instance for read by association EML in code under test.
-   data rba_booking_instances type table for read import /dmo/r_travel_d\_Booking.
+   data rba_booking_instances type table for read import ZAI_DMOr_travel_d\_Booking.
    rba_booking_instances = value #( ( traveluuid = 987 %is_draft = if_abap_behv=>mk-on ) ).
 
 
   "Step 3: Define and set up the failed response structure to be returned for read by association EML on test data instance in CUT
-    data failed type response for failed early /dmo/r_travel_d.
+    data failed type response for failed early ZAI_DMOr_travel_d.
     failed-travel = value #( ( traveluuid = 987 %is_draft = if_abap_behv=>mk-on %fail-cause = if_abap_behv=>cause-not_found ) ).
 
 
   "Step 4: set_failed using configure_addtional_behavior API on double to configure read by association EML on an instance in code under test to fail.
 
-    data(double) =  environment->get_test_double( '/dmo/r_travel_d' ).
+    data(double) =  environment->get_test_double( 'ZAI_DMOr_travel_d' ).
     data(input) = double->create_read_input_config(  )->set_instance( rba_booking_instances[ 1 ] ).
                                                                                 "Note that the input instance should contain only one instance
     data(output) = double->create_read_output_config( )->set_failed( failed ).

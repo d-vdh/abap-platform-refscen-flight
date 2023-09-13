@@ -1,9 +1,9 @@
-"! @testing BDEF:/DMO/I_CarriersLockSingleton_S
+"! @testing BDEF:ZAI_DMOI_CarriersLockSingleton_S
 CLASS lthc_carrier DEFINITION FINAL FOR TESTING
   DURATION SHORT
   RISK LEVEL HARMLESS.
   PRIVATE SECTION.
-    CONSTANTS airlineid_for_test TYPE /dmo/carrier_id VALUE 'XX4' ##NO_TEXT.
+    CONSTANTS airlineid_for_test TYPE ZAI_DMOcarrier_id VALUE 'XX4' ##NO_TEXT.
 
     CLASS-DATA: class_under_test     TYPE REF TO lhc_carrier,
                 cds_test_environment TYPE REF TO if_cds_test_environment.
@@ -13,10 +13,10 @@ CLASS lthc_carrier DEFINITION FINAL FOR TESTING
       class_teardown.
 
     DATA:
-      failed        TYPE RESPONSE FOR FAILED   EARLY /dmo/i_carrierslocksingleton_s,
-      reported      TYPE RESPONSE FOR REPORTED EARLY /dmo/i_carrierslocksingleton_s,
-      failed_late   TYPE RESPONSE FOR FAILED   LATE  /dmo/i_carrierslocksingleton_s,
-      reported_late TYPE RESPONSE FOR REPORTED LATE  /dmo/i_carrierslocksingleton_s.
+      failed        TYPE RESPONSE FOR FAILED   EARLY ZAI_DMOi_carrierslocksingleton_s,
+      reported      TYPE RESPONSE FOR REPORTED EARLY ZAI_DMOi_carrierslocksingleton_s,
+      failed_late   TYPE RESPONSE FOR FAILED   LATE  ZAI_DMOi_carrierslocksingleton_s,
+      reported_late TYPE RESPONSE FOR REPORTED LATE  ZAI_DMOi_carrierslocksingleton_s.
 
 
     METHODS:
@@ -60,8 +60,8 @@ CLASS lthc_carrier IMPLEMENTATION.
     CREATE OBJECT class_under_test FOR TESTING.
     cds_test_environment = cl_cds_test_environment=>create_for_multiple_cds(
         i_for_entities =  VALUE #(
-            ( i_for_entity = '/DMO/I_CARRIER_S'  )
-            ( i_for_entity = '/DMO/I_Connection' )
+            ( i_for_entity = 'ZAI_DMOI_CARRIER_S'  )
+            ( i_for_entity = 'ZAI_DMOI_Connection' )
           )
       ).
   ENDMETHOD.
@@ -86,10 +86,10 @@ CLASS lthc_carrier IMPLEMENTATION.
 
   METHOD validatecurrencycode_success.
     DATA:
-      carrier  TYPE /dmo/i_carrier,
-      carriers TYPE STANDARD TABLE OF /dmo/i_carrier.
+      carrier  TYPE ZAI_DMOi_carrier,
+      carriers TYPE STANDARD TABLE OF ZAI_DMOi_carrier.
 
-    carrier = VALUE /dmo/i_carrier(
+    carrier = VALUE ZAI_DMOi_carrier(
         airlineid     = airlineid_for_test
         currencycode  = 'EUR'
       ).
@@ -125,10 +125,10 @@ CLASS lthc_carrier IMPLEMENTATION.
 
   METHOD validatecurrencycode_initial.
     DATA:
-      carrier  TYPE /dmo/i_carrier,
-      carriers TYPE STANDARD TABLE OF /dmo/i_carrier.
+      carrier  TYPE ZAI_DMOi_carrier,
+      carriers TYPE STANDARD TABLE OF ZAI_DMOi_carrier.
 
-    carrier = VALUE /dmo/i_carrier(
+    carrier = VALUE ZAI_DMOi_carrier(
         airlineid     = airlineid_for_test
       ).
 
@@ -181,10 +181,10 @@ CLASS lthc_carrier IMPLEMENTATION.
 
   METHOD validatecurrencycode_not_exist.
     DATA:
-      carrier  TYPE /dmo/i_carrier,
-      carriers TYPE STANDARD TABLE OF /dmo/i_carrier.
+      carrier  TYPE ZAI_DMOi_carrier,
+      carriers TYPE STANDARD TABLE OF ZAI_DMOi_carrier.
 
-    carrier = VALUE /dmo/i_carrier(
+    carrier = VALUE ZAI_DMOi_carrier(
         airlineid     = airlineid_for_test
         currencycode  = 'ÄÖÜ'
       ).
@@ -238,10 +238,10 @@ CLASS lthc_carrier IMPLEMENTATION.
 
   METHOD validatename_success.
     DATA:
-      carrier  TYPE /dmo/i_carrier,
-      carriers TYPE STANDARD TABLE OF /dmo/i_carrier.
+      carrier  TYPE ZAI_DMOi_carrier,
+      carriers TYPE STANDARD TABLE OF ZAI_DMOi_carrier.
 
-    carrier = VALUE /dmo/i_carrier(
+    carrier = VALUE ZAI_DMOi_carrier(
         airlineid = airlineid_for_test
         name      = 'Testing'
       ).
@@ -277,10 +277,10 @@ CLASS lthc_carrier IMPLEMENTATION.
 
   METHOD validatename_initial.
     DATA:
-      carrier  TYPE /dmo/i_carrier,
-      carriers TYPE STANDARD TABLE OF /dmo/i_carrier.
+      carrier  TYPE ZAI_DMOi_carrier,
+      carriers TYPE STANDARD TABLE OF ZAI_DMOi_carrier.
 
-    carrier = VALUE /dmo/i_carrier(
+    carrier = VALUE ZAI_DMOi_carrier(
         airlineid = airlineid_for_test
       ).
 
@@ -333,25 +333,25 @@ CLASS lthc_carrier IMPLEMENTATION.
 
   METHOD get_instance_features.
     DATA:
-      result                     TYPE  TABLE FOR INSTANCE FEATURES RESULT /dmo/i_carrierslocksingleton_s\\carrier,
-      carrier_with_connection    TYPE /dmo/i_carrier,
-      carrier_without_connection TYPE /dmo/i_carrier,
-      carriers                   TYPE STANDARD TABLE OF /dmo/i_carrier,
-      connection                 TYPE /dmo/connection,
-      connections                TYPE STANDARD TABLE OF /dmo/connection.
+      result                     TYPE  TABLE FOR INSTANCE FEATURES RESULT ZAI_DMOi_carrierslocksingleton_s\\carrier,
+      carrier_with_connection    TYPE ZAI_DMOi_carrier,
+      carrier_without_connection TYPE ZAI_DMOi_carrier,
+      carriers                   TYPE STANDARD TABLE OF ZAI_DMOi_carrier,
+      connection                 TYPE ZAI_DMOconnection,
+      connections                TYPE STANDARD TABLE OF ZAI_DMOconnection.
 
-    carrier_with_connection = VALUE /dmo/i_carrier(
+    carrier_with_connection = VALUE ZAI_DMOi_carrier(
         airlineid = 'AAA'
       ).
 
-    carrier_without_connection = VALUE /dmo/i_carrier(
+    carrier_without_connection = VALUE ZAI_DMOi_carrier(
         airlineid = 'BBB'
       ).
 
     carriers = VALUE #( ( carrier_with_connection ) ( carrier_without_connection ) ).
     cds_test_environment->insert_test_data( carriers ).
 
-    connection = VALUE /dmo/connection(
+    connection = VALUE ZAI_DMOconnection(
         carrier_id      = carrier_with_connection-airlineid
         connection_id   = '1234'
       ).
@@ -394,7 +394,7 @@ CLASS lthc_carrier IMPLEMENTATION.
 
 ENDCLASS.
 
-"! @testing BDEF:/DMO/I_CarriersLockSingleton_S
+"! @testing BDEF:ZAI_DMOI_CarriersLockSingleton_S
 CLASS lthc_carrierslocksingleton DEFINITION FINAL FOR TESTING
   DURATION SHORT
   RISK LEVEL HARMLESS.
@@ -412,9 +412,9 @@ CLASS lthc_carrierslocksingleton IMPLEMENTATION.
   METHOD get_global_authorizations.
     DATA:
       class_under_test         TYPE REF TO lhc_carrierslocksingleton,
-      requested_authorizations TYPE STRUCTURE FOR GLOBAL AUTHORIZATION REQUEST /dmo/i_carrierslocksingleton_s\\carrierslocksingleton,
-      result                   TYPE STRUCTURE FOR GLOBAL AUTHORIZATION RESULT /dmo/i_carrierslocksingleton_s\\carrierslocksingleton,
-      reported                 TYPE RESPONSE  FOR REPORTED EARLY /dmo/i_carrierslocksingleton_s.
+      requested_authorizations TYPE STRUCTURE FOR GLOBAL AUTHORIZATION REQUEST ZAI_DMOi_carrierslocksingleton_s\\carrierslocksingleton,
+      result                   TYPE STRUCTURE FOR GLOBAL AUTHORIZATION RESULT ZAI_DMOi_carrierslocksingleton_s\\carrierslocksingleton,
+      reported                 TYPE RESPONSE  FOR REPORTED EARLY ZAI_DMOi_carrierslocksingleton_s.
 
 
     CREATE OBJECT class_under_test FOR TESTING.
@@ -438,7 +438,7 @@ CLASS lthc_carrierslocksingleton IMPLEMENTATION.
 
 ENDCLASS.
 
-"! @testing BDEF:/DMO/I_CarriersLockSingleton_S
+"! @testing BDEF:ZAI_DMOI_CarriersLockSingleton_S
 CLASS ltsc_i_carrierslocksingleton_s DEFINITION FINAL FOR TESTING
   DURATION SHORT
   RISK LEVEL HARMLESS.
@@ -446,16 +446,16 @@ CLASS ltsc_i_carrierslocksingleton_s DEFINITION FINAL FOR TESTING
   PRIVATE SECTION.
     DATA:
       save_handler TYPE REF TO lsc_i_carrierslocksingleton_s,
-      mapped       TYPE RESPONSE FOR MAPPED   LATE /dmo/i_carrierslocksingleton_s,
-      failed       TYPE RESPONSE FOR FAILED   LATE /dmo/i_carrierslocksingleton_s,
-      reported     TYPE RESPONSE FOR REPORTED LATE /dmo/i_carrierslocksingleton_s.
+      mapped       TYPE RESPONSE FOR MAPPED   LATE ZAI_DMOi_carrierslocksingleton_s,
+      failed       TYPE RESPONSE FOR FAILED   LATE ZAI_DMOi_carrierslocksingleton_s,
+      reported     TYPE RESPONSE FOR REPORTED LATE ZAI_DMOi_carrierslocksingleton_s.
 
     METHODS:
       setup,
       _check_all_initial.
 
     METHODS:
-      "! Checks if { @link ..lsc_I_CARRIERSLOCKSINGLETON_S.METH:save_modified } calls { @link FUNC:/DMO/FLIGHT_TRAVEL_SAVE }
+      "! Checks if { @link ..lsc_I_CARRIERSLOCKSINGLETON_S.METH:save_modified } calls { @link FUNC:ZAI_DMOFLIGHT_TRAVEL_SAVE }
       "! and does not raise any exception nor reporting anything.
       save_modified     FOR TESTING RAISING cx_static_check,
 

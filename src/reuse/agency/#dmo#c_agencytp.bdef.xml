@@ -3,7 +3,7 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <BDEF>
-    <NAME>/DMO/C_AGENCYTP</NAME>
+    <NAME>ZAI_DMOC_AGENCYTP</NAME>
     <TYPE>BDEF/BDO</TYPE>
     <DESCRIPTION>Agency</DESCRIPTION>
     <DESCRIPTION_TEXT_LIMIT>60</DESCRIPTION_TEXT_LIMIT>

@@ -1,5 +1,5 @@
-CLASS /dmo/zz_bp_x_cntry_r_agencytp DEFINITION PUBLIC ABSTRACT FINAL FOR BEHAVIOR OF /dmo/r_agencytp.
+CLASS ZAI_DMOzz_bp_x_cntry_r_agencytp DEFINITION PUBLIC ABSTRACT FINAL FOR BEHAVIOR OF ZAI_DMOr_agencytp.
 ENDCLASS.
 
-CLASS /dmo/zz_bp_x_cntry_r_agencytp IMPLEMENTATION.
+CLASS ZAI_DMOzz_bp_x_cntry_r_agencytp IMPLEMENTATION.
 ENDCLASS.

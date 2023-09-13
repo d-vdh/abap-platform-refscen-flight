@@ -1,6 +1,6 @@
 @EndUserText.label: 'Multi-Inline-Edit Scenario'
-@ObjectModel.leadingEntity.name: '/DMO/C_CarriersLockSingleton_S'
-define service /DMO/UI_Carriers_S {
-  expose /DMO/C_CarriersLockSingleton_S as CarriersSingleton;
-  expose /DMO/C_Carrier_S as Carrier;
+@ObjectModel.leadingEntity.name: 'ZAI_DMOC_CarriersLockSingleton_S'
+define service ZAI_DMOUI_Carriers_S {
+  expose ZAI_DMOC_CarriersLockSingleton_S as CarriersSingleton;
+  expose ZAI_DMOC_Carrier_S as Carrier;
 }

@@ -1,37 +1,37 @@
-"! @testing BDEF:/DMO/I_Travel_U
+"! @testing BDEF:ZAI_DMOI_Travel_U
 CLASS ltcl_handler DEFINITION FINAL FOR TESTING
   DURATION SHORT
   RISK LEVEL HARMLESS.
 
   PRIVATE SECTION.
     CONSTANTS:
-      fm_delete      TYPE sxco_fm_name VALUE '/DMO/FLIGHT_TRAVEL_DELETE',
-      fm_read        TYPE sxco_fm_name VALUE '/DMO/FLIGHT_TRAVEL_READ',
-      fm_update      TYPE sxco_fm_name VALUE '/DMO/FLIGHT_TRAVEL_UPDATE'.
+      fm_delete      TYPE sxco_fm_name VALUE 'ZAI_DMOFLIGHT_TRAVEL_DELETE',
+      fm_read        TYPE sxco_fm_name VALUE 'ZAI_DMOFLIGHT_TRAVEL_READ',
+      fm_update      TYPE sxco_fm_name VALUE 'ZAI_DMOFLIGHT_TRAVEL_UPDATE'.
 
     CONSTANTS:
       cid                   TYPE abp_behv_cid     VALUE '42',
-      travel_id             TYPE /dmo/travel_id   VALUE '1337',
-      agency_id             TYPE /dmo/agency_id   VALUE '42',
-      customer_id           TYPE /dmo/customer_id VALUE '123',
-      booking_id            TYPE /dmo/booking_id  VALUE '20',
-      carrier_id            TYPE /dmo/carrier_id  VALUE 'XX',
-      booking_supplement_id TYPE /dmo/booking_supplement_id VALUE '21',
-      supplement_id         TYPE /dmo/supplement_id VALUE 'XX-42'.
+      travel_id             TYPE ZAI_DMOtravel_id   VALUE '1337',
+      agency_id             TYPE ZAI_DMOagency_id   VALUE '42',
+      customer_id           TYPE ZAI_DMOcustomer_id VALUE '123',
+      booking_id            TYPE ZAI_DMObooking_id  VALUE '20',
+      carrier_id            TYPE ZAI_DMOcarrier_id  VALUE 'XX',
+      booking_supplement_id TYPE ZAI_DMObooking_supplement_id VALUE '21',
+      supplement_id         TYPE ZAI_DMOsupplement_id VALUE 'XX-42'.
 
     CLASS-DATA:
       fm_test_environment TYPE REF TO if_function_test_environment.
 
     DATA:
       behavior_handler TYPE REF TO lhc_booking,
-      mapped           TYPE RESPONSE FOR MAPPED EARLY /dmo/i_travel_u,
-      failed           TYPE RESPONSE FOR FAILED EARLY /dmo/i_travel_u,
-      reported         TYPE RESPONSE FOR REPORTED EARLY /dmo/i_travel_u,
+      mapped           TYPE RESPONSE FOR MAPPED EARLY ZAI_DMOi_travel_u,
+      failed           TYPE RESPONSE FOR FAILED EARLY ZAI_DMOi_travel_u,
+      reported         TYPE RESPONSE FOR REPORTED EARLY ZAI_DMOi_travel_u,
       mapped_line      LIKE LINE OF mapped-booking,
       failed_line      LIKE LINE OF failed-booking,
       reported_line    LIKE LINE OF reported-booking,
       message          TYPE symsg,
-      messages         TYPE /dmo/t_message,
+      messages         TYPE ZAI_DMOt_message,
       message_obj      TYPE REF TO if_abap_behv_message.
 
     CLASS-METHODS:
@@ -43,38 +43,38 @@ CLASS ltcl_handler DEFINITION FINAL FOR TESTING
 
     METHODS:
 
-      "! Checks if { @link ..lhc_booking.METH:read } works as expected when { @link FUNC:/DMO/FLIGHT_TRAVEL_READ } succeeds and the <em>Booking_ID</em> is found.
+      "! Checks if { @link ..lhc_booking.METH:read } works as expected when { @link FUNC:ZAI_DMOFLIGHT_TRAVEL_READ } succeeds and the <em>Booking_ID</em> is found.
       read_success                   FOR TESTING RAISING cx_static_check,
-      "! Checks if { @link ..lhc_booking.METH:read } works as expected when { @link FUNC:/DMO/FLIGHT_TRAVEL_READ } succeeds but the <em>Booking_ID</em> to be read is not found.
+      "! Checks if { @link ..lhc_booking.METH:read } works as expected when { @link FUNC:ZAI_DMOFLIGHT_TRAVEL_READ } succeeds but the <em>Booking_ID</em> to be read is not found.
       read_wrong_booking_id          FOR TESTING RAISING cx_static_check,
-      "! Checks if { @link ..lhc_booking.METH:read } works as expected when { @link FUNC:/DMO/FLIGHT_TRAVEL_READ } fails.
+      "! Checks if { @link ..lhc_booking.METH:read } works as expected when { @link FUNC:ZAI_DMOFLIGHT_TRAVEL_READ } fails.
       read_fail                      FOR TESTING RAISING cx_static_check,
 
-      "! Checks if { @link ..lhc_booking.METH:update } works as expected when { @link FUNC:/DMO/FLIGHT_TRAVEL_UPDATE } succeeds.
+      "! Checks if { @link ..lhc_booking.METH:update } works as expected when { @link FUNC:ZAI_DMOFLIGHT_TRAVEL_UPDATE } succeeds.
       update_success                 FOR TESTING RAISING cx_static_check,
-      "! Checks if { @link ..lhc_booking.METH:update } works as expected when { @link FUNC:/DMO/FLIGHT_TRAVEL_UPDATE } fails.
+      "! Checks if { @link ..lhc_booking.METH:update } works as expected when { @link FUNC:ZAI_DMOFLIGHT_TRAVEL_UPDATE } fails.
       update_fail                    FOR TESTING RAISING cx_static_check,
 
-      "! Checks if { @link ..lhc_booking.METH:delete } works as expected when { @link FUNC:/DMO/FLIGHT_TRAVEL_UPDATE } succeeds.
+      "! Checks if { @link ..lhc_booking.METH:delete } works as expected when { @link FUNC:ZAI_DMOFLIGHT_TRAVEL_UPDATE } succeeds.
       delete_success                 FOR TESTING RAISING cx_static_check,
-      "! Checks if { @link ..lhc_booking.METH:delete } works as expected when { @link FUNC:/DMO/FLIGHT_TRAVEL_UPDATE } fails.
+      "! Checks if { @link ..lhc_booking.METH:delete } works as expected when { @link FUNC:ZAI_DMOFLIGHT_TRAVEL_UPDATE } fails.
       delete_fail                    FOR TESTING RAISING cx_static_check,
 
-      "! Checks if { @link ..lhc_booking.METH:rba_Travel } works as expected when { @link FUNC:/DMO/FLIGHT_TRAVEL_READ } succeeds.
+      "! Checks if { @link ..lhc_booking.METH:rba_Travel } works as expected when { @link FUNC:ZAI_DMOFLIGHT_TRAVEL_READ } succeeds.
       rba_travel_success             FOR TESTING RAISING cx_static_check,
-      "! Checks if { @link ..lhc_booking.METH:rba_Travel } works as expected when { @link FUNC:/DMO/FLIGHT_TRAVEL_READ } fails.
+      "! Checks if { @link ..lhc_booking.METH:rba_Travel } works as expected when { @link FUNC:ZAI_DMOFLIGHT_TRAVEL_READ } fails.
       rba_travel_fail                FOR TESTING RAISING cx_static_check,
 
-      "! Checks if { @link ..lhc_booking.METH:rba_Booksupplement } works as expected when { @link FUNC:/DMO/FLIGHT_TRAVEL_READ } succeeds.
+      "! Checks if { @link ..lhc_booking.METH:rba_Booksupplement } works as expected when { @link FUNC:ZAI_DMOFLIGHT_TRAVEL_READ } succeeds.
       rba_bookingsupplement_success  FOR TESTING RAISING cx_static_check,
-      "! Checks if { @link ..lhc_booking.METH:rba_Booksupplement } works as expected when { @link FUNC:/DMO/FLIGHT_TRAVEL_READ } fails.
+      "! Checks if { @link ..lhc_booking.METH:rba_Booksupplement } works as expected when { @link FUNC:ZAI_DMOFLIGHT_TRAVEL_READ } fails.
       rba_bookingsupplement_fail     FOR TESTING RAISING cx_static_check,
 
-      "! Checks if { @link ..lhc_booking.METH:cba_booksupplement } works as expected when { @link FUNC:/DMO/FLIGHT_TRAVEL_READ } and { @link FUNC:/DMO/FLIGHT_TRAVEL_UPDATE } both succeeds.
+      "! Checks if { @link ..lhc_booking.METH:cba_booksupplement } works as expected when { @link FUNC:ZAI_DMOFLIGHT_TRAVEL_READ } and { @link FUNC:ZAI_DMOFLIGHT_TRAVEL_UPDATE } both succeeds.
       cba_success                    FOR TESTING RAISING cx_static_check,
-      "! Checks if { @link ..lhc_booking.METH:cba_booksupplement } works as expected when { @link FUNC:/DMO/FLIGHT_TRAVEL_READ } fails.
+      "! Checks if { @link ..lhc_booking.METH:cba_booksupplement } works as expected when { @link FUNC:ZAI_DMOFLIGHT_TRAVEL_READ } fails.
       cba_fail_read                  FOR TESTING RAISING cx_static_check,
-      "! Checks if { @link ..lhc_booking.METH:cba_booksupplement } works as expected when { @link FUNC:/DMO/FLIGHT_TRAVEL_READ } succeeds but { @link FUNC:/DMO/FLIGHT_TRAVEL_UPDATE } fails.
+      "! Checks if { @link ..lhc_booking.METH:cba_booksupplement } works as expected when { @link FUNC:ZAI_DMOFLIGHT_TRAVEL_READ } succeeds but { @link FUNC:ZAI_DMOFLIGHT_TRAVEL_UPDATE } fails.
       cba_fail_update                FOR TESTING RAISING cx_static_check.
 ENDCLASS.
 
@@ -108,7 +108,7 @@ CLASS ltcl_handler IMPLEMENTATION.
         msgid = 'CM_TEST'
         msgno = '123'
       ).
-    messages = VALUE /dmo/t_message( ( message ) ).
+    messages = VALUE ZAI_DMOt_message( ( message ) ).
     message_obj = behavior_handler->new_message(
                       id       = message-msgid
                       number   = message-msgno
@@ -123,17 +123,17 @@ CLASS ltcl_handler IMPLEMENTATION.
 
   METHOD read_success.
     DATA:
-      keys        TYPE TABLE     FOR READ IMPORT /dmo/i_travel_u\\Booking,
-      result      TYPE TABLE     FOR READ RESULT /dmo/i_travel_u\\Booking,
-      result_line TYPE STRUCTURE FOR READ RESULT /dmo/i_travel_u\\Booking,
-      bookings    TYPE /dmo/t_booking.
+      keys        TYPE TABLE     FOR READ IMPORT ZAI_DMOi_travel_u\\Booking,
+      result      TYPE TABLE     FOR READ RESULT ZAI_DMOi_travel_u\\Booking,
+      result_line TYPE STRUCTURE FOR READ RESULT ZAI_DMOi_travel_u\\Booking,
+      bookings    TYPE ZAI_DMOt_booking.
 
-    DATA(travel) = VALUE /dmo/travel(
+    DATA(travel) = VALUE ZAI_DMOtravel(
                        travel_id   = travel_id
                        agency_id   = agency_id
                        customer_id = customer_id
                      ).
-    DATA(booking) = VALUE /dmo/booking(
+    DATA(booking) = VALUE ZAI_DMObooking(
                        travel_id   = travel_id
                        booking_id  = booking_id
                        customer_id = customer_id
@@ -189,17 +189,17 @@ CLASS ltcl_handler IMPLEMENTATION.
 
   METHOD read_wrong_booking_id.
     DATA:
-      keys        TYPE TABLE     FOR READ IMPORT /dmo/i_travel_u\\Booking,
-      result      TYPE TABLE     FOR READ RESULT /dmo/i_travel_u\\Booking,
-      result_line TYPE STRUCTURE FOR READ RESULT /dmo/i_travel_u\\Booking,
-      bookings    TYPE /dmo/t_booking.
+      keys        TYPE TABLE     FOR READ IMPORT ZAI_DMOi_travel_u\\Booking,
+      result      TYPE TABLE     FOR READ RESULT ZAI_DMOi_travel_u\\Booking,
+      result_line TYPE STRUCTURE FOR READ RESULT ZAI_DMOi_travel_u\\Booking,
+      bookings    TYPE ZAI_DMOt_booking.
 
-    DATA(travel) = VALUE /dmo/travel(
+    DATA(travel) = VALUE ZAI_DMOtravel(
                        travel_id   = travel_id
                        agency_id   = agency_id
                        customer_id = customer_id
                      ).
-    DATA(booking) = VALUE /dmo/booking(
+    DATA(booking) = VALUE ZAI_DMObooking(
                        travel_id   = travel_id
                        booking_id  = booking_id
                        customer_id = customer_id
@@ -259,8 +259,8 @@ CLASS ltcl_handler IMPLEMENTATION.
 
   METHOD read_fail.
     DATA:
-      keys   TYPE TABLE FOR READ IMPORT /dmo/i_travel_u\\Booking,
-      result TYPE TABLE FOR READ RESULT /dmo/i_travel_u\\Booking.
+      keys   TYPE TABLE FOR READ IMPORT ZAI_DMOi_travel_u\\Booking,
+      result TYPE TABLE FOR READ RESULT ZAI_DMOi_travel_u\\Booking.
 
 
     DATA(fm_read_double) = fm_test_environment->get_double( fm_read ).
@@ -299,20 +299,20 @@ CLASS ltcl_handler IMPLEMENTATION.
 
   METHOD update_success.
     DATA:
-      entities    TYPE TABLE FOR UPDATE /dmo/i_travel_u\\booking.
+      entities    TYPE TABLE FOR UPDATE ZAI_DMOi_travel_u\\booking.
 
     DATA(fm_update_double) = fm_test_environment->get_double( fm_update ).
 
-    DATA(travel)    = VALUE /dmo/s_travel_in(  travel_id = travel_id ).
-    DATA(travelx)   = VALUE /dmo/s_travel_inx( travel_id = travel_id ).
-    DATA(bookings)  = VALUE /dmo/t_booking_in( (
+    DATA(travel)    = VALUE ZAI_DMOs_travel_in(  travel_id = travel_id ).
+    DATA(travelx)   = VALUE ZAI_DMOs_travel_inx( travel_id = travel_id ).
+    DATA(bookings)  = VALUE ZAI_DMOt_booking_in( (
                            travel_id   = travel_id
                            booking_id  = booking_id
                            customer_id = customer_id
                            carrier_id  = carrier_id
                          ) ).
-    DATA(bookingsx) = VALUE /dmo/t_booking_inx( (
-                           action_code = /dmo/if_flight_legacy=>action_code-update
+    DATA(bookingsx) = VALUE ZAI_DMOt_booking_inx( (
+                           action_code = ZAI_DMOif_flight_legacy=>action_code-update
                            booking_id  = booking_id
                            customer_id = customer_id
                            carrier_id  = carrier_id
@@ -404,10 +404,10 @@ CLASS ltcl_handler IMPLEMENTATION.
 
     DATA(fm_update_double) = fm_test_environment->get_double( fm_update ).
 
-    DATA(travel)    = VALUE /dmo/s_travel_in(     travel_id = travel_id ).
-    DATA(travelx)   = VALUE /dmo/s_travel_inx(    travel_id = travel_id ).
-    DATA(bookings)  = VALUE /dmo/t_booking_in( (  travel_id = travel_id                                    booking_id = booking_id ) ).
-    DATA(bookingsx) = VALUE /dmo/t_booking_inx( ( action_code = /dmo/if_flight_legacy=>action_code-delete  booking_id = booking_id ) ).
+    DATA(travel)    = VALUE ZAI_DMOs_travel_in(     travel_id = travel_id ).
+    DATA(travelx)   = VALUE ZAI_DMOs_travel_inx(    travel_id = travel_id ).
+    DATA(bookings)  = VALUE ZAI_DMOt_booking_in( (  travel_id = travel_id                                    booking_id = booking_id ) ).
+    DATA(bookingsx) = VALUE ZAI_DMOt_booking_inx( ( action_code = ZAI_DMOif_flight_legacy=>action_code-delete  booking_id = booking_id ) ).
 
     DATA(fm_update_double_input)  = fm_update_double->create_input_configuration(
                                       )->set_importing_parameter(
@@ -483,13 +483,13 @@ CLASS ltcl_handler IMPLEMENTATION.
 
   METHOD rba_travel_success.
     DATA:
-      keys                   TYPE TABLE     FOR READ IMPORT /dmo/i_travel_u\\Booking\_Travel,
-      result                 TYPE TABLE     FOR READ RESULT /dmo/i_travel_u\\Booking\_Travel,
-      result_line            TYPE STRUCTURE FOR READ RESULT /dmo/i_travel_u\\Booking\_Travel,
-      association_links      TYPE TABLE     FOR READ LINK   /dmo/i_travel_u\\Booking\_Travel,
-      association_links_line TYPE STRUCTURE FOR READ LINK   /dmo/i_travel_u\\Booking\_Travel.
+      keys                   TYPE TABLE     FOR READ IMPORT ZAI_DMOi_travel_u\\Booking\_Travel,
+      result                 TYPE TABLE     FOR READ RESULT ZAI_DMOi_travel_u\\Booking\_Travel,
+      result_line            TYPE STRUCTURE FOR READ RESULT ZAI_DMOi_travel_u\\Booking\_Travel,
+      association_links      TYPE TABLE     FOR READ LINK   ZAI_DMOi_travel_u\\Booking\_Travel,
+      association_links_line TYPE STRUCTURE FOR READ LINK   ZAI_DMOi_travel_u\\Booking\_Travel.
 
-    DATA(travel) = VALUE /dmo/travel(
+    DATA(travel) = VALUE ZAI_DMOtravel(
                        travel_id   = travel_id
                        agency_id   = agency_id
                        customer_id = customer_id
@@ -566,13 +566,13 @@ CLASS ltcl_handler IMPLEMENTATION.
 
   METHOD rba_travel_fail.
     DATA:
-      keys                   TYPE TABLE     FOR READ IMPORT /dmo/i_travel_u\\Booking\_Travel,
-      result                 TYPE TABLE     FOR READ RESULT /dmo/i_travel_u\\Booking\_Travel,
-      result_line            TYPE STRUCTURE FOR READ RESULT /dmo/i_travel_u\\Booking\_Travel,
-      association_links      TYPE TABLE     FOR READ LINK   /dmo/i_travel_u\\Booking\_Travel,
-      association_links_line TYPE STRUCTURE FOR READ LINK   /dmo/i_travel_u\\Booking\_Travel.
+      keys                   TYPE TABLE     FOR READ IMPORT ZAI_DMOi_travel_u\\Booking\_Travel,
+      result                 TYPE TABLE     FOR READ RESULT ZAI_DMOi_travel_u\\Booking\_Travel,
+      result_line            TYPE STRUCTURE FOR READ RESULT ZAI_DMOi_travel_u\\Booking\_Travel,
+      association_links      TYPE TABLE     FOR READ LINK   ZAI_DMOi_travel_u\\Booking\_Travel,
+      association_links_line TYPE STRUCTURE FOR READ LINK   ZAI_DMOi_travel_u\\Booking\_Travel.
 
-    DATA(travel) = VALUE /dmo/travel(
+    DATA(travel) = VALUE ZAI_DMOtravel(
                        travel_id   = travel_id
                        agency_id   = agency_id
                        customer_id = customer_id
@@ -627,19 +627,19 @@ CLASS ltcl_handler IMPLEMENTATION.
 
   METHOD rba_bookingsupplement_success.
     DATA:
-      keys                   TYPE TABLE     FOR READ IMPORT /dmo/i_travel_u\\Booking\_BookSupplement,
-      result                 TYPE TABLE     FOR READ RESULT /dmo/i_travel_u\\Booking\_BookSupplement,
-      result_line            TYPE STRUCTURE FOR READ RESULT /dmo/i_travel_u\\Booking\_BookSupplement,
-      association_links      TYPE TABLE     FOR READ LINK   /dmo/i_travel_u\\Booking\_BookSupplement,
-      association_links_line TYPE STRUCTURE FOR READ LINK   /dmo/i_travel_u\\Booking\_BookSupplement,
-      booking_supplements    TYPE /dmo/t_booking_supplement.
+      keys                   TYPE TABLE     FOR READ IMPORT ZAI_DMOi_travel_u\\Booking\_BookSupplement,
+      result                 TYPE TABLE     FOR READ RESULT ZAI_DMOi_travel_u\\Booking\_BookSupplement,
+      result_line            TYPE STRUCTURE FOR READ RESULT ZAI_DMOi_travel_u\\Booking\_BookSupplement,
+      association_links      TYPE TABLE     FOR READ LINK   ZAI_DMOi_travel_u\\Booking\_BookSupplement,
+      association_links_line TYPE STRUCTURE FOR READ LINK   ZAI_DMOi_travel_u\\Booking\_BookSupplement,
+      booking_supplements    TYPE ZAI_DMOt_booking_supplement.
 
-    DATA(travel) = VALUE /dmo/travel(
+    DATA(travel) = VALUE ZAI_DMOtravel(
                        travel_id   = travel_id
                        agency_id   = agency_id
                        customer_id = customer_id
                      ).
-    DATA(booking_supplement) = VALUE /dmo/book_suppl(
+    DATA(booking_supplement) = VALUE ZAI_DMObook_suppl(
                        travel_id             = travel_id
                        booking_id            = booking_id
                        booking_supplement_id = booking_supplement_id
@@ -706,10 +706,10 @@ CLASS ltcl_handler IMPLEMENTATION.
 
   METHOD rba_bookingsupplement_fail.
     DATA:
-      keys              TYPE TABLE     FOR READ IMPORT /dmo/i_travel_u\\Booking\_BookSupplement,
-      result            TYPE TABLE     FOR READ RESULT /dmo/i_travel_u\\Booking\_BookSupplement,
-      result_line       TYPE STRUCTURE FOR READ RESULT /dmo/i_travel_u\\Booking\_BookSupplement,
-      association_links TYPE TABLE     FOR READ LINK   /dmo/i_travel_u\\Booking\_BookSupplement.
+      keys              TYPE TABLE     FOR READ IMPORT ZAI_DMOi_travel_u\\Booking\_BookSupplement,
+      result            TYPE TABLE     FOR READ RESULT ZAI_DMOi_travel_u\\Booking\_BookSupplement,
+      result_line       TYPE STRUCTURE FOR READ RESULT ZAI_DMOi_travel_u\\Booking\_BookSupplement,
+      association_links TYPE TABLE     FOR READ LINK   ZAI_DMOi_travel_u\\Booking\_BookSupplement.
 
 
     DATA(fm_rba_double) = fm_test_environment->get_double( fm_read ).
@@ -752,28 +752,28 @@ CLASS ltcl_handler IMPLEMENTATION.
 
   METHOD cba_success.
     DATA:
-      entities_cba                   TYPE TABLE FOR CREATE /dmo/i_travel_u\\Booking\_BookSupplement,
+      entities_cba                   TYPE TABLE FOR CREATE ZAI_DMOi_travel_u\\Booking\_BookSupplement,
       mapped_line_booking_supplement LIKE LINE OF mapped-bookingsupplement,
-      travel                         TYPE /dmo/s_travel_in,
-      travelx                        TYPE /dmo/s_travel_inx,
-      old_booking_supplement         TYPE /dmo/book_suppl,
-      new_booking_supplement         TYPE /dmo/s_booking_supplement_in,
-      new_booking_supplementx        TYPE /dmo/s_booking_supplement_inx,
-      old_booking_supplements        TYPE /dmo/t_booking_supplement,
-      new_booking_supplements        TYPE /dmo/t_booking_supplement_in,
-      new_booking_supplementsx       TYPE /dmo/t_booking_supplement_inx.
+      travel                         TYPE ZAI_DMOs_travel_in,
+      travelx                        TYPE ZAI_DMOs_travel_inx,
+      old_booking_supplement         TYPE ZAI_DMObook_suppl,
+      new_booking_supplement         TYPE ZAI_DMOs_booking_supplement_in,
+      new_booking_supplementx        TYPE ZAI_DMOs_booking_supplement_inx,
+      old_booking_supplements        TYPE ZAI_DMOt_booking_supplement,
+      new_booking_supplements        TYPE ZAI_DMOt_booking_supplement_in,
+      new_booking_supplementsx       TYPE ZAI_DMOt_booking_supplement_inx.
 
-    travel  = VALUE /dmo/s_travel_in(  travel_id = travel_id ).
-    travelx = VALUE /dmo/s_travel_inx( travel_id = travel_id ).
+    travel  = VALUE ZAI_DMOs_travel_in(  travel_id = travel_id ).
+    travelx = VALUE ZAI_DMOs_travel_inx( travel_id = travel_id ).
 
-    new_booking_supplement  = VALUE /dmo/s_booking_supplement_in(
+    new_booking_supplement  = VALUE ZAI_DMOs_booking_supplement_in(
                                    booking_id            = booking_id
                                    booking_supplement_id = booking_supplement_id + 1
                                    supplement_id         = supplement_id
                                  ).
     APPEND new_booking_supplement TO new_booking_supplements.
 
-    old_booking_supplement  = VALUE /dmo/book_suppl(
+    old_booking_supplement  = VALUE ZAI_DMObook_suppl(
                                    travel_id             = travel_id
                                    booking_id            = booking_id
                                    booking_supplement_id = booking_supplement_id
@@ -781,9 +781,9 @@ CLASS ltcl_handler IMPLEMENTATION.
                      ).
     APPEND old_booking_supplement TO old_booking_supplements.
 
-    new_booking_supplementx = VALUE /dmo/s_booking_inx(
+    new_booking_supplementx = VALUE ZAI_DMOs_booking_inx(
                        booking_id  = booking_id
-                       action_code = /dmo/if_flight_legacy=>action_code-create
+                       action_code = ZAI_DMOif_flight_legacy=>action_code-create
                      ).
     APPEND new_booking_supplementx TO new_booking_supplementsx.
 
@@ -879,7 +879,7 @@ CLASS ltcl_handler IMPLEMENTATION.
 
   METHOD cba_fail_read.
     DATA:
-      entities_cba  TYPE TABLE FOR CREATE /dmo/i_travel_u\\Booking\_BookSupplement.
+      entities_cba  TYPE TABLE FOR CREATE ZAI_DMOi_travel_u\\Booking\_BookSupplement.
 
 
     DATA(fm_read_double) = fm_test_environment->get_double( fm_read ).
@@ -928,12 +928,12 @@ CLASS ltcl_handler IMPLEMENTATION.
 
   METHOD cba_fail_update.
     DATA:
-      entities_cba                   TYPE TABLE FOR CREATE /dmo/i_travel_u\\Booking\_BookSupplement,
+      entities_cba                   TYPE TABLE FOR CREATE ZAI_DMOi_travel_u\\Booking\_BookSupplement,
       failed_line_booking_supplement LIKE LINE OF failed-bookingsupplement,
-      old_booking_supplement         TYPE /dmo/book_suppl,
-      old_booking_supplements        TYPE /dmo/t_booking_supplement.
+      old_booking_supplement         TYPE ZAI_DMObook_suppl,
+      old_booking_supplements        TYPE ZAI_DMOt_booking_supplement.
 
-    old_booking_supplement  = VALUE /dmo/book_suppl(
+    old_booking_supplement  = VALUE ZAI_DMObook_suppl(
                                    travel_id             = travel_id
                                    booking_id            = booking_id
                                    booking_supplement_id = booking_supplement_id

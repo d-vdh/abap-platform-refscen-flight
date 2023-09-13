@@ -11,8 +11,8 @@
   }
 }
 
-define view entity /DMO/R_AgencyDraft
-  as select from /dmo/agency_d as Agency
+define view entity ZAI_DMOR_AgencyDraft
+  as select from ZAI_DMOagency_d as Agency
 {
   key agencyid                      as Agencyid,
   key draftuuid                     as Draftuuid,

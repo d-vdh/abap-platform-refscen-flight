@@ -1,4 +1,4 @@
-CLASS /dmo/zz_cl_data_gen_agency_ext DEFINITION
+CLASS ZAI_DMOzz_cl_data_gen_agency_ext DEFINITION
   PUBLIC
   FINAL
   CREATE PUBLIC .
@@ -7,7 +7,7 @@ CLASS /dmo/zz_cl_data_gen_agency_ext DEFINITION
 
     INTERFACES:
       if_badi_interface,
-      /dmo/if_data_generation_badi.
+      ZAI_DMOif_data_generation_badi.
     METHODS:
       generate_slogan,
       generate_reviews.
@@ -21,10 +21,10 @@ ENDCLASS.
 
 
 
-CLASS /dmo/zz_cl_data_gen_agency_ext IMPLEMENTATION.
+CLASS ZAI_DMOzz_cl_data_gen_agency_ext IMPLEMENTATION.
 
 
-  METHOD /dmo/if_data_generation_badi~data_generation.
+  METHOD ZAI_DMOif_data_generation_badi~data_generation.
     me->out = out.
     out->write( ' --> Agency Extension' ) ##NO_TEXT.
     out->write( ' --> --> Agency Slogan' ) ##NO_TEXT.

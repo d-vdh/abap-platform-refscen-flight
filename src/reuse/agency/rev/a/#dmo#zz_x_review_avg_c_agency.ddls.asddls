@@ -1,4 +1,4 @@
-extend view entity /DMO/C_AgencyTP with
+extend view entity ZAI_DMOC_AgencyTP with
 {
   @UI.facet: [
       {
@@ -26,5 +26,5 @@ extend view entity /DMO/C_AgencyTP with
             }
           ]
     }
-  Agency./DMO/ZZ_ReviewAvgZAG.AverageRating as /DMO/ZZAverageRatingZAG
+  Agency.ZAI_DMOZZ_ReviewAvgZAG.AverageRating as ZAI_DMOZZAverageRatingZAG
 }

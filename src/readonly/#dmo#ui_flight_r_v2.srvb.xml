@@ -4,7 +4,7 @@
   <asx:values>
    <SRVB>
     <METADATA>
-     <NAME>/DMO/UI_FLIGHT_R_V2</NAME>
+     <NAME>ZAI_DMOUI_FLIGHT_R_V2</NAME>
      <TYPE>SRVB/SVB</TYPE>
      <DESCRIPTION>Service Binding for Managing Flights</DESCRIPTION>
      <LINKS>
@@ -55,13 +55,13 @@
     </METADATA>
     <CONTENT>
      <BIND_TYPE_IMPL>
-      <NAME>/DMO/UI_FLIGHT_R_V2</NAME>
+      <NAME>ZAI_DMOUI_FLIGHT_R_V2</NAME>
      </BIND_TYPE_IMPL>
      <BIND_TYPE>ODATA</BIND_TYPE>
      <BIND_TYPE_VERSION>V2</BIND_TYPE_VERSION>
      <SERVICES>
       <item>
-       <SERVICE_NAME>/DMO/UI_FLIGHT_R_V2</SERVICE_NAME>
+       <SERVICE_NAME>ZAI_DMOUI_FLIGHT_R_V2</SERVICE_NAME>
        <SERVICE_CONTENT>
         <item>
          <SERVICE_VERSION>0001</SERVICE_VERSION>
@@ -69,7 +69,7 @@
          <SRVD_REF>
           <URI>/sap/bc/adt/ddic/srvd/sources/%2fdmo%2fflight_r</URI>
           <TYPE>SRVD/SRV</TYPE>
-          <NAME>/DMO/FLIGHT_R</NAME>
+          <NAME>ZAI_DMOFLIGHT_R</NAME>
          </SRVD_REF>
          <BIND_TYPE_DATA>
           <CONTENT>

@@ -1,6 +1,6 @@
-extension using interface /dmo/i_agencytp;
+extension using interface ZAI_DMOi_agencytp;
 
-extend behavior for /DMO/Agency
+extend behavior for ZAI_DMOAgency
 {
-  managed event /DMO/AgencyReviewCreatedCntct on /DMO/AgencyReviewCreated parameter /DMO/ZZ_P_AgencyReview_Contact;
+  managed event ZAI_DMOAgencyReviewCreatedCntct on ZAI_DMOAgencyReviewCreated parameter ZAI_DMOZZ_P_AgencyReview_Contact;
 }

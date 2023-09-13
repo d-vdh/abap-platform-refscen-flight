@@ -9,10 +9,10 @@
 }
 @ObjectModel.resultSet.sizeCategory: #XS
 
-define view entity /DMO/I_SupplementCategory_VH
-  as select from /dmo/supplcat
+define view entity ZAI_DMOI_SupplementCategory_VH
+  as select from ZAI_DMOsupplcat
 
-  association [0..*] to /DMO/I_SupplementCategory_VH_T as _Text on $projection.SupplementCategory = _Text.SupplementCategory
+  association [0..*] to ZAI_DMOI_SupplementCategory_VH_T as _Text on $projection.SupplementCategory = _Text.SupplementCategory
 
 {
       @UI.textArrangement: #TEXT_ONLY

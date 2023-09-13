@@ -3,7 +3,7 @@
 {
 "FROM":
 [
-"/DMO/R_AGENCYTP"
+"ZAI_DMOR_AGENCYTP"
 ],
 "ASSOCIATED":
 [
@@ -11,7 +11,7 @@
 ],
 "BASE":
 [
-"/DMO/R_AGENCYTP"
+"ZAI_DMOR_AGENCYTP"
 ],
 "ANNO_REF":
 [],

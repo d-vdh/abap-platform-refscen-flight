@@ -3,8 +3,8 @@
 
 @Search.searchable: true
 
-define view entity /DMO/I_Airport
-  as select from /dmo/airport as Airport
+define view entity ZAI_DMOI_Airport
+  as select from ZAI_DMOairport as Airport
 
   association [0..1] to I_Country as _Country on $projection.CountryCode = _Country.Country
 

@@ -1,7 +1,7 @@
 interface;
 use draft;
 use side effects;
-define behavior for /DMO/I_Travel_D alias Travel
+define behavior for ZAI_DMOI_Travel_D alias Travel
 use etag
 
 {
@@ -26,7 +26,7 @@ use etag
   use association _Booking { create; with draft; }
 }
 
-define behavior for /DMO/I_Booking_D alias Booking
+define behavior for ZAI_DMOI_Booking_D alias Booking
 use etag
 {
   use update;
@@ -36,7 +36,7 @@ use etag
   use association _Travel { with draft; }
 }
 
-define behavior for /DMO/I_BookingSupplement_D alias BookingSupplement
+define behavior for ZAI_DMOI_BookingSupplement_D alias BookingSupplement
 use etag
 {
   use update;

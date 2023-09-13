@@ -1,4 +1,4 @@
-CLASS /dmo/cl_travel_auxiliary_m DEFINITION
+CLASS ZAI_DMOcl_travel_auxiliary_m DEFINITION
   PUBLIC
   FINAL
   CREATE PUBLIC .
@@ -12,7 +12,7 @@ CLASS /dmo/cl_travel_auxiliary_m DEFINITION
 ENDCLASS.
 
 
-CLASS /dmo/cl_travel_auxiliary_m IMPLEMENTATION.
+CLASS ZAI_DMOcl_travel_auxiliary_m IMPLEMENTATION.
 
 
 ENDCLASS.

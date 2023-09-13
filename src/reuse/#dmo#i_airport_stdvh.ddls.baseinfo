@@ -3,7 +3,7 @@
 {
 "FROM":
 [
-"/DMO/I_AIRPORT",
+"ZAI_DMOI_AIRPORT",
 "I_COUNTRY",
 "I_COUNTRYTEXT"
 ],

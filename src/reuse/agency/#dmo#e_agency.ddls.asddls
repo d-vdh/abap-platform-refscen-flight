@@ -15,8 +15,8 @@
 
 
 
-define view entity /DMO/E_Agency
-  as select from /dmo/agency as Agency
+define view entity ZAI_DMOE_Agency
+  as select from ZAI_DMOagency as Agency
 {
   key agency_id as AgencyId
 

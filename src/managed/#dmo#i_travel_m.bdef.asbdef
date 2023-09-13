@@ -1,9 +1,9 @@
-managed implementation in class /DMO/BP_TRAVEL_M unique;
+managed implementation in class ZAI_DMOBP_TRAVEL_M unique;
 strict(2);
 
-define behavior for /DMO/I_Travel_M alias travel
-implementation in class /DMO/BP_TRAVEL_M unique
-persistent table /DMO/TRAVEL_M
+define behavior for ZAI_DMOI_Travel_M alias travel
+implementation in class ZAI_DMOBP_TRAVEL_M unique
+persistent table ZAI_DMOTRAVEL_M
 with additional save
 etag master last_changed_at
 lock master
@@ -21,7 +21,7 @@ authorization master(global)
   field ( readonly ) travel_id;
 
   // mapping entity's field types with table field types
-  mapping for /DMO/TRAVEL_M corresponding;
+  mapping for ZAI_DMOTRAVEL_M corresponding;
 
   // standard operations for travel entity
   create;
@@ -56,9 +56,9 @@ authorization master(global)
 
 }
 
-define behavior for /DMO/I_Booking_M alias booking
-implementation in class /DMO/BP_BOOKING_M unique
-persistent table /DMO/BOOKING_M
+define behavior for ZAI_DMOI_Booking_M alias booking
+implementation in class ZAI_DMOBP_BOOKING_M unique
+persistent table ZAI_DMOBOOKING_M
 etag master last_changed_at
 lock dependent by _Travel
 early numbering
@@ -70,7 +70,7 @@ authorization dependent by _Travel
   field ( readonly ) travel_id, booking_id;
 
   // mapping entity's field types with table field types
-  mapping for /DMO/BOOKING_M corresponding;
+  mapping for ZAI_DMOBOOKING_M corresponding;
 
   // Fields that are mandatory for create but should be read-only afterwards
   field ( mandatory : create, readonly : update) booking_date, customer_id;
@@ -94,9 +94,9 @@ authorization dependent by _Travel
 }
 
 
-define behavior for /DMO/I_BookSuppl_M alias booksuppl
-implementation in class /DMO/BP_BOOKINGSUPPLEMENT_M unique
-//persistent table /DMO/BOOKSUPPL_M
+define behavior for ZAI_DMOI_BookSuppl_M alias booksuppl
+implementation in class ZAI_DMOBP_BOOKINGSUPPLEMENT_M unique
+//persistent table ZAI_DMOBOOKSUPPL_M
 with unmanaged save
 etag master last_changed_at
 lock dependent by _Travel
@@ -109,7 +109,7 @@ authorization dependent by _Travel
   field ( readonly ) travel_id, booking_id, booking_supplement_id;
 
   // mapping entity's field types with table field types
-  mapping for /DMO/BOOKSUPPL_M corresponding;
+  mapping for ZAI_DMOBOOKSUPPL_M corresponding;
 
   // standard operations for booking supplement entity
   update;

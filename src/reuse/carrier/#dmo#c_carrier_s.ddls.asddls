@@ -5,8 +5,8 @@
 @ObjectModel.semanticKey: ['AirlineID']
 
 
-define view entity /DMO/C_Carrier_S
-  as projection on /DMO/I_Carrier_S
+define view entity ZAI_DMOC_Carrier_S
+  as projection on ZAI_DMOI_Carrier_S
 {
   key AirlineID,
   
@@ -21,5 +21,5 @@ define view entity /DMO/C_Carrier_S
       LocalLastChangedAt,
       
       /* Associations */
-      _CarrierSingleton : redirected to parent /DMO/C_CarriersLockSingleton_S
+      _CarrierSingleton : redirected to parent ZAI_DMOC_CarriersLockSingleton_S
 }

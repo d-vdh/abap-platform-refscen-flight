@@ -21,9 +21,9 @@ CLASS lhc_carrier IMPLEMENTATION.
 
   METHOD get_instance_features.
 
-    DATA: airline_ids TYPE SORTED TABLE OF /dmo/i_carrier WITH UNIQUE KEY AirlineID.
+    DATA: airline_ids TYPE SORTED TABLE OF ZAI_DMOi_carrier WITH UNIQUE KEY AirlineID.
 
-    READ ENTITIES OF /DMO/I_CarriersLockSingleton_S IN LOCAL MODE
+    READ ENTITIES OF ZAI_DMOI_CarriersLockSingleton_S IN LOCAL MODE
       ENTITY Carrier
         FIELDS ( AirlineID )
         WITH CORRESPONDING #( keys )
@@ -34,7 +34,7 @@ CLASS lhc_carrier IMPLEMENTATION.
 
     IF airline_ids IS NOT INITIAL.
       SELECT DISTINCT AirlineID
-      FROM /DMO/I_Connection
+      FROM ZAI_DMOI_Connection
         FOR ALL ENTRIES IN @airline_ids
         WHERE AirlineID = @airline_ids-AirlineID
         INTO TABLE @DATA(connections_db).
@@ -46,8 +46,8 @@ CLASS lhc_carrier IMPLEMENTATION.
         APPEND VALUE #( %tky    = <carrier>-%tky
                         %delete = if_abap_behv=>fc-o-disabled ) TO result.
         APPEND VALUE #( %tky                        = <carrier>-%tky
-                        %msg                        = NEW /dmo/cx_carriers_s(
-                                                       textid        = /dmo/cx_carriers_s=>airline_still_used
+                        %msg                        = NEW ZAI_DMOcx_carriers_s(
+                                                       textid        = ZAI_DMOcx_carriers_s=>airline_still_used
                                                        severity      = if_abap_behv_message=>severity-information
                                                        airline_id    = <carrier>-AirlineID )
                         %delete                     = if_abap_behv=>mk-on
@@ -65,7 +65,7 @@ CLASS lhc_carrier IMPLEMENTATION.
 
     DATA: currency_codes TYPE SORTED TABLE OF I_Currency WITH UNIQUE KEY Currency.
 
-    READ ENTITIES OF /DMO/I_CarriersLockSingleton_S IN LOCAL MODE
+    READ ENTITIES OF ZAI_DMOI_CarriersLockSingleton_S IN LOCAL MODE
       ENTITY Carrier
         FIELDS ( CarrierSingletonID CurrencyCode )
         WITH CORRESPONDING #( keys )
@@ -90,8 +90,8 @@ CLASS lhc_carrier IMPLEMENTATION.
       IF <carrier>-CurrencyCode IS INITIAL.
         APPEND VALUE #( %tky                             = <carrier>-%tky ) TO failed-carrier.
         APPEND VALUE #( %tky                             = <carrier>-%tky
-                        %msg                             = NEW /dmo/cx_carriers_s(
-                                                               textid     = /dmo/cx_carriers_s=>currency_code_required
+                        %msg                             = NEW ZAI_DMOcx_carriers_s(
+                                                               textid     = ZAI_DMOcx_carriers_s=>currency_code_required
                                                                severity   = if_abap_behv_message=>severity-error
                                                                airline_id = <carrier>-AirlineID )
                         %element-currencycode            = if_abap_behv=>mk-on
@@ -102,8 +102,8 @@ CLASS lhc_carrier IMPLEMENTATION.
       ELSEIF NOT line_exists( currency_codes_db[ Currency = <carrier>-CurrencyCode ] ).
         APPEND VALUE #( %tky                             = <carrier>-%tky ) TO failed-carrier.
         APPEND VALUE #( %tky                             = <carrier>-%tky
-                        %msg                             = NEW /dmo/cx_carriers_s(
-                                                               textid        = /dmo/cx_carriers_s=>invalid_currency_code
+                        %msg                             = NEW ZAI_DMOcx_carriers_s(
+                                                               textid        = ZAI_DMOcx_carriers_s=>invalid_currency_code
                                                                severity      = if_abap_behv_message=>severity-error
                                                                currency_code = <carrier>-CurrencyCode )
                         %element-currencycode            = if_abap_behv=>mk-on
@@ -117,7 +117,7 @@ CLASS lhc_carrier IMPLEMENTATION.
 
   METHOD validateName.
 
-    READ ENTITIES OF /DMO/I_CarriersLockSingleton_S IN LOCAL MODE
+    READ ENTITIES OF ZAI_DMOI_CarriersLockSingleton_S IN LOCAL MODE
       ENTITY Carrier
         FIELDS ( CarrierSingletonID Name )
         WITH CORRESPONDING #( keys )
@@ -133,8 +133,8 @@ CLASS lhc_carrier IMPLEMENTATION.
       IF <carrier>-name IS INITIAL.
         APPEND VALUE #( %tky                        = <carrier>-%tky ) TO failed-carrier.
         APPEND VALUE #( %tky                        = <carrier>-%tky
-                        %msg                        = NEW /dmo/cx_carriers_s(
-                                                         textid     = /dmo/cx_carriers_s=>name_required
+                        %msg                        = NEW ZAI_DMOcx_carriers_s(
+                                                         textid     = ZAI_DMOcx_carriers_s=>name_required
                                                          severity   = if_abap_behv_message=>severity-error
                                                          airline_id = <carrier>-AirlineID )
                         %element-name               = if_abap_behv=>mk-on

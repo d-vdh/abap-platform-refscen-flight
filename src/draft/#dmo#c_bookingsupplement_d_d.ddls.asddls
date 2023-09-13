@@ -5,8 +5,8 @@
 @Search.searchable: true
 @ObjectModel.semanticKey: ['BookingSupplementID']
 
-define view entity /DMO/C_BookingSupplement_D_D
-  as projection on /DMO/R_BookingSupplement_D
+define view entity ZAI_DMOC_BookingSupplement_D_D
+  as projection on ZAI_DMOR_BookingSupplement_D
 {
   key BookSupplUUID,
 
@@ -19,7 +19,7 @@ define view entity /DMO/C_BookingSupplement_D_D
 
       @ObjectModel.text.element: ['SupplementDescription']
       @Consumption.valueHelpDefinition: [ 
-          {  entity: {name: '/DMO/I_Supplement_StdVH', element: 'SupplementID' },
+          {  entity: {name: 'ZAI_DMOI_Supplement_StdVH', element: 'SupplementID' },
              additionalBinding: [ { localElement: 'BookSupplPrice',  element: 'Price',        usage: #RESULT },
                                   { localElement: 'CurrencyCode',    element: 'CurrencyCode', usage: #RESULT }], 
              useForValidation: true }
@@ -35,8 +35,8 @@ define view entity /DMO/C_BookingSupplement_D_D
       LocalLastChangedAt,
 
       /* Associations */
-      _Booking : redirected to parent /DMO/C_Booking_D_D,
+      _Booking : redirected to parent ZAI_DMOC_Booking_D_D,
       _Product,
       _SupplementText,
-      _Travel  : redirected to /DMO/C_Travel_D_D
+      _Travel  : redirected to ZAI_DMOC_Travel_D_D
 }

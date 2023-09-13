@@ -8,16 +8,16 @@ CLASS lcl_agency_data_generator DEFINITION CREATE PRIVATE.
 
   PUBLIC SECTION.
     INTERFACES: lif_data_generator.
-    TYPES: tt_agency TYPE STANDARD TABLE OF /dmo/agency WITH KEY agency_id.
+    TYPES: tt_agency TYPE STANDARD TABLE OF ZAI_DMOagency WITH KEY agency_id.
     CLASS-METHODS: get_data
       RETURNING VALUE(rt_data) TYPE tt_agency.
   PROTECTED SECTION.
   PRIVATE SECTION.
     CONSTANTS:
       cv_numberrange_interval TYPE cl_numberrange_runtime=>nr_interval VALUE '01',
-      cv_numberrange_object   TYPE cl_numberrange_runtime=>nr_object   VALUE '/DMO/AGNCY' ##NO_TEXT,
-      cv_agency_minimum       TYPE /dmo/agency_id VALUE '070001',
-      cv_agency_maximum       TYPE /dmo/agency_id VALUE '079999'.
+      cv_numberrange_object   TYPE cl_numberrange_runtime=>nr_object   VALUE 'ZAI_DMOAGNCY' ##NO_TEXT,
+      cv_agency_minimum       TYPE ZAI_DMOagency_id VALUE '070001',
+      cv_agency_maximum       TYPE ZAI_DMOagency_id VALUE '079999'.
     CLASS-DATA gt_data TYPE lcl_agency_data_generator=>tt_agency.
     CLASS-METHODS:
       set_numberrange,
@@ -29,7 +29,7 @@ CLASS lcl_agency_data_generator IMPLEMENTATION.
   METHOD lif_data_generator~create.
     IF out IS BOUND.  out->write( '--> Delete Content.' ) ##NO_TEXT.
     ENDIF.
-    DELETE FROM /dmo/agency.                            "#EC CI_NOWHERE
+    DELETE FROM ZAI_DMOagency.                            "#EC CI_NOWHERE
 
     IF out IS BOUND.  out->write( '--> Set Numberranges.' ) ##NO_TEXT.
     ENDIF.
@@ -41,7 +41,7 @@ CLASS lcl_agency_data_generator IMPLEMENTATION.
 
     IF out IS BOUND.  out->write( '--> Insert Content.' ) ##NO_TEXT.
     ENDIF.
-    INSERT /dmo/agency FROM TABLE @lt_data.
+    INSERT ZAI_DMOagency FROM TABLE @lt_data.
 
     IF out IS BOUND.  out->write( '--> Done.' ) ##NO_TEXT.
     ENDIF.
@@ -49,7 +49,7 @@ CLASS lcl_agency_data_generator IMPLEMENTATION.
 
   METHOD set_numberrange.
 
-    /dmo/cl_flight_data_generator=>reset_numberrange_interval(
+    ZAI_DMOcl_flight_data_generator=>reset_numberrange_interval(
         numberrange_object   = cv_numberrange_object
         numberrange_interval = cv_numberrange_interval
         fromnumber           = CONV cl_numberrange_intervals=>nr_nriv_line-fromnumber( cv_agency_minimum )
@@ -549,7 +549,7 @@ CLASS lcl_airport_data_generator DEFINITION CREATE PRIVATE.
 
   PUBLIC SECTION.
     INTERFACES: lif_data_generator.
-    TYPES: tt_airport TYPE STANDARD TABLE OF /dmo/airport WITH KEY airport_id.
+    TYPES: tt_airport TYPE STANDARD TABLE OF ZAI_DMOairport WITH KEY airport_id.
     CLASS-METHODS: get_data
       RETURNING VALUE(rt_data) TYPE lcl_airport_data_generator=>tt_airport.
   PROTECTED SECTION.
@@ -562,7 +562,7 @@ CLASS lcl_airport_data_generator IMPLEMENTATION.
   METHOD lif_data_generator~create.
     IF out IS BOUND.  out->write( '--> Delete Content.' ) ##NO_TEXT.
     ENDIF.
-    DELETE FROM /dmo/airport.                           "#EC CI_NOWHERE
+    DELETE FROM ZAI_DMOairport.                           "#EC CI_NOWHERE
 
     IF out IS BOUND.  out->write( '--> Build Content.' ) ##NO_TEXT.
     ENDIF.
@@ -570,7 +570,7 @@ CLASS lcl_airport_data_generator IMPLEMENTATION.
 
     IF out IS BOUND.  out->write( '--> Insert Content.' ) ##NO_TEXT.
     ENDIF.
-    INSERT /dmo/airport FROM TABLE @lt_data.
+    INSERT ZAI_DMOairport FROM TABLE @lt_data.
 
     IF out IS BOUND.  out->write( '--> Done.' ) ##NO_TEXT.
     ENDIF.
@@ -644,7 +644,7 @@ CLASS lcl_carrier_data_generator DEFINITION CREATE PRIVATE.
 
   PUBLIC SECTION.
     INTERFACES: lif_data_generator.
-    TYPES: tt_carrier TYPE STANDARD TABLE OF /dmo/carrier WITH KEY carrier_id.
+    TYPES: tt_carrier TYPE STANDARD TABLE OF ZAI_DMOcarrier WITH KEY carrier_id.
     CLASS-METHODS: get_data
       RETURNING
         VALUE(rt_data) TYPE tt_carrier.
@@ -660,7 +660,7 @@ CLASS lcl_carrier_data_generator IMPLEMENTATION.
   METHOD lif_data_generator~create.
     IF out IS BOUND.  out->write( '--> Delete Content.' ) ##NO_TEXT.
     ENDIF.
-    DELETE FROM /dmo/carrier.                           "#EC CI_NOWHERE
+    DELETE FROM ZAI_DMOcarrier.                           "#EC CI_NOWHERE
 
     IF out IS BOUND.  out->write( '--> Build Content.' ) ##NO_TEXT.
     ENDIF.
@@ -668,7 +668,7 @@ CLASS lcl_carrier_data_generator IMPLEMENTATION.
 
     IF out IS BOUND.  out->write( '--> Insert Content.' ) ##NO_TEXT.
     ENDIF.
-    INSERT /dmo/carrier FROM TABLE @lt_data.
+    INSERT ZAI_DMOcarrier FROM TABLE @lt_data.
 
     IF out IS BOUND.  out->write( '--> Done.' ) ##NO_TEXT.
     ENDIF.
@@ -709,13 +709,13 @@ CLASS lcl_connection_data_generator DEFINITION CREATE PRIVATE.
 
   PUBLIC SECTION.
     INTERFACES: lif_data_generator.
-    TYPES: tt_connection TYPE STANDARD TABLE OF /dmo/connection WITH KEY carrier_id connection_id.
+    TYPES: tt_connection TYPE STANDARD TABLE OF ZAI_DMOconnection WITH KEY carrier_id connection_id.
 
     TYPES:
       "! Structure for additional information for generation. <br/>
       "! <em>weekday</em> '1' means Monday, '7' is Sunday
       BEGIN OF ty_connection_additional_info.
-        INCLUDE TYPE /dmo/connection.
+        INCLUDE TYPE ZAI_DMOconnection.
     TYPES: weekday TYPE i,
       END OF ty_connection_additional_info.
 
@@ -734,7 +734,7 @@ CLASS lcl_connection_data_generator IMPLEMENTATION.
   METHOD lif_data_generator~create.
     IF out IS BOUND.  out->write( '--> Delete Content.' ) ##NO_TEXT.
     ENDIF.
-    DELETE FROM /dmo/connection.                        "#EC CI_NOWHERE
+    DELETE FROM ZAI_DMOconnection.                        "#EC CI_NOWHERE
 
     IF out IS BOUND.  out->write( '--> Build Content.' ) ##NO_TEXT.
     ENDIF.
@@ -743,7 +743,7 @@ CLASS lcl_connection_data_generator IMPLEMENTATION.
 
     IF out IS BOUND.  out->write( '--> Insert Content.' ) ##NO_TEXT.
     ENDIF.
-    INSERT /dmo/connection FROM TABLE @lt_data.
+    INSERT ZAI_DMOconnection FROM TABLE @lt_data.
 
     IF out IS BOUND.  out->write( '--> Done.' ) ##NO_TEXT.
     ENDIF.
@@ -778,12 +778,12 @@ ENDCLASS.
 
 
 CLASS lcl_flight_data_generator DEFINITION DEFERRED.
-CLASS /dmo/cl_flight_data_generator DEFINITION LOCAL FRIENDS lcl_flight_data_generator.
+CLASS ZAI_DMOcl_flight_data_generator DEFINITION LOCAL FRIENDS lcl_flight_data_generator.
 CLASS lcl_flight_data_generator DEFINITION CREATE PRIVATE.
 
   PUBLIC SECTION.
     INTERFACES: lif_data_generator.
-    TYPES: tt_flights TYPE STANDARD TABLE OF /dmo/flight
+    TYPES: tt_flights TYPE STANDARD TABLE OF ZAI_DMOflight
                             WITH KEY carrier_id connection_id flight_date
                             WITH NON-UNIQUE SORTED KEY key_sorted_seats COMPONENTS seats_occupied
                             WITH NON-UNIQUE SORTED KEY key_sorted_date COMPONENTS connection_id flight_date.
@@ -794,21 +794,21 @@ CLASS lcl_flight_data_generator DEFINITION CREATE PRIVATE.
 
   PRIVATE SECTION.
     TYPES: BEGIN OF ty_plane_type,
-             id            TYPE /dmo/plane_type_id,
-             seats_max     TYPE /dmo/plane_seats_max,
+             id            TYPE ZAI_DMOplane_type_id,
+             seats_max     TYPE ZAI_DMOplane_seats_max,
              long_distance TYPE abap_bool,
              index         TYPE int1,
            END OF ty_plane_type,
            BEGIN OF ty_flight_info,
-             id             TYPE /dmo/plane_type_id,
+             id             TYPE ZAI_DMOplane_type_id,
              long_distance  TYPE abap_bool,
-             seats_max      TYPE /dmo/plane_seats_max,
-             seats_occupied TYPE /dmo/plane_seats_occupied,
-             price          TYPE /dmo/flight_price,
+             seats_max      TYPE ZAI_DMOplane_seats_max,
+             seats_occupied TYPE ZAI_DMOplane_seats_occupied,
+             price          TYPE ZAI_DMOflight_price,
            END OF ty_flight_info,
            BEGIN OF ty_connection_recurrency,
-             id         TYPE /dmo/connection_id,
-             recurrency TYPE STANDARD TABLE OF /dmo/flight_date WITH EMPTY KEY,
+             id         TYPE ZAI_DMOconnection_id,
+             recurrency TYPE STANDARD TABLE OF ZAI_DMOflight_date WITH EMPTY KEY,
            END OF ty_connection_recurrency.
 
     TYPES: tt_plane_type            TYPE STANDARD TABLE OF ty_plane_type               WITH KEY id,
@@ -830,7 +830,7 @@ CLASS lcl_flight_data_generator DEFINITION CREATE PRIVATE.
     CLASS-METHODS: build_dependent_content,
       get_flight_info
         IMPORTING
-          iv_connection_id     TYPE /dmo/connection_id
+          iv_connection_id     TYPE ZAI_DMOconnection_id
         RETURNING
           VALUE(rs_plane_info) TYPE ty_flight_info,
       build_plane_types
@@ -853,7 +853,7 @@ CLASS lcl_flight_data_generator IMPLEMENTATION.
   METHOD lif_data_generator~create.
     IF out IS BOUND.  out->write( '--> Delete Content.' ) ##NO_TEXT.
     ENDIF.
-    DELETE FROM /dmo/flight.                            "#EC CI_NOWHERE
+    DELETE FROM ZAI_DMOflight.                            "#EC CI_NOWHERE
 
     IF out IS BOUND.  out->write( '--> Build Dependent Content.' ) ##NO_TEXT.
     ENDIF.
@@ -865,7 +865,7 @@ CLASS lcl_flight_data_generator IMPLEMENTATION.
 
     IF out IS BOUND.  out->write( '--> Insert Content.' ) ##NO_TEXT.
     ENDIF.
-    INSERT /dmo/flight FROM TABLE @gt_flights.
+    INSERT ZAI_DMOflight FROM TABLE @gt_flights.
 
     IF out IS BOUND.  out->write( '--> Done.' ) ##NO_TEXT.
     ENDIF.
@@ -890,12 +890,12 @@ CLASS lcl_flight_data_generator IMPLEMENTATION.
     LOOP AT gt_connections INTO DATA(ls_connection).
       LOOP AT gt_connection_recurrency[ id = ls_connection-connection_id ]-recurrency INTO DATA(lv_flight_date).
         ls_flight = get_flight_info( ls_connection-connection_id ).
-        APPEND VALUE /dmo/flight(
+        APPEND VALUE ZAI_DMOflight(
                   carrier_id     = ls_connection-carrier_id
                   connection_id  = ls_connection-connection_id
                   flight_date    = lv_flight_date
                   price          = ls_flight-price
-                  currency_code  = VALUE /dmo/flight-currency_code(
+                  currency_code  = VALUE ZAI_DMOflight-currency_code(
                                                  gt_carrier[ carrier_id = ls_connection-carrier_id ]-currency_code
                                                  DEFAULT 'EUR' )
                   plane_type_id  =  ls_flight-id
@@ -967,7 +967,7 @@ CLASS lcl_flight_data_generator IMPLEMENTATION.
         long_distance  = ls_plane_type-long_distance
         seats_max      = ls_plane_type-seats_max
         seats_occupied = ls_plane_type-seats_max * lv_seats_occupied_percent DIV 100
-        price          = /dmo/cl_flight_data_generator=>calculate_flight_price(
+        price          = ZAI_DMOcl_flight_data_generator=>calculate_flight_price(
                             iv_seats_occupied_percent = lv_seats_occupied_percent
                             iv_flight_distance        = lt_connections[ connection_id = iv_connection_id ]-distance
                           )
@@ -1010,10 +1010,10 @@ CLASS lcl_flight_data_generator IMPLEMENTATION.
     lv_datum = tmp(8).
 
     " flight_date_max is a Monday 8 months in the future
-    flight_date_max = calc_next_monday( CONV /dmo/flight_date( lv_datum + 217 ) ).
+    flight_date_max = calc_next_monday( CONV ZAI_DMOflight_date( lv_datum + 217 ) ).
 
     " flight_date_min is a Monday 5 months in the past
-    flight_date_min = calc_next_monday( CONV /dmo/flight_date( lv_datum - 148 ) ).
+    flight_date_min = calc_next_monday( CONV ZAI_DMOflight_date( lv_datum - 148 ) ).
 
     LOOP AT lcl_connection_data_generator=>get_data( ) INTO DATA(ls_connection).
       APPEND VALUE ty_connection_recurrency(
@@ -1022,7 +1022,7 @@ CLASS lcl_flight_data_generator IMPLEMENTATION.
                                     FOR   flightdate = flight_date_max + ls_connection-weekday - 1
                                     THEN  flightdate - lv_days_between
                                     UNTIL flightdate < flight_date_min + ls_connection-weekday - 1
-                                       ( CONV /dmo/flight_date( flightdate ) )
+                                       ( CONV ZAI_DMOflight_date( flightdate ) )
                                )
       ) TO rt_data.
     ENDLOOP.
@@ -1051,9 +1051,9 @@ CLASS lcl_customer_data_generator DEFINITION CREATE PRIVATE.
   PUBLIC SECTION.
     INTERFACES: lif_data_generator.
     TYPES: BEGIN OF ty_last_name,
-             last_name TYPE /dmo/last_name,
+             last_name TYPE ZAI_DMOlast_name,
            END OF ty_last_name.
-    TYPES: tt_customer  TYPE STANDARD TABLE OF /dmo/customer WITH KEY customer_id,
+    TYPES: tt_customer  TYPE STANDARD TABLE OF ZAI_DMOcustomer WITH KEY customer_id,
            tt_last_name TYPE STANDARD TABLE OF ty_last_name  WITH KEY last_name.
     CLASS-METHODS: get_data
       RETURNING VALUE(rt_data) TYPE tt_customer,
@@ -1065,32 +1065,32 @@ CLASS lcl_customer_data_generator DEFINITION CREATE PRIVATE.
     TYPES:
       " Names
       BEGIN OF ty_first_name,
-        first_name TYPE /dmo/first_name,
+        first_name TYPE ZAI_DMOfirst_name,
         gender     TYPE c LENGTH 1,
       END OF ty_first_name,
       BEGIN OF ty_name,
-        first_name TYPE /dmo/first_name,
-        last_name  TYPE /dmo/last_name,
-        title      TYPE /dmo/title,
+        first_name TYPE ZAI_DMOfirst_name,
+        last_name  TYPE ZAI_DMOlast_name,
+        title      TYPE ZAI_DMOtitle,
       END OF ty_name,
       " Addresses
       BEGIN OF ty_city,
         country     TYPE land1,
-        postal_code TYPE /dmo/postal_code,
-        city        TYPE /dmo/city,
+        postal_code TYPE ZAI_DMOpostal_code,
+        city        TYPE ZAI_DMOcity,
       END OF ty_city,
-      tt_street_per_country TYPE STANDARD TABLE OF /dmo/street WITH EMPTY KEY,
+      tt_street_per_country TYPE STANDARD TABLE OF ZAI_DMOstreet WITH EMPTY KEY,
       BEGIN OF ty_street,
         country TYPE land1,
         streets TYPE tt_street_per_country,
       END OF ty_street,
       BEGIN OF ty_address,
         country       TYPE land1,
-        postal_code   TYPE /dmo/postal_code,
-        city          TYPE /dmo/city,
-        street        TYPE /dmo/street,
-        phone_number  TYPE  /dmo/phone_number,
-        email_address TYPE /dmo/email_address,
+        postal_code   TYPE ZAI_DMOpostal_code,
+        city          TYPE ZAI_DMOcity,
+        street        TYPE ZAI_DMOstreet,
+        phone_number  TYPE  ZAI_DMOphone_number,
+        email_address TYPE ZAI_DMOemail_address,
       END OF ty_address.
 
 
@@ -1135,7 +1135,7 @@ CLASS lcl_customer_data_generator IMPLEMENTATION.
   METHOD lif_data_generator~create.
     IF out IS BOUND.  out->write( '--> Delete Content.' ) ##NO_TEXT.
     ENDIF.
-    DELETE FROM /dmo/customer.                          "#EC CI_NOWHERE
+    DELETE FROM ZAI_DMOcustomer.                          "#EC CI_NOWHERE
 
     IF out IS BOUND.  out->write( '--> Build Content.' ) ##NO_TEXT.
     ENDIF.
@@ -1143,7 +1143,7 @@ CLASS lcl_customer_data_generator IMPLEMENTATION.
 
     IF out IS BOUND.  out->write( '--> Insert Content.' ) ##NO_TEXT.
     ENDIF.
-    INSERT /dmo/customer FROM TABLE @lt_data.
+    INSERT ZAI_DMOcustomer FROM TABLE @lt_data.
 
     IF out IS BOUND.  out->write( '--> Done.' ) ##NO_TEXT.
     ENDIF.
@@ -1362,7 +1362,7 @@ CLASS lcl_customer_data_generator IMPLEMENTATION.
         APPEND VALUE ty_name(
             first_name = ls_first_name-first_name
             last_name  = ls_last_name-last_name
-            title      = COND /dmo/title( WHEN ls_first_name-gender = 'M' THEN 'Mr.'
+            title      = COND ZAI_DMOtitle( WHEN ls_first_name-gender = 'M' THEN 'Mr.'
                                           WHEN ls_first_name-gender = 'F' THEN 'Mrs.'
                                           ELSE 'Martian' ) ##NO_TEXT
         ) TO rt_data.
@@ -1552,19 +1552,19 @@ CLASS lcl_supplement_data_generator DEFINITION CREATE PRIVATE.
   PUBLIC SECTION.
     INTERFACES: lif_data_generator.
     TYPES:
-      tt_supplement               TYPE STANDARD TABLE OF /dmo/supplement  WITH KEY supplement_id,
-      tt_supplement_text          TYPE STANDARD TABLE OF /dmo/suppl_text  WITH KEY supplement_id language_code,
-      tt_supplement_category      TYPE STANDARD TABLE OF /dmo/supplcat    WITH KEY supplement_category,
-      tt_supplement_category_text TYPE STANDARD TABLE OF /dmo/supplcat_t  WITH KEY supplement_category language_code.
+      tt_supplement               TYPE STANDARD TABLE OF ZAI_DMOsupplement  WITH KEY supplement_id,
+      tt_supplement_text          TYPE STANDARD TABLE OF ZAI_DMOsuppl_text  WITH KEY supplement_id language_code,
+      tt_supplement_category      TYPE STANDARD TABLE OF ZAI_DMOsupplcat    WITH KEY supplement_category,
+      tt_supplement_category_text TYPE STANDARD TABLE OF ZAI_DMOsupplcat_t  WITH KEY supplement_category language_code.
 
     " Merged types
     TYPES BEGIN OF ty_supplement_complete.
-    INCLUDE TYPE /dmo/supplement.
+    INCLUDE TYPE ZAI_DMOsupplement.
     TYPES language_code TYPE spras.
-    TYPES description   TYPE /dmo/description.
+    TYPES description   TYPE ZAI_DMOdescription.
     TYPES END OF ty_supplement_complete.
 
-    TYPES tt_supplement_category_compl TYPE STANDARD TABLE OF /dmo/supplcat_t WITH KEY supplement_category language_code.
+    TYPES tt_supplement_category_compl TYPE STANDARD TABLE OF ZAI_DMOsupplcat_t WITH KEY supplement_category language_code.
 
     TYPES tt_supplement_complete TYPE STANDARD TABLE OF ty_supplement_complete WITH KEY supplement_id WITH NON-UNIQUE SORTED KEY category COMPONENTS supplement_category.
 
@@ -1578,15 +1578,15 @@ CLASS lcl_supplement_data_generator DEFINITION CREATE PRIVATE.
 
     CONSTANTS:
       BEGIN OF cs_supplement_category,
-        beverage TYPE /dmo/supplement_category VALUE 'BV',
-        meal     TYPE /dmo/supplement_category VALUE 'ML',
-        luggage  TYPE /dmo/supplement_category VALUE 'LU',
-        extra    TYPE /dmo/supplement_category VALUE 'EX',
+        beverage TYPE ZAI_DMOsupplement_category VALUE 'BV',
+        meal     TYPE ZAI_DMOsupplement_category VALUE 'ML',
+        luggage  TYPE ZAI_DMOsupplement_category VALUE 'LU',
+        extra    TYPE ZAI_DMOsupplement_category VALUE 'EX',
       END OF cs_supplement_category.
 
     CONSTANTS:
       cv_numberrange_interval TYPE cl_numberrange_runtime=>nr_interval VALUE '01',
-      cv_numberrange_object   TYPE cl_numberrange_runtime=>nr_object   VALUE '/DMO/SUPPL' ##NO_TEXT.
+      cv_numberrange_object   TYPE cl_numberrange_runtime=>nr_object   VALUE 'ZAI_DMOSUPPL' ##NO_TEXT.
 
     CLASS-DATA:
       gt_supplement_category TYPE tt_supplement_category_compl,
@@ -1607,20 +1607,20 @@ CLASS lcl_supplement_data_generator IMPLEMENTATION.
     IF out IS BOUND.  out->write( '--> Delete Content.' ) ##NO_TEXT.
     ENDIF.
     DELETE FROM:
-      /dmo/supplement,                                  "#EC CI_NOWHERE
-      /dmo/suppl_text,                                  "#EC CI_NOWHERE
-      /dmo/supplcat,                                    "#EC CI_NOWHERE
-      /dmo/supplcat_t.                                  "#EC CI_NOWHERE
+      ZAI_DMOsupplement,                                  "#EC CI_NOWHERE
+      ZAI_DMOsuppl_text,                                  "#EC CI_NOWHERE
+      ZAI_DMOsupplcat,                                    "#EC CI_NOWHERE
+      ZAI_DMOsupplcat_t.                                  "#EC CI_NOWHERE
 
     IF out IS BOUND.  out->write( '--> Defining Supplement Types.' ) ##NO_TEXT.
     ENDIF.
     gt_supplement_category = get_supplement_category( ).
 
     DATA(lt_type) = get_supplement_category( ).
-    INSERT /dmo/supplcat    FROM TABLE @( CORRESPONDING tt_supplement_category(      lt_type ) ).
-    INSERT /dmo/supplcat_t  FROM TABLE @( CORRESPONDING tt_supplement_category_text( lt_type ) ).
+    INSERT ZAI_DMOsupplcat    FROM TABLE @( CORRESPONDING tt_supplement_category(      lt_type ) ).
+    INSERT ZAI_DMOsupplcat_t  FROM TABLE @( CORRESPONDING tt_supplement_category_text( lt_type ) ).
 
-*   The number range has to be set after inserting values into /dmo/supplcat as it reads the data from the table to validate the sub-objects ...
+*   The number range has to be set after inserting values into ZAI_DMOsupplcat as it reads the data from the table to validate the sub-objects ...
     IF out IS BOUND.  out->write( '--> Set up Number Range Intervals.' ) ##NO_TEXT.
     ENDIF.
     set_numberrange_intervals( ).
@@ -1631,8 +1631,8 @@ CLASS lcl_supplement_data_generator IMPLEMENTATION.
 
     IF out IS BOUND.  out->write( '--> Insert Content.' ) ##NO_TEXT.
     ENDIF.
-    INSERT /dmo/supplement  FROM TABLE @( CORRESPONDING tt_supplement(               lt_data ) ).
-    INSERT /dmo/suppl_text  FROM TABLE @( CORRESPONDING tt_supplement_text(          lt_data ) ).
+    INSERT ZAI_DMOsupplement  FROM TABLE @( CORRESPONDING tt_supplement(               lt_data ) ).
+    INSERT ZAI_DMOsuppl_text  FROM TABLE @( CORRESPONDING tt_supplement_text(          lt_data ) ).
     IF out IS BOUND.  out->write( '--> Done.' ) ##NO_TEXT.
     ENDIF.
     IF out IS BOUND.  out->write( '--> Done.' ) ##NO_TEXT.
@@ -1748,7 +1748,7 @@ CLASS lcl_supplement_data_generator IMPLEMENTATION.
       cv_tonumber   TYPE cl_numberrange_intervals=>nr_nriv_line-tonumber   VALUE '9999'.
 
     LOOP AT gt_supplement_category INTO DATA(ls_supplement_category).
-      /dmo/cl_flight_data_generator=>reset_numberrange_interval(
+      ZAI_DMOcl_flight_data_generator=>reset_numberrange_interval(
         EXPORTING
           numberrange_object   = cv_numberrange_object
           numberrange_interval = cv_numberrange_interval
@@ -1780,9 +1780,9 @@ CLASS lcl_status_vh_data_generator DEFINITION CREATE PRIVATE.
   PROTECTED SECTION.
   PRIVATE SECTION.
     TYPES:
-      type_travel_status  TYPE STANDARD TABLE OF /dmo/trvl_stat_t WITH KEY travel_status  language,
-      type_overall_status TYPE STANDARD TABLE OF /dmo/oall_stat_t WITH KEY overall_status language,
-      type_booking_status TYPE STANDARD TABLE OF /dmo/book_stat_t WITH KEY booking_status language.
+      type_travel_status  TYPE STANDARD TABLE OF ZAI_DMOtrvl_stat_t WITH KEY travel_status  language,
+      type_overall_status TYPE STANDARD TABLE OF ZAI_DMOoall_stat_t WITH KEY overall_status language,
+      type_booking_status TYPE STANDARD TABLE OF ZAI_DMObook_stat_t WITH KEY booking_status language.
 
     CLASS-METHODS:
       _travel_status
@@ -1800,31 +1800,31 @@ CLASS lcl_status_vh_data_generator IMPLEMENTATION.
     IF out IS BOUND.  out->write( '--> Delete Content.' ) ##NO_TEXT.
     ENDIF.
     DELETE FROM:
-       /dmo/trvl_stat,                                  "#EC CI_NOWHERE
-       /dmo/oall_stat,                                  "#EC CI_NOWHERE
-       /dmo/book_stat,                                  "#EC CI_NOWHERE
-       /dmo/trvl_stat_t,                                "#EC CI_NOWHERE
-       /dmo/oall_stat_t,                                "#EC CI_NOWHERE
-       /dmo/book_stat_t.                                "#EC CI_NOWHERE
+       ZAI_DMOtrvl_stat,                                  "#EC CI_NOWHERE
+       ZAI_DMOoall_stat,                                  "#EC CI_NOWHERE
+       ZAI_DMObook_stat,                                  "#EC CI_NOWHERE
+       ZAI_DMOtrvl_stat_t,                                "#EC CI_NOWHERE
+       ZAI_DMOoall_stat_t,                                "#EC CI_NOWHERE
+       ZAI_DMObook_stat_t.                                "#EC CI_NOWHERE
 
 
     IF out IS BOUND.  out->write( '--> Travel Status' ) ##no_text.
     ENDIF.
     DATA(travel_status) = _travel_status( ).
-    INSERT /dmo/trvl_stat   FROM TABLE @( CORRESPONDING #( travel_status ) ).
-    INSERT /dmo/trvl_stat_t FROM TABLE @travel_status.
+    INSERT ZAI_DMOtrvl_stat   FROM TABLE @( CORRESPONDING #( travel_status ) ).
+    INSERT ZAI_DMOtrvl_stat_t FROM TABLE @travel_status.
 
     IF out IS BOUND.  out->write( '--> Overall Status' ) ##no_text.
     ENDIF.
     DATA(overall_status) = _overall_status( ).
-    INSERT /dmo/oall_stat   FROM TABLE @( CORRESPONDING #( overall_status ) ).
-    INSERT /dmo/oall_stat_t FROM TABLE @overall_status.
+    INSERT ZAI_DMOoall_stat   FROM TABLE @( CORRESPONDING #( overall_status ) ).
+    INSERT ZAI_DMOoall_stat_t FROM TABLE @overall_status.
 
     IF out IS BOUND.  out->write( '--> Booking Status' ) ##no_text.
     ENDIF.
     DATA(booking_status) = _booking_status( ).
-    INSERT /dmo/book_stat   FROM TABLE @( CORRESPONDING #( booking_status ) ).
-    INSERT /dmo/book_stat_t FROM TABLE @booking_status.
+    INSERT ZAI_DMObook_stat   FROM TABLE @( CORRESPONDING #( booking_status ) ).
+    INSERT ZAI_DMObook_stat_t FROM TABLE @booking_status.
 
     IF out IS BOUND.  out->write( '--> Done.' ) ##NO_TEXT.
     ENDIF.
@@ -1861,26 +1861,26 @@ CLASS lcl_status_vh_data_generator IMPLEMENTATION.
 ENDCLASS.
 
 CLASS lcl_travel_data_generator DEFINITION DEFERRED.
-CLASS /dmo/cl_flight_data_generator DEFINITION LOCAL FRIENDS lcl_travel_data_generator.
+CLASS ZAI_DMOcl_flight_data_generator DEFINITION LOCAL FRIENDS lcl_travel_data_generator.
 CLASS lcl_travel_data_generator DEFINITION CREATE PRIVATE.
 
   PUBLIC SECTION.
     INTERFACES: lif_data_generator.
 
-    TYPES: tt_travel              TYPE STANDARD TABLE OF /dmo/travel     WITH KEY travel_id,
-           tt_bookings            TYPE STANDARD TABLE OF /dmo/booking    WITH KEY travel_id booking_id,
-           tt_booking_supplements TYPE STANDARD TABLE OF /dmo/book_suppl WITH KEY travel_id booking_id booking_supplement_id.
+    TYPES: tt_travel              TYPE STANDARD TABLE OF ZAI_DMOtravel     WITH KEY travel_id,
+           tt_bookings            TYPE STANDARD TABLE OF ZAI_DMObooking    WITH KEY travel_id booking_id,
+           tt_booking_supplements TYPE STANDARD TABLE OF ZAI_DMObook_suppl WITH KEY travel_id booking_id booking_supplement_id.
 
     " Build nested tables
     TYPES BEGIN OF ty_booking_complete.
-    INCLUDE TYPE /dmo/booking.
+    INCLUDE TYPE ZAI_DMObooking.
     TYPES booking_supplements TYPE tt_booking_supplements.
     TYPES END OF ty_booking_complete.
 
     TYPES tt_booking_complete TYPE STANDARD TABLE OF ty_booking_complete WITH KEY travel_id booking_id.
 
     TYPES BEGIN OF ty_travel_complete.
-    INCLUDE TYPE /dmo/travel.
+    INCLUDE TYPE ZAI_DMOtravel.
     TYPES bookings TYPE tt_booking_complete.
     TYPES END OF ty_travel_complete.
 
@@ -1911,7 +1911,7 @@ CLASS lcl_travel_data_generator DEFINITION CREATE PRIVATE.
       cv_booking_supplement_amount   TYPE i VALUE 5,
       cv_booking_days_before         TYPE i VALUE 15,
       cv_numberrange_interval        TYPE cl_numberrange_runtime=>nr_interval VALUE '01',
-      cv_numberrange_object          TYPE cl_numberrange_runtime=>nr_object   VALUE '/DMO/TRAVL' ##NO_TEXT.
+      cv_numberrange_object          TYPE cl_numberrange_runtime=>nr_object   VALUE 'ZAI_DMOTRAVL' ##NO_TEXT.
 
     CLASS-DATA:
       go_random_seats                TYPE REF TO cl_abap_random_int,
@@ -1953,19 +1953,19 @@ CLASS lcl_travel_data_generator DEFINITION CREATE PRIVATE.
       find_next_fitting_flight
         IMPORTING
           iv_seats_required  TYPE i
-          is_flight_previous TYPE /dmo/flight OPTIONAL
+          is_flight_previous TYPE ZAI_DMOflight OPTIONAL
         RETURNING
-          VALUE(rs_flight)   TYPE /dmo/flight,
+          VALUE(rs_flight)   TYPE ZAI_DMOflight,
       generate_booking_supplements
         IMPORTING
-          iv_booking_id  TYPE /dmo/booking-booking_id
+          iv_booking_id  TYPE ZAI_DMObooking-booking_id
         RETURNING
           VALUE(rt_data) TYPE tt_booking_supplements,
       generate_description
         IMPORTING
           it_bookings           TYPE lcl_travel_data_generator=>tt_booking_complete
         RETURNING
-          VALUE(rv_description) TYPE /dmo/travel-description,
+          VALUE(rv_description) TYPE ZAI_DMOtravel-description,
       generate_random_time
         RETURNING
           VALUE(r_result) TYPE i,
@@ -1973,12 +1973,12 @@ CLASS lcl_travel_data_generator DEFINITION CREATE PRIVATE.
         IMPORTING
           it_bookings           TYPE lcl_travel_data_generator=>tt_booking_complete
         RETURNING
-          VALUE(rv_booking_fee) TYPE /dmo/travel-booking_fee,
+          VALUE(rv_booking_fee) TYPE ZAI_DMOtravel-booking_fee,
       generate_travel_customer_id
         IMPORTING
           it_bookings           TYPE lcl_travel_data_generator=>tt_booking_complete
         RETURNING
-          VALUE(rv_customer_id) TYPE /dmo/travel-customer_id,
+          VALUE(rv_customer_id) TYPE ZAI_DMOtravel-customer_id,
       set_today,
       calc_days_before_book_or_today
         IMPORTING
@@ -2000,13 +2000,13 @@ CLASS lcl_travel_data_generator IMPLEMENTATION.
 
     IF out IS BOUND.  out->write( '--> Delete Travel Content.' ) ##NO_TEXT.
     ENDIF.
-    DELETE FROM /dmo/travel.                            "#EC CI_NOWHERE
+    DELETE FROM ZAI_DMOtravel.                            "#EC CI_NOWHERE
     IF out IS BOUND.  out->write( '--> Delete Booking Content.' ) ##NO_TEXT.
     ENDIF.
-    DELETE FROM /dmo/booking.                           "#EC CI_NOWHERE
+    DELETE FROM ZAI_DMObooking.                           "#EC CI_NOWHERE
     IF out IS BOUND.  out->write( '--> Delete Booking Supplement Content.' ) ##NO_TEXT.
     ENDIF.
-    DELETE FROM /dmo/book_suppl.                        "#EC CI_NOWHERE
+    DELETE FROM ZAI_DMObook_suppl.                        "#EC CI_NOWHERE
 
     IF out IS BOUND.  out->write( '--> Set Numberranges.' ) ##NO_TEXT.
     ENDIF.
@@ -2019,22 +2019,22 @@ CLASS lcl_travel_data_generator IMPLEMENTATION.
     IF out IS BOUND.  out->write( '--> Convert Content to Table Format' ) ##NO_TEXT.
     ENDIF.
     LOOP AT lt_data INTO DATA(ls_travel).
-      APPEND CORRESPONDING /dmo/travel( ls_travel ) TO lt_travels.
+      APPEND CORRESPONDING ZAI_DMOtravel( ls_travel ) TO lt_travels.
       LOOP AT ls_travel-bookings INTO DATA(ls_booking).
-        APPEND CORRESPONDING /dmo/booking( ls_booking ) TO lt_bookings.
+        APPEND CORRESPONDING ZAI_DMObooking( ls_booking ) TO lt_bookings.
         APPEND LINES OF ls_booking-booking_supplements TO lt_booking_supplements.
       ENDLOOP.
     ENDLOOP.
 
     IF out IS BOUND.  out->write( '--> Insert Travel Content' ) ##NO_TEXT.
     ENDIF.
-    INSERT /dmo/travel FROM TABLE @lt_travels.
+    INSERT ZAI_DMOtravel FROM TABLE @lt_travels.
     IF out IS BOUND.  out->write( '--> Insert Booking Content' ) ##NO_TEXT.
     ENDIF.
-    INSERT /dmo/booking FROM TABLE @lt_bookings.
+    INSERT ZAI_DMObooking FROM TABLE @lt_bookings.
     IF out IS BOUND.  out->write( '--> Insert Booking Supplement Content' ) ##NO_TEXT.
     ENDIF.
-    INSERT /dmo/book_suppl FROM TABLE @lt_booking_supplements.
+    INSERT ZAI_DMObook_suppl FROM TABLE @lt_booking_supplements.
 
     IF out IS BOUND.  out->write( '--> Done.' ) ##NO_TEXT.
     ENDIF.
@@ -2042,7 +2042,7 @@ CLASS lcl_travel_data_generator IMPLEMENTATION.
 
 
   METHOD get_data.
-    DATA: lv_travel_id TYPE /dmo/booking-travel_id.
+    DATA: lv_travel_id TYPE ZAI_DMObooking-travel_id.
 
     build_dependend_content( ).
     set_today( ).
@@ -2065,21 +2065,21 @@ CLASS lcl_travel_data_generator IMPLEMENTATION.
           begin_date    = lt_bookings[ 1 ]-flight_date
           end_date      = lt_bookings[ lines( lt_bookings ) ]-flight_date
           booking_fee   = lv_booking_fee
-          total_price   = lv_booking_fee + REDUCE /dmo/travel-total_price( INIT sum = 0
+          total_price   = lv_booking_fee + REDUCE ZAI_DMOtravel-total_price( INIT sum = 0
                                                           FOR booking IN lt_bookings
                                                           NEXT
                                                            sum = sum
                                                                  + booking-flight_price
-                                                                 + REDUCE /dmo/flight_price( INIT sum_supplement = 0
+                                                                 + REDUCE ZAI_DMOflight_price( INIT sum_supplement = 0
                                                                                              FOR booking_supplement IN booking-booking_supplements
                                                                                              NEXT sum_supplement = sum_supplement + booking_supplement-price )
                                                         )
           currency_code = lt_bookings[ 1 ]-currency_code
           description   = generate_description( lt_bookings )
-          status        = SWITCH /dmo/travel-status( go_ran_status_description->get_next( )
-                                          WHEN 1 OR 2 THEN /dmo/if_flight_legacy=>travel_status-new
-                                          WHEN 3      THEN /dmo/if_flight_legacy=>travel_status-booked
-                                          WHEN 4      THEN /dmo/if_flight_legacy=>travel_status-planned  )
+          status        = SWITCH ZAI_DMOtravel-status( go_ran_status_description->get_next( )
+                                          WHEN 1 OR 2 THEN ZAI_DMOif_flight_legacy=>travel_status-new
+                                          WHEN 3      THEN ZAI_DMOif_flight_legacy=>travel_status-booked
+                                          WHEN 4      THEN ZAI_DMOif_flight_legacy=>travel_status-planned  )
           createdby     = gt_last_names[ go_ran_last_name->get_next( ) ]-last_name
           createdat     = CONV timestampl( CONV string( lv_travel_create_date_dats ) * 1000000 + generate_random_time( ) )
           lastchangedby = gt_last_names[ go_ran_last_name->get_next( ) ]-last_name
@@ -2122,12 +2122,12 @@ CLASS lcl_travel_data_generator IMPLEMENTATION.
 
   METHOD set_numberrange.
 
-    /dmo/cl_flight_data_generator=>reset_numberrange_interval(
+    ZAI_DMOcl_flight_data_generator=>reset_numberrange_interval(
       EXPORTING
         numberrange_object   = cv_numberrange_object
         numberrange_interval = cv_numberrange_interval
         fromnumber           = CONV cl_numberrange_intervals=>nr_nriv_line-fromnumber( '00000001' )
-        tonumber             = CONV cl_numberrange_intervals=>nr_nriv_line-tonumber( CONV /dmo/travel_id( /dmo/if_flight_legacy=>late_numbering_boundary - 1 ) ) ).
+        tonumber             = CONV cl_numberrange_intervals=>nr_nriv_line-tonumber( CONV ZAI_DMOtravel_id( ZAI_DMOif_flight_legacy=>late_numbering_boundary - 1 ) ) ).
 
   ENDMETHOD.
 
@@ -2199,8 +2199,8 @@ CLASS lcl_travel_data_generator IMPLEMENTATION.
 
 
   METHOD build_booking.
-    TYPES: tt_customer_id TYPE TABLE OF /dmo/customer-customer_id WITH EMPTY KEY.
-    DATA: lv_booking_id      TYPE /dmo/booking-booking_id,
+    TYPES: tt_customer_id TYPE TABLE OF ZAI_DMOcustomer-customer_id WITH EMPTY KEY.
+    DATA: lv_booking_id      TYPE ZAI_DMObooking-booking_id,
           lt_customer_id     TYPE tt_customer_id,
           lv_customer_amount TYPE i.
 
@@ -2231,9 +2231,9 @@ CLASS lcl_travel_data_generator IMPLEMENTATION.
           flight_date   = ls_flight-flight_date
         ASSIGNING FIELD-SYMBOL(<flight>).
 
-      DATA(lv_booking_date) = CONV /dmo/booking-booking_date( <flight>-flight_date - go_ran_booking_date->get_next( ) ).
+      DATA(lv_booking_date) = CONV ZAI_DMObooking-booking_date( <flight>-flight_date - go_ran_booking_date->get_next( ) ).
 
-      DATA(lv_price) = /dmo/cl_flight_data_generator=>calculate_flight_price(
+      DATA(lv_price) = ZAI_DMOcl_flight_data_generator=>calculate_flight_price(
                                       iv_flight_distance = gt_connections[ carrier_id = <flight>-carrier_id connection_id = <flight>-connection_id ]-distance
                                       iv_seats_occupied_percent = ( gt_flights_final[ KEY primary_key ##PRIMKEY[KEY_SORTED_DATE]
                                                                                       carrier_id    = <flight>-carrier_id
@@ -2257,7 +2257,7 @@ CLASS lcl_travel_data_generator IMPLEMENTATION.
             flight_date         = <flight>-flight_date
             flight_price        = lv_price
             currency_code       = <flight>-currency_code
-            booking_supplements = generate_booking_supplements( CONV /dmo/booking-booking_id( lv_booking_id + i ) )
+            booking_supplements = generate_booking_supplements( CONV ZAI_DMObooking-booking_id( lv_booking_id + i ) )
           )
       ) TO rt_bookings.
 
@@ -2285,7 +2285,7 @@ CLASS lcl_travel_data_generator IMPLEMENTATION.
     CHECK lt_flights_filtered IS NOT INITIAL.
 
     IF is_flight_previous IS SUPPLIED.
-      DATA(lv_connection_id_new) = VALUE /dmo/connection-connection_id( gt_connections[
+      DATA(lv_connection_id_new) = VALUE ZAI_DMOconnection-connection_id( gt_connections[
                                                         airport_from_id = gt_connections[
                                                                                  connection_id = is_flight_previous-connection_id
                                                                              ]-airport_to_id
@@ -2325,24 +2325,24 @@ CLASS lcl_travel_data_generator IMPLEMENTATION.
 
 
   METHOD generate_description.
-    TYPES: tt_customers TYPE SORTED TABLE OF /dmo/customer WITH UNIQUE KEY customer_id.
-    rv_description = SWITCH /dmo/travel-description(
+    TYPES: tt_customers TYPE SORTED TABLE OF ZAI_DMOcustomer WITH UNIQUE KEY customer_id.
+    rv_description = SWITCH ZAI_DMOtravel-description(
                                go_ran_travel_description->get_next( )
                                   WHEN 1 THEN `Business Trip for ` &&
-                                                REDUCE /dmo/travel-description(
+                                                REDUCE ZAI_DMOtravel-description(
                                                                LET travelers = CORRESPONDING tt_customers( it_bookings DISCARDING DUPLICATES MAPPING customer_id = customer_id ) IN
                                                                INIT s = `` i = 1
                                                                FOR traveler IN travelers
                                                                NEXT s =  s && gt_customer[ customer_id = traveler-customer_id ]-first_name
-                                                                           && COND /dmo/travel-description( WHEN i < lines( it_bookings ) THEN `, ` )
+                                                                           && COND ZAI_DMOtravel-description( WHEN i < lines( it_bookings ) THEN `, ` )
                                                                     i = i + 1 )
                                   WHEN 2 THEN `Vacation for ` &&
-                                                REDUCE /dmo/travel-description(
+                                                REDUCE ZAI_DMOtravel-description(
                                                                LET travelers2 = CORRESPONDING tt_customers( it_bookings DISCARDING DUPLICATES MAPPING customer_id = customer_id ) IN
                                                                INIT s = `` i = 1
                                                                FOR traveler IN travelers2
                                                                NEXT s =  s && gt_customer[ customer_id = traveler-customer_id ]-first_name
-                                                                           && COND /dmo/travel-description( WHEN i < lines( it_bookings ) THEN `, ` )
+                                                                           && COND ZAI_DMOtravel-description( WHEN i < lines( it_bookings ) THEN `, ` )
                                                                     i = i + 1 )
                                   WHEN 3 THEN `Business Trip to ` &&
                                                gt_countryname[
@@ -2379,7 +2379,7 @@ CLASS lcl_travel_data_generator IMPLEMENTATION.
 
 
   METHOD generate_travel_customer_id.
-    rv_customer_id = COND /dmo/travel-customer_id(
+    rv_customer_id = COND ZAI_DMOtravel-customer_id(
                         WHEN go_ran_customer_travel->get_next( ) = 1
                           THEN gt_customer[ go_ran_customer->get_next( ) ]-customer_id
                           ELSE it_bookings[ 1 ]-customer_id
