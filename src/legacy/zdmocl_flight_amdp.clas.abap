@@ -11,11 +11,14 @@ CLASS ZDMOcl_flight_amdp DEFINITION
                                                   VALUE(iv_currency_code_target) TYPE ZDMOcurrency_code
                                                   VALUE(iv_exchange_rate_date)   TYPE d
                                         EXPORTING VALUE(ev_amount)               TYPE ZDMOtotal_price.
+protected section.
+private section.
 ENDCLASS.
 
 
 
-CLASS ZDMOcl_flight_amdp IMPLEMENTATION.
+CLASS ZDMOCL_FLIGHT_AMDP IMPLEMENTATION.
+
 
   METHOD convert_currency BY DATABASE PROCEDURE FOR HDB LANGUAGE SQLSCRIPT OPTIONS READ-ONLY .
     tab = SELECT CONVERT_CURRENCY( amount         => :iv_amount,
@@ -30,5 +33,4 @@ CLASS ZDMOcl_flight_amdp IMPLEMENTATION.
               FROM dummy ;
     ev_amount = :tab.target_value[1];
   ENDMETHOD.
-
 ENDCLASS.

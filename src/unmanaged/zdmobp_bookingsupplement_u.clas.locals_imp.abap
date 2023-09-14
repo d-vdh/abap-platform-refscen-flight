@@ -52,19 +52,19 @@ CLASS lhc_bookingsupplement IMPLEMENTATION.
     LOOP AT entities ASSIGNING FIELD-SYMBOL(<bookingsupplement>).
       book_supplements = CORRESPONDING   #( <bookingsupplement> MAPPING FROM ENTITY ).
 
-      CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_UPDATE'
-        EXPORTING
-          is_travel              = VALUE ZDMOs_travel_in( travel_id = <bookingsupplement>-travelid )
-          is_travelx             = VALUE ZDMOs_travel_inx( travel_id = <bookingsupplement>-travelid )
-          it_booking_supplement  = VALUE ZDMOt_booking_supplement_in( ( CORRESPONDING #( book_supplements ) ) )
-          it_booking_supplementx = VALUE ZDMOt_booking_supplement_inx( (
-                                            booking_supplement_id = <bookingsupplement>-bookingsupplementid
-                                            action_code           = ZDMOif_flight_legacy=>action_code-update
-                                            booking_id            = <bookingsupplement>-bookingid
-                                            _intx                 = CORRESPONDING #( <bookingsupplement> MAPPING FROM ENTITY )
-                                          ) )
-        IMPORTING
-          et_messages            = messages.
+*      CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_UPDATE'
+*        EXPORTING
+*          is_travel              = VALUE ZDMOs_travel_in( travel_id = <bookingsupplement>-travelid )
+*          is_travelx             = VALUE ZDMOs_travel_inx( travel_id = <bookingsupplement>-travelid )
+*          it_booking_supplement  = VALUE ZDMOt_booking_supplement_in( ( CORRESPONDING #( book_supplements ) ) )
+*          it_booking_supplementx = VALUE ZDMOt_booking_supplement_inx( (
+*                                            booking_supplement_id = <bookingsupplement>-bookingsupplementid
+*                                            action_code           = ZDMOif_flight_legacy=>action_code-update
+*                                            booking_id            = <bookingsupplement>-bookingid
+*                                            _intx                 = CORRESPONDING #( <bookingsupplement> MAPPING FROM ENTITY )
+*                                          ) )
+*        IMPORTING
+*          et_messages            = messages.
 
       map_messages(
         EXPORTING
@@ -133,12 +133,12 @@ CLASS lhc_bookingsupplement IMPLEMENTATION.
     LOOP AT keys ASSIGNING FIELD-SYMBOL(<booksuppl_by_travel>)
                                GROUP BY <booksuppl_by_travel>-TravelID.
 
-      CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_READ'
-        EXPORTING
-          iv_travel_id          = <booksuppl_by_travel>-travelid
-        IMPORTING
-          et_booking_supplement = booksuppls_out
-          et_messages           = messages.
+*      CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_READ'
+*        EXPORTING
+*          iv_travel_id          = <booksuppl_by_travel>-travelid
+*        IMPORTING
+*          et_booking_supplement = booksuppls_out
+*          et_messages           = messages.
 
 
       map_messages(

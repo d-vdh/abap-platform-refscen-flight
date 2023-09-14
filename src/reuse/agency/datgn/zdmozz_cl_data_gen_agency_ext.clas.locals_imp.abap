@@ -123,18 +123,18 @@ CLASS lcl_slogan IMPLEMENTATION.
 
     DATA(roots) = FILTER tt_slogan( mt_text USING KEY filter WHERE root = abap_true ).
     LOOP AT gt_agency ASSIGNING FIELD-SYMBOL(<agency>).
-      <agency>-control-ZDMOzzsloganzag = if_abap_behv=>mk-on.
+      <agency>-control-zzsloganzag = if_abap_behv=>mk-on.
       DATA(next) = roots[ floor( go_rnd->get_next( ) * lines( roots ) ) + 1 ].
-      <agency>-ZDMOzzsloganzag = next-text.
+      <agency>-zzsloganzag = next-text.
       WHILE next-followed_by IS NOT INITIAL.
         IF next-posible_end = abap_true AND go_rnd->get_next( ) > '0.6'.
           EXIT.
         ENDIF.
         id = floor( go_rnd->get_next( ) * lines( next-followed_by ) ) + 1.
         next = mt_text[ id = next-followed_by[ id ] ].
-        <agency>-ZDMOzzsloganzag &&= ` ` && next-text.
+        <agency>-zzsloganzag &&= ` ` && next-text.
       ENDWHILE.
-      REPLACE ALL OCCURRENCES OF agencys_name IN <agency>-ZDMOzzsloganzag WITH <agency>-name.
+      REPLACE ALL OCCURRENCES OF agencys_name IN <agency>-zzsloganzag WITH <agency>-name.
     ENDLOOP.
   ENDMETHOD.
 

@@ -22,11 +22,14 @@ CLASS ZDMOcl_travel_auxiliary DEFINITION
       RETURNING
         VALUE(fail_cause) TYPE if_abap_behv=>t_fail_cause.
 
+protected section.
+private section.
 ENDCLASS.
 
 
 
-CLASS ZDMOcl_travel_auxiliary IMPLEMENTATION.
+CLASS ZDMOCL_TRAVEL_AUXILIARY IMPLEMENTATION.
+
 
   METHOD get_cause_from_message.
     fail_cause = if_abap_behv=>cause-unspecific.
@@ -49,5 +52,4 @@ CLASS ZDMOcl_travel_auxiliary IMPLEMENTATION.
       ENDCASE.
     ENDIF.
   ENDMETHOD.
-
 ENDCLASS.

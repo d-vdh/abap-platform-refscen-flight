@@ -14,7 +14,7 @@ ENDCLASS.
 
 
 
-CLASS ZDMOcl_data_generator_draft IMPLEMENTATION.
+CLASS ZDMOCL_DATA_GENERATOR_DRAFT IMPLEMENTATION.
 
 
   METHOD ZDMOif_data_generation_badi~data_generation.
@@ -103,6 +103,4 @@ CLASS ZDMOcl_data_generator_draft IMPLEMENTATION.
     ).
 
   ENDMETHOD.
-
-
 ENDCLASS.

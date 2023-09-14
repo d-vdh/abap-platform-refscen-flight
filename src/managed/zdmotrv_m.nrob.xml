@@ -8,9 +8,7 @@
     <PERCENTAGE>10.0</PERCENTAGE>
     <BUFFER>X</BUFFER>
     <NOIVBUFFER>00000001</NOIVBUFFER>
-    <UNAME>REICHERTGE</UNAME>
-    <UDATE>2022-02-03</UDATE>
-    <UTIME>07:54:34</UTIME>
+    <ABAP_LANGUAGE_VERSION>5</ABAP_LANGUAGE_VERSION>
    </ATTRIBUTES>
    <TEXT>
     <LANGU>E</LANGU>
@@ -18,6 +16,7 @@
     <TXT>Travel_ID number range object</TXT>
     <TXTSHORT>Travel_ID number...</TXTSHORT>
    </TEXT>
+   <ISOLANG>EN</ISOLANG>
   </asx:values>
  </asx:abap>
 </abapGit>

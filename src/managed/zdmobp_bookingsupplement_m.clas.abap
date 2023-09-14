@@ -1,8 +1,9 @@
 CLASS ZDMObp_bookingsupplement_m DEFINITION PUBLIC ABSTRACT FINAL FOR BEHAVIOR OF ZDMOi_travel_m.
+protected section.
+private section.
 ENDCLASS.
 
 
-CLASS ZDMObp_bookingsupplement_m IMPLEMENTATION.
 
-
+CLASS ZDMOBP_BOOKINGSUPPLEMENT_M IMPLEMENTATION.
 ENDCLASS.

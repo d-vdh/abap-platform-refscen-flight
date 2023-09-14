@@ -10,6 +10,7 @@
     <OUTPUTLEN>000003</OUTPUTLEN>
     <DDTEXT>Agency Review: Rating</DDTEXT>
     <DOMMASTER>E</DOMMASTER>
+    <ABAP_LANGUAGE_VERSION>5</ABAP_LANGUAGE_VERSION>
    </DD01V>
   </asx:values>
  </asx:abap>

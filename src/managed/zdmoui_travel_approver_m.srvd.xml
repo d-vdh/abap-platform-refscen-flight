@@ -8,7 +8,7 @@
     <DESCRIPTION>Service definition for managing travels - managed impl type</DESCRIPTION>
     <LANGUAGE>EN</LANGUAGE>
     <MASTER_LANGUAGE>EN</MASTER_LANGUAGE>
-    <SOURCE_URI>./%2Fdmo%2Fui_travel_approver_m/source/main</SOURCE_URI>
+    <SOURCE_URI>./zdmoui_travel_approver_m/source/main</SOURCE_URI>
     <SOURCE_TYPE>ABAP_SOURCE</SOURCE_TYPE>
     <SOURCE_ORIGIN_DESCRIPTION>ABAP Development Tools</SOURCE_ORIGIN_DESCRIPTION>
     <SRVD_SOURCE_TYPE>S</SRVD_SOURCE_TYPE>

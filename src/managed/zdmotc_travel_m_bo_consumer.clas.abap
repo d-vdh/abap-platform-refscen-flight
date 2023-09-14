@@ -139,7 +139,8 @@ ENDCLASS.
 
 
 
-CLASS ZDMOtc_travel_m_bo_consumer IMPLEMENTATION.
+CLASS ZDMOTC_TRAVEL_M_BO_CONSUMER IMPLEMENTATION.
+
 
   method create_travel.
 
@@ -156,6 +157,7 @@ CLASS ZDMOtc_travel_m_bo_consumer IMPLEMENTATION.
   "This is a demo code under test and only includes the EML operation to be isolated.
   "In actual scenario there will be additional business logic that forms the code to be tested.
   endmethod.
+
 
   method mod_eml_w_mult_ents_nd_ops.
 
@@ -208,6 +210,7 @@ CLASS ZDMOtc_travel_m_bo_consumer IMPLEMENTATION.
     "This is a demo code under test and only includes the EML operation to be isolated.
     "In actual scenario there will be additional business logic that forms the code to be tested.
   endmethod.
+
 
   method create_ba_booking_for_travel_1.
     "This is a demo code under test and only includes the EML operation to be isolated.
@@ -349,6 +352,7 @@ CLASS ZDMOtc_travel_m_bo_consumer IMPLEMENTATION.
     "In actual scenario there will be additional business logic that forms the code to be tested.
   endmethod.
 
+
   method read_travel_1.
     "This is a demo code under test and only includes the EML operation to be isolated.
     "In actual scenario there will be additional business logic that forms the code to be tested.
@@ -365,6 +369,7 @@ CLASS ZDMOtc_travel_m_bo_consumer IMPLEMENTATION.
     "In actual scenario there will be additional business logic that forms the code to be tested.
   endmethod.
 
+
   method delete_travel.
     "This is a demo code under test and only includes the EML operation to be isolated.
     "In actual scenario there will be additional business logic that forms the code to be tested.
@@ -379,6 +384,7 @@ CLASS ZDMOtc_travel_m_bo_consumer IMPLEMENTATION.
     "This is a demo code under test and only includes the EML operation to be isolated.
     "In actual scenario there will be additional business logic that forms the code to be tested.
   endmethod.
+
 
   METHOD ACCEPT_TRAVEL_ACTION.
     "This is a demo code under test and only includes the EML operation to be isolated.
@@ -396,5 +402,4 @@ CLASS ZDMOtc_travel_m_bo_consumer IMPLEMENTATION.
     "In actual scenario there will be additional business logic that forms the code to be tested.
 
   ENDMETHOD.
-
 ENDCLASS.

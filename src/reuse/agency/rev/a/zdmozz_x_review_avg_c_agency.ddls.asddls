@@ -26,5 +26,5 @@ extend view entity ZDMOC_AgencyTP with
             }
           ]
     }
-  Agency.ZDMOZZ_ReviewAvgZAG.AverageRating as ZDMOZZAverageRatingZAG
+  Agency.ZZ_ReviewAvgZAG.AverageRating as ZZAverageRatingZAG
 }

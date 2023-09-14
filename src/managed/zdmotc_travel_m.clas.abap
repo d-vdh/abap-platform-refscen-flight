@@ -47,7 +47,8 @@ ENDCLASS.
 
 
 
-CLASS ZDMOtc_travel_m IMPLEMENTATION.
+CLASS ZDMOTC_TRAVEL_M IMPLEMENTATION.
+
 
   METHOD class_setup.
     agency_mock_data     = VALUE #( ( agency_id   = '987654' name      = 'Miles and More'   ) ).
@@ -76,15 +77,16 @@ CLASS ZDMOtc_travel_m IMPLEMENTATION.
     cds_test_environment->clear_doubles( ).
   ENDMETHOD.
 
+
   METHOD teardown.
     ROLLBACK ENTITIES.                                 "#EC CI_ROLLBACK
   ENDMETHOD.
+
 
   METHOD class_teardown.
     cds_test_environment->destroy(  ).
     sql_test_environment->destroy(  ).
   ENDMETHOD.
-
 
 
   METHOD create_validation_negative.
@@ -521,5 +523,4 @@ CLASS ZDMOtc_travel_m IMPLEMENTATION.
 
 
   ENDMETHOD.
-
 ENDCLASS.

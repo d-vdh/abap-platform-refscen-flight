@@ -13,7 +13,8 @@ ENDCLASS.
 
 
 
-CLASS ZDMOcl_data_generator_managed IMPLEMENTATION.
+CLASS ZDMOCL_DATA_GENERATOR_MANAGED IMPLEMENTATION.
+
 
   METHOD ZDMOif_data_generation_badi~data_generation.
 
@@ -105,5 +106,4 @@ CLASS ZDMOcl_data_generator_managed IMPLEMENTATION.
     INSERT ZDMObooksuppl_m FROM TABLE @lt_booksuppl_m.
 
   ENDMETHOD.
-
 ENDCLASS.

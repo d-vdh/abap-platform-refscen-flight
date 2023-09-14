@@ -36,7 +36,7 @@ ENDCLASS.
 
 
 
-CLASS ZDMOcl_flight_data_generator IMPLEMENTATION.
+CLASS ZDMOCL_FLIGHT_DATA_GENERATOR IMPLEMENTATION.
 
 
   METHOD if_oo_adt_classrun~main.
@@ -90,6 +90,7 @@ CLASS ZDMOcl_flight_data_generator IMPLEMENTATION.
                  iv_flight_distance        = iv_flight_distance
                ).
   ENDMETHOD.
+
 
   METHOD reset_numberrange_interval.
 
@@ -192,5 +193,4 @@ CLASS ZDMOcl_flight_data_generator IMPLEMENTATION.
     ENDIF.
 
   ENDMETHOD.
-
 ENDCLASS.

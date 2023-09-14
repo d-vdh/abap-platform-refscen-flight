@@ -74,14 +74,14 @@ CLASS lhc_booking IMPLEMENTATION.
       bookingx-booking_id  = <booking>-BookingID.
       bookingx-action_code = ZDMOif_flight_legacy=>action_code-update.
 
-      CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_UPDATE'
-        EXPORTING
-          is_travel   = VALUE ZDMOs_travel_in( travel_id = <booking>-travelid )
-          is_travelx  = VALUE ZDMOs_travel_inx( travel_id = <booking>-travelid )
-          it_booking  = VALUE ZDMOt_booking_in( ( CORRESPONDING #( booking ) ) )
-          it_bookingx = VALUE ZDMOt_booking_inx( ( bookingx ) )
-        IMPORTING
-          et_messages = messages.
+*      CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_UPDATE'
+*        EXPORTING
+*          is_travel   = VALUE ZDMOs_travel_in( travel_id = <booking>-travelid )
+*          is_travelx  = VALUE ZDMOs_travel_inx( travel_id = <booking>-travelid )
+*          it_booking  = VALUE ZDMOt_booking_in( ( CORRESPONDING #( booking ) ) )
+*          it_bookingx = VALUE ZDMOt_booking_inx( ( bookingx ) )
+*        IMPORTING
+*          et_messages = messages.
 
       map_messages(
         EXPORTING
@@ -106,15 +106,15 @@ CLASS lhc_booking IMPLEMENTATION.
 
     LOOP AT keys ASSIGNING FIELD-SYMBOL(<booking>).
 
-      CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_UPDATE'
-        EXPORTING
-          is_travel   = VALUE ZDMOs_travel_in( travel_id = <booking>-travelid )
-          is_travelx  = VALUE ZDMOs_travel_inx( travel_id = <booking>-travelid )
-          it_booking  = VALUE ZDMOt_booking_in( ( booking_id = <booking>-bookingid ) )
-          it_bookingx = VALUE ZDMOt_booking_inx( ( booking_id  = <booking>-bookingid
-                                                    action_code = ZDMOif_flight_legacy=>action_code-delete ) )
-        IMPORTING
-          et_messages = messages.
+*      CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_UPDATE'
+*        EXPORTING
+*          is_travel   = VALUE ZDMOs_travel_in( travel_id = <booking>-travelid )
+*          is_travelx  = VALUE ZDMOs_travel_inx( travel_id = <booking>-travelid )
+*          it_booking  = VALUE ZDMOt_booking_in( ( booking_id = <booking>-bookingid ) )
+*          it_bookingx = VALUE ZDMOt_booking_inx( ( booking_id  = <booking>-bookingid
+*                                                    action_code = ZDMOif_flight_legacy=>action_code-delete ) )
+*        IMPORTING
+*          et_messages = messages.
 
       map_messages(
         EXPORTING
@@ -143,13 +143,13 @@ CLASS lhc_booking IMPLEMENTATION.
     LOOP AT keys ASSIGNING FIELD-SYMBOL(<booking_by_travel>)
                                GROUP BY <booking_by_travel>-travelid .
 
-      CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_READ'
-        EXPORTING
-          iv_travel_id = <booking_by_travel>-travelid
-        IMPORTING
-          es_travel    = travel_out
-          et_booking   = bookings_out
-          et_messages  = messages.
+*      CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_READ'
+*        EXPORTING
+*          iv_travel_id = <booking_by_travel>-travelid
+*        IMPORTING
+*          es_travel    = travel_out
+*          et_booking   = bookings_out
+*          et_messages  = messages.
 
       map_messages(
         EXPORTING
@@ -200,12 +200,12 @@ CLASS lhc_booking IMPLEMENTATION.
     LOOP AT keys_rba ASSIGNING FIELD-SYMBOL(<bookingsupplement_by_travel>)
                                GROUP BY <bookingsupplement_by_travel>-travelid .
 
-      CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_READ'
-        EXPORTING
-          iv_travel_id          = <bookingsupplement_by_travel>-travelid
-        IMPORTING
-          et_booking_supplement = bookingsupplements_out
-          et_messages           = messages.
+*      CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_READ'
+*        EXPORTING
+*          iv_travel_id          = <bookingsupplement_by_travel>-travelid
+*        IMPORTING
+*          et_booking_supplement = bookingsupplements_out
+*          et_messages           = messages.
 
       LOOP AT keys_rba ASSIGNING FIELD-SYMBOL(<bookingsuppl_by_travel_book>)
                                  USING KEY entity
@@ -264,12 +264,12 @@ CLASS lhc_booking IMPLEMENTATION.
     LOOP AT keys_rba ASSIGNING FIELD-SYMBOL(<booking_by_travel>)
                                GROUP BY <booking_by_travel>-travelid .
 
-      CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_READ'
-        EXPORTING
-          iv_travel_id = <booking_by_travel>-travelid
-        IMPORTING
-          es_travel    = travel
-          et_messages  = messages.
+*      CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_READ'
+*        EXPORTING
+*          iv_travel_id = <booking_by_travel>-travelid
+*        IMPORTING
+*          es_travel    = travel
+*          et_messages  = messages.
 
       map_messages(
         EXPORTING
@@ -323,12 +323,12 @@ CLASS lhc_booking IMPLEMENTATION.
       DATA(parent_key) = <booking>-%tky.
 
       " Retrieve booking supplements related to the imported travel ID
-      CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_READ'
-        EXPORTING
-          iv_travel_id          = parent_key-travelid
-        IMPORTING
-          et_booking_supplement = booksupplements_old
-          et_messages           = messages.
+*      CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_READ'
+*        EXPORTING
+*          iv_travel_id          = parent_key-travelid
+*        IMPORTING
+*          et_booking_supplement = booksupplements_old
+*          et_messages           = messages.
 
       map_messages(
         EXPORTING
@@ -378,19 +378,19 @@ CLASS lhc_booking IMPLEMENTATION.
           booksupplement-booking_id = parent_key-BookingID.
           booksupplement-booking_supplement_id = last_bookingsupplement_id.
 
-          " Create a new booking supplement and update a booking instance
-          CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_UPDATE'
-            EXPORTING
-              is_travel              = VALUE ZDMOs_travel_in( travel_id = parent_key-travelid )
-              is_travelx             = VALUE ZDMOs_travel_inx( travel_id = parent_key-travelid )
-              it_booking_supplement  = VALUE ZDMOt_booking_supplement_in( ( CORRESPONDING #( booksupplement ) ) )
-              it_booking_supplementx = VALUE ZDMOt_booking_supplement_inx( ( VALUE #(
-                                                                                 booking_id = booksupplement-booking_id
-                                                                                 booking_supplement_id = booksupplement-booking_supplement_id
-                                                                                 action_code = ZDMOif_flight_legacy=>action_code-create )
-                                                                               ) )
-            IMPORTING
-              et_messages            = messages.
+*          " Create a new booking supplement and update a booking instance
+*          CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_UPDATE'
+*            EXPORTING
+*              is_travel              = VALUE ZDMOs_travel_in( travel_id = parent_key-travelid )
+*              is_travelx             = VALUE ZDMOs_travel_inx( travel_id = parent_key-travelid )
+*              it_booking_supplement  = VALUE ZDMOt_booking_supplement_in( ( CORRESPONDING #( booksupplement ) ) )
+*              it_booking_supplementx = VALUE ZDMOt_booking_supplement_inx( ( VALUE #(
+*                                                                                 booking_id = booksupplement-booking_id
+*                                                                                 booking_supplement_id = booksupplement-booking_supplement_id
+*                                                                                 action_code = ZDMOif_flight_legacy=>action_code-create )
+*                                                                               ) )
+*            IMPORTING
+*              et_messages            = messages.
 
 
           map_messages_assoc_to_booksupp(

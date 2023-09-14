@@ -42,7 +42,10 @@ CLASS ZDMOtc_travel_proc_m_o2_odata DEFINITION
 
 ENDCLASS.
 
-CLASS ZDMOtc_travel_proc_m_o2_odata  IMPLEMENTATION.
+
+
+CLASS ZDMOTC_TRAVEL_PROC_M_O2_ODATA IMPLEMENTATION.
+
 
   METHOD class_setup.
 
@@ -80,6 +83,7 @@ CLASS ZDMOtc_travel_proc_m_o2_odata  IMPLEMENTATION.
 
   ENDMETHOD.
 
+
   METHOD setup.
     sql_test_environment->clear_doubles(  ).
     cds_test_environment->clear_doubles(  ).
@@ -90,15 +94,18 @@ CLASS ZDMOtc_travel_proc_m_o2_odata  IMPLEMENTATION.
     sql_test_environment->insert_test_data( supplement_mock_data ).
   ENDMETHOD.
 
+
   METHOD teardown.
     ROLLBACK ENTITIES. "#EC CI_ROLLBACK
   ENDMETHOD.
+
 
   METHOD class_teardown.
     " remove test doubles
     cds_test_environment->destroy(  ).
     sql_test_environment->destroy(  ).
   ENDMETHOD.
+
 
   METHOD create_travel.
     " call a simple create operation and check if the data is available via EML and in the database
@@ -154,8 +161,6 @@ CLASS ZDMOtc_travel_proc_m_o2_odata  IMPLEMENTATION.
   ENDMETHOD.
 
 
-
-
   METHOD create_local_client_proxy.
 
     " as long as CL_WEB_ODATA_CLIENT_FACTORY is not available
@@ -188,5 +193,4 @@ CLASS ZDMOtc_travel_proc_m_o2_odata  IMPLEMENTATION.
     cl_abap_unit_assert=>assert_bound( msg = 'cannot get client proxy factory or service binding not active' act = client_proxy ).
 
   ENDMETHOD.
-
 ENDCLASS.

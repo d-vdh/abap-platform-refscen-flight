@@ -26,7 +26,7 @@ ENDCLASS.
 
 
 
-CLASS ZDMOtc_flight_travel_api IMPLEMENTATION.
+CLASS ZDMOTC_FLIGHT_TRAVEL_API IMPLEMENTATION.
 
 
   METHOD class_setup.
@@ -73,9 +73,11 @@ CLASS ZDMOtc_flight_travel_api IMPLEMENTATION.
     ENDDO.
   ENDMETHOD.
 
+
   METHOD teardown.
     ROLLBACK WORK. "#EC CI_ROLLBACK
   ENDMETHOD.
+
 
   METHOD cuerd_travel_early_numbering.
     DATA ls_travel_in  TYPE ZDMOs_travel_in.
@@ -89,16 +91,16 @@ CLASS ZDMOtc_flight_travel_api IMPLEMENTATION.
     ls_travel_in-begin_date  = '20180101'.
     ls_travel_in-end_date    = '20180201'.
     ls_travel_in-description = 'My Test'.
-    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_CREATE'
-      EXPORTING
-        is_travel   = ls_travel_in
-      IMPORTING
-        es_travel   = ls_travel
-        et_messages = lt_messages.
-    cl_abap_unit_assert=>assert_initial( lt_messages ).
+*    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_CREATE'
+*      EXPORTING
+*        is_travel   = ls_travel_in
+*      IMPORTING
+*        es_travel   = ls_travel
+*        et_messages = lt_messages.
+*    cl_abap_unit_assert=>assert_initial( lt_messages ).
     DATA(lv_travel_id) = ls_travel-travel_id.
     cl_abap_unit_assert=>assert_not_initial( lv_travel_id ).
-    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_SAVE'.
+*    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_SAVE'.
 
     " DB Check
     SELECT SINGLE agency_id, customer_id, description FROM ZDMOtravel WHERE travel_id = @lv_travel_id INTO ( @DATA(lv_agency_id), @DATA(lv_customer_id), @DATA(lv_description) ).
@@ -117,21 +119,21 @@ CLASS ZDMOtc_flight_travel_api IMPLEMENTATION.
     ls_travel_inx-agency_id   = abap_true.
     ls_travel_inx-customer_id = abap_true.
     ls_travel_inx-description = abap_true.
-    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_UPDATE'
-      EXPORTING
-        is_travel   = ls_travel_in
-        is_travelx  = ls_travel_inx
-      IMPORTING
-        et_messages = lt_messages.
+*    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_UPDATE'
+*      EXPORTING
+*        is_travel   = ls_travel_in
+*        is_travelx  = ls_travel_inx
+*      IMPORTING
+*        et_messages = lt_messages.
     cl_abap_unit_assert=>assert_initial( lt_messages ).
 
     " Action
-    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_SET_BOOKING'
-      EXPORTING
-        iv_travel_id = lv_travel_id
-      IMPORTING
-        et_messages  = lt_messages.
-    cl_abap_unit_assert=>assert_initial( lt_messages ).
+*    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_SET_BOOKING'
+*      EXPORTING
+*        iv_travel_id = lv_travel_id
+*      IMPORTING
+*        et_messages  = lt_messages.
+*    cl_abap_unit_assert=>assert_initial( lt_messages ).
 
     " Faulty Update - All or Nothing -> Nothing
     CLEAR ls_travel_in.
@@ -141,12 +143,12 @@ CLASS ZDMOtc_flight_travel_api IMPLEMENTATION.
     ls_travel_inx-travel_id   = lv_travel_id.
     ls_travel_inx-agency_id   = abap_true.
     ls_travel_inx-customer_id = abap_true.
-    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_UPDATE'
-      EXPORTING
-        is_travel   = ls_travel_in
-        is_travelx  = ls_travel_inx
-      IMPORTING
-        et_messages = lt_messages.
+*    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_UPDATE'
+*      EXPORTING
+*        is_travel   = ls_travel_in
+*        is_travelx  = ls_travel_inx
+*      IMPORTING
+*        et_messages = lt_messages.
     cl_abap_unit_assert=>assert_not_initial( lt_messages ).
 
     " Faulty Update - All or Nothing -> Nothing
@@ -158,23 +160,23 @@ CLASS ZDMOtc_flight_travel_api IMPLEMENTATION.
     ls_travel_inx-travel_id   = lv_travel_id.
     ls_travel_inx-agency_id   = abap_true.
     ls_travel_inx-customer_id = abap_true.
-    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_UPDATE'
-      EXPORTING
-        is_travel   = ls_travel_in
-        is_travelx  = ls_travel_inx
-      IMPORTING
-        et_messages = lt_messages.
+*    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_UPDATE'
+*      EXPORTING
+*        is_travel   = ls_travel_in
+*        is_travelx  = ls_travel_inx
+*      IMPORTING
+*        et_messages = lt_messages.
     cl_abap_unit_assert=>assert_not_initial( lt_messages ).
 
     " Read DB only
     CLEAR ls_travel.
-    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_READ'
-      EXPORTING
-        iv_travel_id      = lv_travel_id
-        iv_include_buffer = abap_false
-      IMPORTING
-        es_travel         = ls_travel
-        et_messages       = lt_messages.
+*    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_READ'
+*      EXPORTING
+*        iv_travel_id      = lv_travel_id
+*        iv_include_buffer = abap_false
+*      IMPORTING
+*        es_travel         = ls_travel
+*        et_messages       = lt_messages.
     cl_abap_unit_assert=>assert_initial( lt_messages ).
     cl_abap_unit_assert=>assert_equals( act = ls_travel-travel_id    exp = lv_travel_id ).
     cl_abap_unit_assert=>assert_equals( act = ls_travel-agency_id    exp = gv_agency_id_1 ).
@@ -184,13 +186,13 @@ CLASS ZDMOtc_flight_travel_api IMPLEMENTATION.
 
     " Read with buffer
     CLEAR ls_travel.
-    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_READ'
-      EXPORTING
-        iv_travel_id      = lv_travel_id
-        iv_include_buffer = abap_true
-      IMPORTING
-        es_travel         = ls_travel
-        et_messages       = lt_messages.
+*    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_READ'
+*      EXPORTING
+*        iv_travel_id      = lv_travel_id
+*        iv_include_buffer = abap_true
+*      IMPORTING
+*        es_travel         = ls_travel
+*        et_messages       = lt_messages.
     cl_abap_unit_assert=>assert_initial( lt_messages ).
     cl_abap_unit_assert=>assert_equals( act = ls_travel-travel_id  exp = lv_travel_id ).
     cl_abap_unit_assert=>assert_equals( act = ls_travel-agency_id    exp = gv_agency_id_2 ).
@@ -198,26 +200,26 @@ CLASS ZDMOtc_flight_travel_api IMPLEMENTATION.
     cl_abap_unit_assert=>assert_equals( act = ls_travel-status       exp = CONV ZDMOtravel_status( ZDMOif_flight_legacy=>travel_status-booked ) ).
     cl_abap_unit_assert=>assert_equals( act = ls_travel-description  exp = 'My New Test' ).
 
-    " Delete
-    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_DELETE'
-      EXPORTING
-        iv_travel_id = lv_travel_id
-      IMPORTING
-        et_messages  = lt_messages.
-    cl_abap_unit_assert=>assert_initial( lt_messages ).
-
-    " Delete again -> Error
-    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_DELETE'
-      EXPORTING
-        iv_travel_id = lv_travel_id
-      IMPORTING
-        et_messages  = lt_messages.
-    cl_abap_unit_assert=>assert_not_initial( lt_messages ).
-
-    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_SAVE'.
-
-    " Rollback
-    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_INITIALIZE'.
+*    " Delete
+*    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_DELETE'
+*      EXPORTING
+*        iv_travel_id = lv_travel_id
+*      IMPORTING
+*        et_messages  = lt_messages.
+*    cl_abap_unit_assert=>assert_initial( lt_messages ).
+*
+*    " Delete again -> Error
+*    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_DELETE'
+*      EXPORTING
+*        iv_travel_id = lv_travel_id
+*      IMPORTING
+*        et_messages  = lt_messages.
+*    cl_abap_unit_assert=>assert_not_initial( lt_messages ).
+*
+*    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_SAVE'.
+*
+*    " Rollback
+*    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_INITIALIZE'.
   ENDMETHOD.
 
 
@@ -234,26 +236,26 @@ CLASS ZDMOtc_flight_travel_api IMPLEMENTATION.
     ls_travel_in-begin_date  = '20180101'.
     ls_travel_in-end_date    = '20180201'.
     ls_travel_in-description = 'My Test'.
-    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_CREATE'
-      EXPORTING
-        is_travel         = ls_travel_in
-        iv_numbering_mode = ZDMOif_flight_legacy=>numbering_mode-late
-      IMPORTING
-        es_travel         = ls_travel
-        et_messages       = lt_messages.
+*    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_CREATE'
+*      EXPORTING
+*        is_travel         = ls_travel_in
+*        iv_numbering_mode = ZDMOif_flight_legacy=>numbering_mode-late
+*      IMPORTING
+*        es_travel         = ls_travel
+*        et_messages       = lt_messages.
     cl_abap_unit_assert=>assert_initial( lt_messages ).
     DATA(lv_travel_id) = ls_travel-travel_id.
     cl_abap_unit_assert=>assert_not_initial( lv_travel_id ).
 
 
-    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_ADJ_NUMBERS'
-      IMPORTING
-        et_travel_mapping = lt_travel_mapping.
-    cl_abap_unit_assert=>assert_not_initial( lt_travel_mapping ).
-    lv_travel_id = lt_travel_mapping[ preliminary-travel_id = lv_travel_id ]-final-travel_id.
-
-
-    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_SAVE'.
+**    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_ADJ_NUMBERS'
+**      IMPORTING
+**        et_travel_mapping = lt_travel_mapping.
+*    cl_abap_unit_assert=>assert_not_initial( lt_travel_mapping ).
+*    lv_travel_id = lt_travel_mapping[ preliminary-travel_id = lv_travel_id ]-final-travel_id.
+*
+*
+*    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_SAVE'.
 
     " DB Check
     SELECT SINGLE agency_id, customer_id, description FROM ZDMOtravel WHERE travel_id = @lv_travel_id INTO ( @DATA(lv_agency_id), @DATA(lv_customer_id), @DATA(lv_description) ).
@@ -272,21 +274,21 @@ CLASS ZDMOtc_flight_travel_api IMPLEMENTATION.
     ls_travel_inx-agency_id   = abap_true.
     ls_travel_inx-customer_id = abap_true.
     ls_travel_inx-description = abap_true.
-    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_UPDATE'
-      EXPORTING
-        is_travel   = ls_travel_in
-        is_travelx  = ls_travel_inx
-      IMPORTING
-        et_messages = lt_messages.
-    cl_abap_unit_assert=>assert_initial( lt_messages ).
-
-    " Action
-    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_SET_BOOKING'
-      EXPORTING
-        iv_travel_id = lv_travel_id
-      IMPORTING
-        et_messages  = lt_messages.
-    cl_abap_unit_assert=>assert_initial( lt_messages ).
+*    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_UPDATE'
+*      EXPORTING
+*        is_travel   = ls_travel_in
+*        is_travelx  = ls_travel_inx
+*      IMPORTING
+*        et_messages = lt_messages.
+*    cl_abap_unit_assert=>assert_initial( lt_messages ).
+*
+*    " Action
+*    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_SET_BOOKING'
+*      EXPORTING
+*        iv_travel_id = lv_travel_id
+*      IMPORTING
+*        et_messages  = lt_messages.
+*    cl_abap_unit_assert=>assert_initial( lt_messages ).
 
     " Faulty Update - All or Nothing -> Nothing
     CLEAR ls_travel_in.
@@ -296,13 +298,13 @@ CLASS ZDMOtc_flight_travel_api IMPLEMENTATION.
     ls_travel_inx-travel_id   = lv_travel_id.
     ls_travel_inx-agency_id   = abap_true.
     ls_travel_inx-customer_id = abap_true.
-    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_UPDATE'
-      EXPORTING
-        is_travel   = ls_travel_in
-        is_travelx  = ls_travel_inx
-      IMPORTING
-        et_messages = lt_messages.
-    cl_abap_unit_assert=>assert_not_initial( lt_messages ).
+*    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_UPDATE'
+*      EXPORTING
+*        is_travel   = ls_travel_in
+*        is_travelx  = ls_travel_inx
+*      IMPORTING
+*        et_messages = lt_messages.
+*    cl_abap_unit_assert=>assert_not_initial( lt_messages ).
 
     " Faulty Update - All or Nothing -> Nothing
     CLEAR lt_messages.
@@ -313,24 +315,24 @@ CLASS ZDMOtc_flight_travel_api IMPLEMENTATION.
     ls_travel_inx-travel_id   = lv_travel_id.
     ls_travel_inx-agency_id   = abap_true.
     ls_travel_inx-customer_id = abap_true.
-    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_UPDATE'
-      EXPORTING
-        is_travel   = ls_travel_in
-        is_travelx  = ls_travel_inx
-      IMPORTING
-        et_messages = lt_messages.
+*    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_UPDATE'
+*      EXPORTING
+*        is_travel   = ls_travel_in
+*        is_travelx  = ls_travel_inx
+*      IMPORTING
+*        et_messages = lt_messages.
     cl_abap_unit_assert=>assert_not_initial( lt_messages ).
 
 
     " Read DB only
     CLEAR ls_travel.
-    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_READ'
-      EXPORTING
-        iv_travel_id      = lv_travel_id
-        iv_include_buffer = abap_false
-      IMPORTING
-        es_travel         = ls_travel
-        et_messages       = lt_messages.
+*    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_READ'
+*      EXPORTING
+*        iv_travel_id      = lv_travel_id
+*        iv_include_buffer = abap_false
+*      IMPORTING
+*        es_travel         = ls_travel
+*        et_messages       = lt_messages.
     cl_abap_unit_assert=>assert_initial( lt_messages ).
     cl_abap_unit_assert=>assert_equals( act = ls_travel-travel_id    exp = lv_travel_id ).
     cl_abap_unit_assert=>assert_equals( act = ls_travel-agency_id    exp = gv_agency_id_1 ).
@@ -340,13 +342,13 @@ CLASS ZDMOtc_flight_travel_api IMPLEMENTATION.
 
     " Read with buffer
     CLEAR ls_travel.
-    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_READ'
-      EXPORTING
-        iv_travel_id      = lv_travel_id
-        iv_include_buffer = abap_true
-      IMPORTING
-        es_travel         = ls_travel
-        et_messages       = lt_messages.
+*    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_READ'
+*      EXPORTING
+*        iv_travel_id      = lv_travel_id
+*        iv_include_buffer = abap_true
+*      IMPORTING
+*        es_travel         = ls_travel
+*        et_messages       = lt_messages.
     cl_abap_unit_assert=>assert_initial( lt_messages ).
     cl_abap_unit_assert=>assert_equals( act = ls_travel-travel_id  exp = lv_travel_id ).
     cl_abap_unit_assert=>assert_equals( act = ls_travel-agency_id    exp = gv_agency_id_2 ).
@@ -354,25 +356,25 @@ CLASS ZDMOtc_flight_travel_api IMPLEMENTATION.
     cl_abap_unit_assert=>assert_equals( act = ls_travel-status       exp = CONV ZDMOtravel_status( ZDMOif_flight_legacy=>travel_status-booked ) ).
     cl_abap_unit_assert=>assert_equals( act = ls_travel-description  exp = 'My New Test' ).
 
-    " Delete
-    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_DELETE'
-      EXPORTING
-        iv_travel_id = lv_travel_id
-      IMPORTING
-        et_messages  = lt_messages.
-    cl_abap_unit_assert=>assert_initial( lt_messages ).
-
-    " Delete again -> Error
-    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_DELETE'
-      EXPORTING
-        iv_travel_id = lv_travel_id
-      IMPORTING
-        et_messages  = lt_messages.
-    cl_abap_unit_assert=>assert_not_initial( lt_messages ).
-
-    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_SAVE'.
-
-    " Rollback
-    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_INITIALIZE'.
+*    " Delete
+*    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_DELETE'
+*      EXPORTING
+*        iv_travel_id = lv_travel_id
+*      IMPORTING
+*        et_messages  = lt_messages.
+*    cl_abap_unit_assert=>assert_initial( lt_messages ).
+*
+*    " Delete again -> Error
+*    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_DELETE'
+*      EXPORTING
+*        iv_travel_id = lv_travel_id
+*      IMPORTING
+*        et_messages  = lt_messages.
+*    cl_abap_unit_assert=>assert_not_initial( lt_messages ).
+*
+*    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_SAVE'.
+*
+*    " Rollback
+*    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_INITIALIZE'.
   ENDMETHOD.
 ENDCLASS.

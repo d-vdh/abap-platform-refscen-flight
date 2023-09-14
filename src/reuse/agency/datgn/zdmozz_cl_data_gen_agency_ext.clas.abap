@@ -21,7 +21,7 @@ ENDCLASS.
 
 
 
-CLASS ZDMOzz_cl_data_gen_agency_ext IMPLEMENTATION.
+CLASS ZDMOZZ_CL_DATA_GEN_AGENCY_EXT IMPLEMENTATION.
 
 
   METHOD ZDMOif_data_generation_badi~data_generation.
@@ -32,6 +32,7 @@ CLASS ZDMOzz_cl_data_gen_agency_ext IMPLEMENTATION.
     out->write( ' --> --> Agency Reviews' ) ##NO_TEXT.
     generate_reviews( ).
   ENDMETHOD.
+
 
   METHOD generate_slogan.
     lcl_slogan=>get_instance( out )->generate_slogan(
@@ -76,6 +77,7 @@ CLASS ZDMOzz_cl_data_gen_agency_ext IMPLEMENTATION.
         )
       ).
   ENDMETHOD.
+
 
   METHOD generate_reviews.
     lcl_review_text=>set_text_graph(
@@ -244,5 +246,4 @@ CLASS ZDMOzz_cl_data_gen_agency_ext IMPLEMENTATION.
 
     lcl_review_generator=>get_instance( out )->generate_reviews( ).
   ENDMETHOD.
-
 ENDCLASS.

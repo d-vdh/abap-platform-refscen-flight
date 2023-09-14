@@ -5,6 +5,7 @@ CLASS ZDMOtc_travel_d_ktd_examples DEFINITION
   FOR TESTING
   DURATION SHORT
   RISK LEVEL HARMLESS.
+protected section.
   PRIVATE SECTION.
 
     CONSTANTS:
@@ -76,7 +77,9 @@ CLASS ZDMOtc_travel_d_ktd_examples DEFINITION
 ENDCLASS.
 
 
-CLASS ZDMOtc_travel_d_ktd_examples IMPLEMENTATION.
+
+CLASS ZDMOTC_TRAVEL_D_KTD_EXAMPLES IMPLEMENTATION.
+
 
   METHOD class_setup.
     cds_test_environment = cl_cds_test_environment=>create_for_multiple_cds(
@@ -95,6 +98,7 @@ CLASS ZDMOtc_travel_d_ktd_examples IMPLEMENTATION.
                                  )
                                ).
   ENDMETHOD.
+
 
   METHOD setup.
     DATA:
@@ -127,14 +131,17 @@ CLASS ZDMOtc_travel_d_ktd_examples IMPLEMENTATION.
     cds_test_environment->insert_test_data( travel_mock_data ).
   ENDMETHOD.
 
+
   METHOD teardown.
     ROLLBACK ENTITIES.                                 "#EC CI_ROLLBACK
   ENDMETHOD.
+
 
   METHOD class_teardown.
     cds_test_environment->destroy( ).
     sql_test_environment->destroy( ).
   ENDMETHOD.
+
 
   METHOD test_create_via_eml.
     create_via_eml( ).
@@ -174,6 +181,7 @@ CLASS ZDMOtc_travel_d_ktd_examples IMPLEMENTATION.
       MAPPED   mapped.
   ENDMETHOD.
 
+
   METHOD action_accept_travel_via_eml.
     MODIFY ENTITIES OF ZDMOi_travel_d
       ENTITY travel
@@ -188,6 +196,7 @@ CLASS ZDMOtc_travel_d_ktd_examples IMPLEMENTATION.
       MAPPED   mapped.
   ENDMETHOD.
 
+
   METHOD delete_via_eml.
     MODIFY ENTITIES OF ZDMOi_travel_d
       ENTITY travel
@@ -200,6 +209,7 @@ CLASS ZDMOtc_travel_d_ktd_examples IMPLEMENTATION.
       FAILED   failed
       MAPPED   mapped.
   ENDMETHOD.
+
 
   METHOD read_via_eml.
     READ ENTITIES OF ZDMOi_travel_d
@@ -214,6 +224,7 @@ CLASS ZDMOtc_travel_d_ktd_examples IMPLEMENTATION.
       REPORTED reported
       FAILED   failed.
   ENDMETHOD.
+
 
   METHOD t_action_accept_travel_via_eml.
     action_accept_travel_via_eml( ).
@@ -236,6 +247,7 @@ CLASS ZDMOtc_travel_d_ktd_examples IMPLEMENTATION.
       ).
   ENDMETHOD.
 
+
   METHOD test_delete_via_eml.
     delete_via_eml( ).
 
@@ -250,6 +262,7 @@ CLASS ZDMOtc_travel_d_ktd_examples IMPLEMENTATION.
         act =  lines( failed-travel )
       ).
   ENDMETHOD.
+
 
   METHOD test_read_via_eml.
     read_via_eml( ).
@@ -280,6 +293,7 @@ CLASS ZDMOtc_travel_d_ktd_examples IMPLEMENTATION.
       ).
   ENDMETHOD.
 
+
   METHOD test_updating_customer_via_eml.
     updating_customer_via_eml( ).
 
@@ -301,6 +315,7 @@ CLASS ZDMOtc_travel_d_ktd_examples IMPLEMENTATION.
       ).
   ENDMETHOD.
 
+
   METHOD updating_customer_via_eml.
     MODIFY ENTITIES OF ZDMOi_travel_d
       ENTITY travel
@@ -316,6 +331,7 @@ CLASS ZDMOtc_travel_d_ktd_examples IMPLEMENTATION.
       FAILED   failed
       MAPPED   mapped.
   ENDMETHOD.
+
 
   METHOD test_updating_agency_via_eml.
     updating_agency_via_eml( ).
@@ -338,6 +354,7 @@ CLASS ZDMOtc_travel_d_ktd_examples IMPLEMENTATION.
       ).
   ENDMETHOD.
 
+
   METHOD updating_agency_via_eml.
     MODIFY ENTITIES OF ZDMOi_travel_d
       ENTITY travel
@@ -353,5 +370,4 @@ CLASS ZDMOtc_travel_d_ktd_examples IMPLEMENTATION.
       FAILED   failed
       MAPPED   mapped.
   ENDMETHOD.
-
 ENDCLASS.

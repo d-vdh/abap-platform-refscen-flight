@@ -138,7 +138,8 @@ ENDCLASS.
 
 
 
-CLASS ZDMOcx_agency IMPLEMENTATION.
+CLASS ZDMOCX_AGENCY IMPLEMENTATION.
+
 
   METHOD constructor ##ADT_SUPPRESS_GENERATION.
     super->constructor( previous = previous ).
@@ -159,5 +160,4 @@ CLASS ZDMOcx_agency IMPLEMENTATION.
     ENDIF.
 
   ENDMETHOD.
-
 ENDCLASS.

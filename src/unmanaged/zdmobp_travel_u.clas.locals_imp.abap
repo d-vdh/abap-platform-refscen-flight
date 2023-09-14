@@ -113,13 +113,13 @@ CLASS lhc_travel IMPLEMENTATION.
 
       travel_in = CORRESPONDING #( <travel_create> MAPPING FROM ENTITY USING CONTROL ).
 
-      CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_CREATE'
-        EXPORTING
-          is_travel         = CORRESPONDING ZDMOs_travel_in( travel_in )
-          iv_numbering_mode = ZDMOif_flight_legacy=>numbering_mode-late
-        IMPORTING
-          es_travel         = travel_out
-          et_messages       = messages.
+*      CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_CREATE'
+*        EXPORTING
+*          is_travel         = CORRESPONDING ZDMOs_travel_in( travel_in )
+*          iv_numbering_mode = ZDMOif_flight_legacy=>numbering_mode-late
+*        IMPORTING
+*          es_travel         = travel_out
+*          et_messages       = messages.
 
       map_messages(
           EXPORTING
@@ -160,12 +160,12 @@ CLASS lhc_travel IMPLEMENTATION.
       travelx-travel_id = <travel_update>-TravelID.
       travelx-_intx     = CORRESPONDING #( <travel_update> MAPPING FROM ENTITY ).
 
-      CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_UPDATE'
-        EXPORTING
-          is_travel   = CORRESPONDING ZDMOs_travel_in( travel )
-          is_travelx  = travelx
-        IMPORTING
-          et_messages = messages.
+*      CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_UPDATE'
+*        EXPORTING
+*          is_travel   = CORRESPONDING ZDMOs_travel_in( travel )
+*          is_travelx  = travelx
+*        IMPORTING
+*          et_messages = messages.
 
       map_messages(
           EXPORTING
@@ -191,11 +191,11 @@ CLASS lhc_travel IMPLEMENTATION.
 
     LOOP AT keys ASSIGNING FIELD-SYMBOL(<travel_delete>).
 
-      CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_DELETE'
-        EXPORTING
-          iv_travel_id = <travel_delete>-travelid
-        IMPORTING
-          et_messages  = messages.
+*      CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_DELETE'
+*        EXPORTING
+*          iv_travel_id = <travel_delete>-travelid
+*        IMPORTING
+*          et_messages  = messages.
 
       map_messages(
           EXPORTING
@@ -222,12 +222,12 @@ CLASS lhc_travel IMPLEMENTATION.
 
     LOOP AT keys ASSIGNING FIELD-SYMBOL(<travel_to_read>) GROUP BY <travel_to_read>-%tky.
 
-      CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_READ'
-        EXPORTING
-          iv_travel_id = <travel_to_read>-travelid
-        IMPORTING
-          es_travel    = travel_out
-          et_messages  = messages.
+*      CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_READ'
+*        EXPORTING
+*          iv_travel_id = <travel_to_read>-travelid
+*        IMPORTING
+*          es_travel    = travel_out
+*          et_messages  = messages.
 
       map_messages(
           EXPORTING
@@ -304,13 +304,13 @@ CLASS lhc_travel IMPLEMENTATION.
 
     LOOP AT keys_rba ASSIGNING FIELD-SYMBOL(<travel_rba>) GROUP BY <travel_rba>-TravelID.
 
-      CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_READ'
-        EXPORTING
-          iv_travel_id = <travel_rba>-travelid
-        IMPORTING
-          es_travel    = travel_out
-          et_booking   = booking_out
-          et_messages  = messages.
+*      CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_READ'
+*        EXPORTING
+*          iv_travel_id = <travel_rba>-travelid
+*        IMPORTING
+*          es_travel    = travel_out
+*          et_booking   = booking_out
+*          et_messages  = messages.
 
       map_messages(
           EXPORTING
@@ -369,12 +369,12 @@ CLASS lhc_travel IMPLEMENTATION.
 
       DATA(travelid) = <travel>-travelid.
 
-      CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_READ'
-        EXPORTING
-          iv_travel_id = travelid
-        IMPORTING
-          et_booking   = booking_old
-          et_messages  = messages.
+*      CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_READ'
+*        EXPORTING
+*          iv_travel_id = travelid
+*        IMPORTING
+*          et_booking   = booking_old
+*          et_messages  = messages.
 
       map_messages(
           EXPORTING
@@ -413,19 +413,19 @@ CLASS lhc_travel IMPLEMENTATION.
           last_booking_id += 1.
           booking-booking_id = last_booking_id.
 
-          CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_UPDATE'
-            EXPORTING
-              is_travel   = VALUE ZDMOs_travel_in( travel_id = travelid )
-              is_travelx  = VALUE ZDMOs_travel_inx( travel_id = travelid )
-              it_booking  = VALUE ZDMOt_booking_in( ( CORRESPONDING #( booking ) ) )
-              it_bookingx = VALUE ZDMOt_booking_inx(
-                (
-                  booking_id  = booking-booking_id
-                  action_code = ZDMOif_flight_legacy=>action_code-create
-                )
-              )
-            IMPORTING
-              et_messages = messages.
+*          CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_UPDATE'
+*            EXPORTING
+*              is_travel   = VALUE ZDMOs_travel_in( travel_id = travelid )
+*              is_travelx  = VALUE ZDMOs_travel_inx( travel_id = travelid )
+*              it_booking  = VALUE ZDMOt_booking_in( ( CORRESPONDING #( booking ) ) )
+*              it_bookingx = VALUE ZDMOt_booking_inx(
+*                (
+*                  booking_id  = booking-booking_id
+*                  action_code = ZDMOif_flight_legacy=>action_code-create
+*                )
+*              )
+*            IMPORTING
+*              et_messages = messages.
 
           map_messages_assoc_to_booking(
               EXPORTING
@@ -469,11 +469,11 @@ CLASS lhc_travel IMPLEMENTATION.
 
       DATA(travelid) = <travel_set_status_booked>-travelid.
 
-      CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_SET_BOOKING'
-        EXPORTING
-          iv_travel_id = travelid
-        IMPORTING
-          et_messages  = messages.
+*      CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_SET_BOOKING'
+*        EXPORTING
+*          iv_travel_id = travelid
+*        IMPORTING
+*          et_messages  = messages.
 
       map_messages(
           EXPORTING
@@ -487,11 +487,11 @@ CLASS lhc_travel IMPLEMENTATION.
         ).
 
       IF failed_added = abap_false.
-        CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_READ'
-          EXPORTING
-            iv_travel_id = travelid
-          IMPORTING
-            es_travel    = travel_out.
+*        CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_READ'
+*          EXPORTING
+*            iv_travel_id = travelid
+*          IMPORTING
+*            es_travel    = travel_out.
 
         travel_set_status_booked-travelid        = travelid.
         travel_set_status_booked-%param          = CORRESPONDING #( travel_out MAPPING TO ENTITY ).
@@ -609,11 +609,11 @@ CLASS lsc_I_TRAVEL_U IMPLEMENTATION.
           booking_mapping      TYPE ZDMOif_flight_legacy=>tt_ln_booking_mapping,
           bookingsuppl_mapping TYPE ZDMOif_flight_legacy=>tt_ln_bookingsuppl_mapping.
 
-    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_ADJ_NUMBERS'
-      IMPORTING
-        et_travel_mapping       = travel_mapping
-        et_booking_mapping      = booking_mapping
-        et_bookingsuppl_mapping = bookingsuppl_mapping.
+*    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_ADJ_NUMBERS'
+*      IMPORTING
+*        et_travel_mapping       = travel_mapping
+*        et_booking_mapping      = booking_mapping
+*        et_bookingsuppl_mapping = bookingsuppl_mapping.
 
     mapped-travel            = VALUE #( FOR travel IN travel_mapping             ( %tmp                = VALUE #( TravelID = travel-preliminary-travel_id )
                                                                                    TravelID            = travel-final-travel_id ) ).
@@ -633,11 +633,11 @@ CLASS lsc_I_TRAVEL_U IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD save.
-    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_SAVE'.
+*    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_SAVE'.
   ENDMETHOD.
-
+*
   METHOD cleanup.
-    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_INITIALIZE'.
+*    CALL FUNCTION 'ZDMOFLIGHT_TRAVEL_INITIALIZE'.
   ENDMETHOD.
 
   METHOD cleanup_finalize.

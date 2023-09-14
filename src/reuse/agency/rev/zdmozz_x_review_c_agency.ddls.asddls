@@ -7,8 +7,8 @@ extend view entity ZDMOC_AgencyTP with
         type:          #LINEITEM_REFERENCE,
         label:         'Review',
         position:      20,
-        targetElement: 'ZDMOZZ_ReviewZAG'
+        targetElement: 'ZZ_ReviewZAG'
       }
     ]
-  Agency.ZDMOZZ_ReviewZAG : redirected to composition child ZDMOZZ_C_Agency_ReviewTP
+  Agency.ZZ_ReviewZAG : redirected to composition child ZDMOZZ_C_Agency_ReviewTP
 }

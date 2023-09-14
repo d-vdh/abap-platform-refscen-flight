@@ -783,7 +783,7 @@ CLASS lcl_save IMPLEMENTATION.
     IF create-booksuppl IS NOT INITIAL.
       booksuppls_db = CORRESPONDING #( create-booksuppl MAPPING FROM ENTITY ).
 
-      CALL FUNCTION 'ZDMOFLIGHT_BOOKSUPPL_C' EXPORTING values = booksuppls_db.
+      "CALL FUNCTION 'ZDMOFLIGHT_BOOKSUPPL_C' EXPORTING values = booksuppls_db.
 
     ENDIF.
 
@@ -818,7 +818,7 @@ CLASS lcl_save IMPLEMENTATION.
       ENDLOOP.
 
       " Update the complete instance data
-      CALL FUNCTION 'ZDMOFLIGHT_BOOKSUPPL_U' EXPORTING values = booksuppls_db.
+      "CALL FUNCTION 'ZDMOFLIGHT_BOOKSUPPL_U' EXPORTING values = booksuppls_db.
 
     ENDIF.
 
@@ -826,7 +826,7 @@ CLASS lcl_save IMPLEMENTATION.
     IF delete-booksuppl IS NOT INITIAL.
       booksuppls_db = CORRESPONDING #( delete-booksuppl MAPPING FROM ENTITY ).
 
-      CALL FUNCTION 'ZDMOFLIGHT_BOOKSUPPL_D' EXPORTING values = booksuppls_db.
+      "CALL FUNCTION 'ZDMOFLIGHT_BOOKSUPPL_D' EXPORTING values = booksuppls_db.
 
     ENDIF.
 
